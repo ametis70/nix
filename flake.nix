@@ -13,6 +13,7 @@
   outputs = { nixpkgs, home-manager, ... }:
     let
       packages = {
+        "x86_64-linux" = nixpkgs.legacyPackages."x86_64-linux";
         "aarch64-darwin" = nixpkgs.legacyPackages."aarch64-darwin";
       };
 
@@ -22,6 +23,12 @@
           hostname = "AR0FVFGD3PFQ05N";
           username = "imancini";
           system = "aarch64-darwin";
+        };
+        deck = {
+          id = "deck";
+          hostname = "steamdeck";
+          username = "deck";
+          system = "x86_64-linux";
         };
       };
 
@@ -37,6 +44,7 @@
     {
       homeConfigurations = with hosts; {
         "${getHost work}" = configureHomeManager work;
+        "${getHost deck}" = configureHomeManager deck;
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
