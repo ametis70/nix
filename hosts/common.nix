@@ -8,6 +8,7 @@
     timewarrior
     taskwarrior
     taskwarrior-tui
+    pass
     fd
   ];
 
