@@ -8,12 +8,14 @@
       url = "github:nix-community/home-manager/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixgl.url = "github:nix-community/nixGL";
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { nixpkgs, home-manager, nixgl, ... }:
     let
       packages = {
-        "x86_64-linux" = nixpkgs.legacyPackages."x86_64-linux";
+        "x86_64-linux" = (nixpkgs.legacyPackages."x86_64-linux".extend nixgl.overlay);
         "aarch64-darwin" = nixpkgs.legacyPackages."aarch64-darwin";
       };
 

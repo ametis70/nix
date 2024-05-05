@@ -1,9 +1,12 @@
-{ specialArgs, ... }:
+{ pkgs, specialArgs, lib, ... }:
 
-with specialArgs; {
+let
+  nixgl = import ../../utils/nixgl.nix { inherit pkgs; inherit lib; };
+in {
+  imports = [ ../linux.nix ];
 
-  imports = [ ../common.nix ];
+  home.packages = with pkgs; [
+    (nixgl.wrapMesa kitty)
+  ];
 
-  home.username = host.username;
-  home.homeDirectory = "/home/${host.username}";
 }
