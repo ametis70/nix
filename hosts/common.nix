@@ -12,7 +12,10 @@
     taskwarrior-tui
     pass
     fd
+    (nerdfonts.override { fonts = [ "Iosevka" ]; })
   ];
+
+  fonts.fontconfig.enable = true;
 
   programs = {
     zsh = {
