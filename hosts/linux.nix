@@ -8,5 +8,6 @@
   home.packages = with pkgs; [
     nixgl.nixGLIntel
     nixgl.nixVulkanIntel
+    xclip
   ];
 }
