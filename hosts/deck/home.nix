@@ -3,7 +3,7 @@
 let
   nixgl = import ../../utils/nixgl.nix { inherit pkgs; inherit lib; };
 in {
-  imports = [ ../linux.nix ];
+  imports = [ ../../systems/linux.nix ];
 
   home.packages = with pkgs; [
     (nixgl.wrapMesa kitty)
