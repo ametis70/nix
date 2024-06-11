@@ -1,7 +1,7 @@
 { pkgs, specialArgs, ... }: {
   imports = [ ../programs/nvim/nvim.nix ];
 
-  home.stateVersion = "23.11";
+  home.stateVersion = "24.05";
   programs.home-manager.enable = true;
 
   home.username = specialArgs.host.username;
@@ -20,9 +20,11 @@
   programs = {
     zsh = {
       enable = true;
-      enableAutosuggestions = true;
       enableCompletion = true;
       enableVteIntegration = true;
+      autosuggestion = {
+        enable = true;
+      };
     };
     fzf = {
       enable = true;
