@@ -89,9 +89,10 @@ end
 
 return {
   { "RaafatTurki/hex.nvim", config = true },
-  "Eduruiz/vim-blade",
   {
     "nvim-orgmode/orgmode",
+    event = "VeryLazy",
+    ft = { "org" },
     opts = {
       org_agenda_files = {
         "~/.org/work/*",
@@ -106,6 +107,7 @@ return {
   },
   {
     "vuki656/package-info.nvim",
+    event = "BufEnter *package.json",
     dependencies = {
       "MunifTanjim/nui.nvim",
     },

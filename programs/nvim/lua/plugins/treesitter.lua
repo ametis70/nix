@@ -10,7 +10,6 @@ return {
         return
       end
 
-      require("orgmode").setup_ts_grammar()
       require("nvim-ts-autotag").setup()
 
       configs.setup({
@@ -82,6 +81,7 @@ return {
           "xml",
           "yaml",
         },
+        ignore_install = { "org" },
         highlight = {
           enable = true,
           additional_vim_regex_highlighting = { "org" },
@@ -112,7 +112,6 @@ return {
         end,
       },
       "windwp/nvim-ts-autotag",
-      "nvim-orgmode/orgmode",
     },
   },
 }

@@ -1,3 +1,31 @@
+local init = function()
+  local wk = require("which-key")
+
+  local augroup = vim.api.nvim_create_augroup("RestNvim", {})
+  vim.api.nvim_clear_autocmds({ group = augroup })
+  vim.api.nvim_create_autocmd("BufEnter", {
+    group = augroup,
+    pattern = { "*.http" },
+    callback = function(bufnr)
+      wk.register({
+        r = {
+          "<Plug>RestNvim",
+          "Run the request under the cursor",
+        },
+        p = {
+          "<Plug>RestNvimPreview",
+          "Preview the request cURL command",
+        },
+        l = { "<Plug>RestNvimLast", "Re-run the last request" },
+      }, {
+        mode = "n",
+        bufnr = bufnr,
+        prefix = "<localleader>",
+      })
+    end,
+  })
+end
+
 local config = function()
   require("rest-nvim").setup({
     -- Open request results in a horizontal split
@@ -33,36 +61,11 @@ local config = function()
     custom_dynamic_variables = {},
     yank_dry_run = true,
   })
-
-  local wk = require("which-key")
-
-  local augroup = vim.api.nvim_create_augroup("RestNvim", {})
-  vim.api.nvim_clear_autocmds({ group = augroup })
-  vim.api.nvim_create_autocmd("BufEnter", {
-    group = augroup,
-    pattern = { "*.http" },
-    callback = function(bufnr)
-      wk.register({
-        r = {
-          "<Plug>RestNvim",
-          "Run the request under the cursor",
-        },
-        p = {
-          "<Plug>RestNvimPreview",
-          "Preview the request cURL command",
-        },
-        l = { "<Plug>RestNvimLast", "Re-run the last request" },
-      }, {
-        mode = "n",
-        bufnr = bufnr,
-        prefix = "<localleader>",
-      })
-    end,
-  })
 end
 
 return {
   "rest-nvim/rest.nvim",
-  init = setup,
-  event = "BufEnter *.lua",
+  init = init,
+  config = config,
+  event = "BufEnter *.http",
 }

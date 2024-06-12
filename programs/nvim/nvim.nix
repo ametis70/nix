@@ -23,6 +23,10 @@ in
     extraPackages = with pkgs; [
       # Deps
       ripgrep
+      vim # for xxd
+      gh
+      nodejs_22
+      luajitPackages.luautf8
 
       # LSP
       lua-language-server
@@ -61,6 +65,7 @@ in
         nui-nvim
         promise-async
         nvim-web-devicons
+        nvim-nio
 
         # Autocomplete
         copilot-lua
@@ -160,7 +165,7 @@ in
         toggleterm-nvim
 
         # Testing
-        neotest
+        { name = "neotest"; path = neotest; }
         neotest-jest
         neotest-go
         neotest-python
@@ -190,6 +195,7 @@ in
         ''
         vim.g.NIX = true
         vim.g.mapleader = " "
+        vim.g.maplocalleader = ","
         require("lazy").setup({
           defaults = {
             lazy = true,
@@ -279,6 +285,7 @@ in
           vue
           xml
           yaml
+          org
         ])).dependencies;
       };
     in

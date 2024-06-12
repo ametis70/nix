@@ -31,8 +31,6 @@ vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
 vim.opt.listchars:append("tab:⟶ ")
 
-vim.g.maplocalleader = ","
-
 -- Highlight on yank
 vim.cmd("au TextYankPost * lua vim.highlight.on_yank {on_visual = false}")
 

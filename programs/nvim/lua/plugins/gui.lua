@@ -72,7 +72,7 @@ return {
   },
   { "folke/zen-mode.nvim",         init = setup_zen_mode },
   { "folke/twilight.nvim",         init = setup_twilight },
-  { "folke/todo-comments.nvim",    requires = "nvim-lua/plenary.nvim" },
+  { "folke/todo-comments.nvim",    event = "BufRead",        requires = "nvim-lua/plenary.nvim" },
   { "nvim-tree/nvim-web-devicons", opts = { default = true } },
-  "norcalli/nvim-colorizer.lua",
+  { "norcalli/nvim-colorizer.lua", event = "BufRead" },
 }
