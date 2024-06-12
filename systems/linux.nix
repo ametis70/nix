@@ -9,5 +9,6 @@
     nixgl.nixGLIntel
     nixgl.nixVulkanIntel
     xclip
+    wl-clipboard
   ];
 }
