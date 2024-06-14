@@ -1,5 +1,5 @@
-{ specialArgs, ... }:
+{ ... }:
 
-with specialArgs; {
-  imports = [ ../systems/macos.nix ];
+{
+  imports = [ ../../systems/macos.nix ];
 }
