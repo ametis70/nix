@@ -17,6 +17,8 @@
     taskwarrior-tui
     pass
     fd
+    curl
+    asdf-vm
     (nerdfonts.override { fonts = [ "Iosevka" ]; })
   ];
 
@@ -31,6 +33,16 @@
       enable = true;
     };
     lazygit = {
+      enable = true;
+    };
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv = {
+        enable = true;
+      };
+    };
+    git = {
       enable = true;
     };
   };

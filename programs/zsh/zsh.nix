@@ -12,6 +12,12 @@
       syntaxHighlighting = {
         enable = true;
       };
+      oh-my-zsh = {
+        enable = true;
+        plugins = [
+          "asdf"
+        ];
+      };
       zplug = {
         enable = true;
         plugins = [
