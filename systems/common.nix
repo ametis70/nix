@@ -18,6 +18,7 @@
     pass
     fd
     curl
+    jq
     asdf-vm
     (nerdfonts.override { fonts = [ "Iosevka" ]; })
   ];
