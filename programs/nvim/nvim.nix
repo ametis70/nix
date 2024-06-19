@@ -26,7 +26,6 @@ in
       vim # for xxd
       gh
       nodejs_22
-      luajitPackages.luautf8
 
       # LSP
       lua-language-server
@@ -52,6 +51,7 @@ in
       python311Packages.black
       rustywind
       stylelint
+      html-tidy
     ];
 
     plugins = with pkgs.vimPlugins; [
@@ -59,6 +59,13 @@ in
     ];
 
     extraLuaConfig = let
+      luaRocks = with pkgs.luajitPackages; [
+        luautf8
+        lua-curl
+        mimetypes
+        xml2lua
+      ];
+
       plugins = with pkgs.vimPlugins; [
         # Deps
         plenary-nvim
@@ -191,11 +198,22 @@ in
 
       pluginsPath = pkgs.linkFarm "nvim-plugins" (builtins.map mkEntryFromDrv plugins);
 
+      getStorePath = drv: "${lib.getLib drv}";
+      getCpath = drv: "${getStorePath drv}/lib/lua/5.1/?.so;";
+      getPath = drv: "${getStorePath drv}/share/lua/5.1/?.lua;";
+
+      luarocks.cpath = lib.concatStrings (builtins.map getCpath luaRocks);
+      luarocks.path = lib.concatStrings (builtins.map getPath luaRocks);
+
      in
         ''
         vim.g.NIX = true
         vim.g.mapleader = " "
         vim.g.maplocalleader = ","
+
+        package.cpath = "${luarocks.cpath}" .. package.cpath
+        package.path = "${luarocks.path}" .. package.path
+
         require("lazy").setup({
           defaults = {
             lazy = true,
