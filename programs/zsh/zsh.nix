@@ -1,4 +1,4 @@
-{ pkgs, specialArgs, ... }:
+{ pkgs, ... }:
 
 {
   programs = {
@@ -11,12 +11,6 @@
       };
       syntaxHighlighting = {
         enable = true;
-      };
-      oh-my-zsh = {
-        enable = true;
-        plugins = [
-          "asdf"
-        ];
       };
       zplug = {
         enable = true;
@@ -38,6 +32,13 @@
         if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
           source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
         fi
+
+        # Source asdf
+        . "${pkgs.lib.getBin pkgs.asdf-vm}/share/asdf-vm/asdf.sh"
+      '';
+      initExtraBeforeCompInit = ''
+        # asdf completion
+        fpath=(''${ASDF_DIR}/completions $fpath)
       '';
     };
   };
