@@ -16,6 +16,7 @@
         enable = true;
         plugins = [
           { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
+          { name = "Aloxaf/fzf-tab"; }
         ];
       };
       plugins = [
@@ -35,10 +36,21 @@
 
         # Source asdf
         . "${pkgs.lib.getBin pkgs.asdf-vm}/share/asdf-vm/asdf.sh"
+
+        export GPG_TTY=$TTY
       '';
       initExtraBeforeCompInit = ''
         # asdf completion
         fpath=(''${ASDF_DIR}/completions $fpath)
+      '';
+      initExtra = ''
+        bindkey "^[[3~"   delete-char
+        bindkey "^[[5~"   beginning-of-buffer-or-history
+        bindkey "^[[6~"   end-of-buffer-or-history
+        bindkey "^[[H"    beginning-of-line
+        bindkey "^[[F"    end-of-line
+        bindkey '^[[1;5C' forward-word
+        bindkey '^[[1;5D' backward-word
       '';
     };
   };
