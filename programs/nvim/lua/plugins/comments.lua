@@ -10,6 +10,5 @@ return {
     dependencies = {
       "JoosepAlviste/nvim-ts-context-commentstring",
     },
-    lazy = true,
   },
 }

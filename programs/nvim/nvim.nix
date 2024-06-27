@@ -95,7 +95,7 @@ in
         tokyonight-nvim
 
         # Comments
-        comment-nvim
+        { name = "Comment.nvim"; path = (fromGithub "e30b7f2008e52442154b66f7c519bfd2f1e32acb" "master" "numToStr/Comment.nvim"); }
         nvim-ts-context-commentstring
 
         # Debugging
