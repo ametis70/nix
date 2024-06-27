@@ -32,6 +32,12 @@
           username = "deck";
           system = "x86_64-linux";
         };
+        windows10 = {
+          id = "windows10";
+          hostname = "ianmethyst-vm-windows";
+          username = "ametis70";
+          system = "x86_64-linux";
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -47,6 +53,7 @@
       homeConfigurations = with hosts; {
         "${getHost work}" = configureHomeManager work;
         "${getHost deck}" = configureHomeManager deck;
+        "${getHost windows10}" = configureHomeManager windows10;
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
