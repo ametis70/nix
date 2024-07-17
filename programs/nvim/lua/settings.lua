@@ -20,7 +20,7 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.o.cursorline = true
 vim.o.clipboard = "unnamed,unnamedplus"
-vim.o.lazyredraw = true
+vim.o.lazyredraw = false
 vim.o.undofile = true
 vim.o.mouse = "a"
 vim.o.scrolloff = 10
@@ -37,13 +37,13 @@ vim.cmd("au TextYankPost * lua vim.highlight.on_yank {on_visual = false}")
 -- Terminal
 vim.api.nvim_create_augroup("Terminal", { clear = true })
 vim.api.nvim_create_autocmd("TermOpen", {
-  group = "Terminal",
-  pattern = "*",
-  callback = function()
-    -- vim.bo.filetype = "terminal"
-    vim.api.nvim_buf_set_keymap(0, "t", "<esc>", [[<C-\><C-n>]], { noremap = true })
-    vim.cmd("startinsert")
-  end,
+	group = "Terminal",
+	pattern = "*",
+	callback = function()
+		-- vim.bo.filetype = "terminal"
+		vim.api.nvim_buf_set_keymap(0, "t", "<esc>", [[<C-\><C-n>]], { noremap = true })
+		vim.cmd("startinsert")
+	end,
 })
 
 vim.g.tokyonight_style = "night"

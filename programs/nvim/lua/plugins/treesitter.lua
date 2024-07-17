@@ -67,6 +67,7 @@ return {
           "perl",
           "php",
           "python",
+          "regex",
           "requirements",
           "ruby",
           "rust",

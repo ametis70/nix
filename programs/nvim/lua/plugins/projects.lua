@@ -1,26 +1,34 @@
 return {
   {
-    -- "ahmedkhalf/project.nvim",
-    "hawk78/project.nvim",
-    config = function(_, opts)
-      require("project_nvim").setup(opts)
+    "coffebar/neovim-project",
+    config = function()
+      require("neovim-project").setup({
+        projects = {
+          "~/Sandbox/*",
+        },
+        last_session_on_startup = false,
+        dashboard_mode = true,
+      })
     end,
-    opts = {
-      manual_mode = true,
-      detection_methods = { "lsp", "pattern" },
-      patterns = {
-        ".git",
-        "Makefile",
-        "package.json",
-        ".luarc.json",
-        "lazy-lock.json",
-        ".zk",
-      },
-      ignore_lsp = {},
-      exclude_dirs = {},
-      show_hidden = true,
-      silent_chdir = true,
-      datapath = vim.fn.stdpath("data"),
+    init = function()
+      vim.opt.sessionoptions:append("globals")
+    end,
+    dependencies = {
+      { "nvim-lua/plenary.nvim" },
+      { "nvim-telescope/telescope.nvim" },
+      { "Shatur/neovim-session-manager" },
     },
+    lazy = false,
+    priority = 100,
+  },
+  {
+    "Shatur/neovim-session-manager",
+    lazy = false,
+    config = function()
+      local config = require("session_manager.config")
+      require("session_manager").setup({
+        autoload_mode = config.AutoloadMode.Disabled,
+      })
+    end,
   },
 }

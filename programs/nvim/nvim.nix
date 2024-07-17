@@ -74,6 +74,8 @@ in
         promise-async
         nvim-web-devicons
         nvim-nio
+        nvim-window-picker
+        { name = "neovim-session-manager"; path = (fromGithub "35c154a4b904cbe2aa7acce00a8c1c54a8831780" "master" "Shatur/neovim-session-manager"); }
 
         # Autocomplete
         copilot-lua
@@ -135,6 +137,9 @@ in
         twilight-nvim
         todo-comments-nvim
         nvim-colorizer-lua
+        nvim-notify
+        noice-nvim
+        alpha-nvim
 
         # Keybindings
         which-key-nvim
@@ -143,7 +148,6 @@ in
         mason-nvim
         mason-tool-installer-nvim
         mason-lspconfig-nvim
-        fidget-nvim
         nvim-lightbulb
         aerial-nvim
         trouble-nvim
@@ -160,13 +164,13 @@ in
         mkdnflow-nvim
 
         # Projects
-        project-nvim
+        { name = "neovim-project"; path = (fromGithub "16594823c2a3e2214ed8c7d676e5e5beefbe96fd" "main" "coffebar/neovim-project"); }
 
         # REST
         rest-nvim
 
         # Statusline
-        { name = "incline.nvim" ; path = (fromGithub "16fc9c073e3ea4175b66ad94375df6d73fc114c0" "main" "b0o/incline.nvim"); }
+        { name = "incline.nvim"; path = (fromGithub "16fc9c073e3ea4175b66ad94375df6d73fc114c0" "main" "b0o/incline.nvim"); }
         lualine-nvim
 
         # Term
@@ -291,6 +295,7 @@ in
           perl
           php
           python
+          regex
           requirements
           ruby
           rust

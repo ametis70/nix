@@ -1,6 +1,7 @@
 return {
 	{
 		"kevinhwang91/nvim-ufo",
+		event = "BufRead",
 		opts = {
 			provider_selector = function(bufnr, filetype, buftype)
 				return { "treesitter", "indent" }
@@ -42,8 +43,12 @@ return {
 			vim.o.foldlevel = 99
 			vim.o.foldlevelstart = 99
 
-			vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-			vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+			vim.keymap.set("n", "zR", function()
+				require("ufo").openAllFolds()
+			end)
+			vim.keymap.set("n", "zM", function()
+				require("ufo").closeAllFolds()
+			end)
 		end,
 		dependencies = { "nvim-treesitter/nvim-treesitter", "kevinhwang91/promise-async" },
 	},

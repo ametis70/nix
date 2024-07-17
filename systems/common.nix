@@ -20,6 +20,7 @@
     curl
     jq
     asdf-vm
+    ranger
     (nerdfonts.override { fonts = [ "Iosevka" ]; })
   ];
 

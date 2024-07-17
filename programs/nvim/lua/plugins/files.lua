@@ -4,11 +4,42 @@ return {
     branch = "v3.x",
     cmd = "Neotree",
     config = true,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+      {
+        "s1n7ax/nvim-window-picker",
+        version = "2.*",
+        config = function()
+          require("window-picker").setup({
+            filter_rules = {
+              include_current_win = false,
+              autoselect_one = true,
+              bo = {
+                filetype = { "neo-tree", "neo-tree-popup", "notify" },
+                buftype = { "terminal", "quickfix" },
+              },
+            },
+          })
+        end,
+      },
+    },
     opts = {
+      close_if_last_window = true,
       filesystem = {
         use_libuv_file_watcher = true,
         follow_current_file = {
-          enabled = false, -- This will find and focus the file in the active buffer every time
+          enabled = true,
+          leave_dirs_open = true,
+        },
+        filtered_items = {
+          visible = true,
+        },
+      },
+      window = {
+        mappings = {
+          ["/"] = "none",
         },
       },
     },
@@ -17,7 +48,7 @@ return {
 
       wk.register({
         o = {
-          p = { "<cmd>Neotree<CR>", "Open project sidebar" },
+          p = { "<cmd>Neotree toggle<CR>", "Toggle project sidebar" },
         },
       }, {
         prefix = "<leader>",
