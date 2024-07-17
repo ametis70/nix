@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-24.05";
@@ -12,11 +13,17 @@
     nixgl.url = "github:nix-community/nixGL";
   };
 
-  outputs = { nixpkgs, home-manager, nixgl, ... }:
+  outputs = { nixpkgs, nixpkgs-unstable, home-manager, nixgl, ... }:
     let
       packages = {
-        "x86_64-linux" = (nixpkgs.legacyPackages."x86_64-linux".extend nixgl.overlay);
-        "aarch64-darwin" = nixpkgs.legacyPackages."aarch64-darwin";
+        "x86_64-linux" = {
+          pkgs = (nixpkgs.legacyPackages."x86_64-linux".extend nixgl.overlay);
+          pkgs-unstable = (nixpkgs-unstable.legacyPackages."x86_64-linux".extend nixgl);
+        };
+        "aarch64-darwin" = {
+          pkgs = nixpkgs.legacyPackages."aarch64-darwin";
+          pkgs-unstable = nixpkgs-unstable.legacyPackages."aarch64-darwin";
+        };
       };
 
       hosts = {
@@ -44,9 +51,9 @@
 
       configureHomeManager = host:
         home-manager.lib.homeManagerConfiguration {
-          pkgs = packages.${host.system};
+          pkgs = packages.${host.system}.pkgs;
           modules = [ ./hosts/${host.id}/home.nix ];
-          extraSpecialArgs.host = host;
+          extraSpecialArgs = { host = host; pkgs-unstable = packages.${host.system}.pkgs-unstable; };
         };
     in
     {

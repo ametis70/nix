@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, pkgs-unstable, ... }:
 
 let
  fromGithub = rev: ref: repo: pkgs.vimUtils.buildVimPlugin {
@@ -15,6 +15,7 @@ in
 {
   programs.neovim = {
     enable = true;
+    package = pkgs-unstable.neovim-unwrapped;
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
