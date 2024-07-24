@@ -1,10 +1,9 @@
 local lazygit = nil
+local last_cwd = vim.fn.getcwd()
 
-local config = function()
-	require("toggleterm").setup()
-
+local spawn_lazygit = function()
 	local Terminal = require("toggleterm.terminal").Terminal
-	lazygit = Terminal:new({
+	return Terminal:new({
 		count = 999,
 		cmd = "lazygit",
 		hidden = true,
@@ -23,6 +22,10 @@ local config = function()
 	})
 end
 
+local config = function()
+	require("toggleterm").setup()
+end
+
 local init = function()
 	local wk = require("which-key")
 
@@ -30,8 +33,16 @@ local init = function()
 		g = {
 			g = {
 				function()
+					local current_cwd = vim.fn.getcwd()
+					if last_cwd ~= current_cwd then
+						last_cwd = current_cwd
+						if lazygit ~= nil then
+							lazygit:shutdown()
+						end
+						lazygit = nil
+					end
 					if lazygit == nil then
-						return
+						lazygit = spawn_lazygit()
 					end
 					lazygit:toggle()
 				end,
