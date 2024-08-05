@@ -1,4 +1,4 @@
-{ pkgs, specialArgs, lib, ... }:
+{ pkgs, lib, ... }:
 
 let
   nixgl = import ../../utils/nixgl.nix { inherit pkgs; inherit lib; };

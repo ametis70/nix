@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-unstable, ... }:
+{ config, lib, pkgs, specialArgs, ... }:
 
 let
  fromGithub = rev: ref: repo: pkgs.vimUtils.buildVimPlugin {
@@ -15,7 +15,7 @@ in
 {
   programs.neovim = {
     enable = true;
-    package = pkgs-unstable.neovim-unwrapped;
+    package = specialArgs.pkgs-unstable.neovim-unwrapped;
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
@@ -241,7 +241,7 @@ in
     let
       parsers = pkgs.symlinkJoin {
         name = "treesitter-parsers";
-        paths = (pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
+        paths = (specialArgs.pkgs-unstable.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
           arduino
           bash
           bibtex
