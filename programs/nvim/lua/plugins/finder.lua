@@ -35,6 +35,13 @@ local config = function()
         hidden = true,
         follow = true,
       },
+      buffers = {
+        mappings = {
+          i = {
+            ["<c-d>"] = actions.delete_buffer + actions.move_to_top,
+          },
+        },
+      },
     },
     extensions = {
       file_browser = {
@@ -76,9 +83,11 @@ local init = function()
     f = {
       f = { "<cmd>Telescope find_files<cr>", "Find file" },
       p = {
-        "<cmd>lua require('telescope.builtin').git_files{ cwd = "
-        .. (vim.g.NIX and "'~/Sandbox/nix'" or "'~/.config/nvim/'")
-        .. " }<CR>",
+        function()
+          local dir = vim.g.NIX and "~/Sandbox/nix" or "~/.config/nvim"
+          vim.cmd({ cmd = "NeovimProjectLoad", args = { dir } })
+          require("telescope.builtin").git_files({ cwd = dir })
+        end,
         "Find config file",
       },
       o = { "<cmd>Telescope oldfiles<cr>", "Open recent file" },
