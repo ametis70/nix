@@ -55,19 +55,19 @@ in
       html-tidy
     ];
 
-    plugins = with pkgs.vimPlugins; [
+    plugins = with specialArgs.pkgs-unstable.vimPlugins; [
       lazy-nvim
     ];
 
     extraLuaConfig = let
-      luaRocks = with pkgs.luajitPackages; [
+      luaRocks = with specialArgs.pkgs-unstable.luajitPackages; [
         luautf8
         lua-curl
         mimetypes
         xml2lua
       ];
 
-      plugins = with pkgs.vimPlugins; [
+      plugins = with specialArgs.pkgs-unstable.vimPlugins; [
         # Deps
         plenary-nvim
         nui-nvim

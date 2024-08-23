@@ -1,6 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    lazy = false,
     build = ":TSUpdate",
     config = function()
       local configs = require("nvim-treesitter.configs")
@@ -98,9 +99,6 @@ return {
             scope_incremental = "grc",
             node_decremental = "grm",
           },
-        },
-        autotag = {
-          enable = true,
         },
       })
     end,

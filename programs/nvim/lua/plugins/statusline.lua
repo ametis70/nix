@@ -35,7 +35,15 @@ return {
             path = 1,
           },
         },
-        lualine_x = { "location", "progress" },
+        lualine_x = {
+          {
+            require("noice").api.statusline.mode.get,
+            cond = require("noice").api.statusline.mode.has,
+            color = { fg = "#ff9e64" },
+          },
+          "location",
+          "progress",
+        },
         lualine_y = { "diagnostics", "filetype" },
         lualine_z = {},
       },

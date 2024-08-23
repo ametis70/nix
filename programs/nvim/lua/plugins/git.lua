@@ -34,7 +34,7 @@ return {
       local wk_toggle_git_blame = { "<cmd>GitBlameToggle<CR>", "Toggle git blame" }
 
       wk.register({
-        t = {
+        T = {
           b = wk_toggle_git_blame,
         },
         g = {

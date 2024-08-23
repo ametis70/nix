@@ -9,7 +9,7 @@ local setup_indent_blankline = function()
   local wk = require("which-key")
 
   wk.register({
-    t = {
+    T = {
       i = {
         function()
           if vim.opt.list then
@@ -27,12 +27,47 @@ local setup_indent_blankline = function()
 end
 
 local setup_zen_mode = function()
-  require("zen-mode").setup()
+  require("zen-mode").setup({
+    window = {
+      backdrop = 1,
+      width = 120,
+      height = 1,
+      options = {
+        signcolumn = "no",
+        number = false,
+        relativenumber = false,
+        -- cursorline = false,
+        -- cursorcolumn = false,
+        foldcolumn = "0",
+        list = false,
+      },
+    },
+    plugins = {
+      options = {
+        enabled = true,
+        ruler = true,
+        showcmd = true,
+        laststatus = 0,
+      },
+      twilight = { enabled = true },
+      gitsigns = { enabled = true },
+      neovide = {
+        enabled = true,
+        scale = 1.2,
+      },
+      kitty = {
+        enabled = true,
+        font = "+4",
+      },
+    },
+  })
+end
 
+local init_zen_mode = function()
   local wk = require("which-key")
 
   wk.register({
-    t = {
+    T = {
       z = { "<cmd>ZenMode<CR>", "Zen mode" },
     },
   }, {
@@ -49,16 +84,41 @@ local setup_twilight = function()
       "table",
       "if_statement",
     },
+    context = 1,
   })
+end
 
+local init_twilight = function()
   local wk = require("which-key")
 
   wk.register({
-    t = {
+    T = {
       t = { "<cmd>Twilight<CR>", "Twilight" },
     },
   }, {
     prefix = "<leader>",
+  })
+end
+
+local config_noice = function()
+  local noice = require("noice")
+  noice.setup({
+    lsp = {
+      override = {
+        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+        ["vim.lsp.util.stylize_markdown"] = true,
+        ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+      },
+    },
+    presets = {
+      lsp_doc_border = true,
+      command_palette = true,
+      bottom_search = true,
+    },
+    popupmenu = {
+      enabled = true,
+      backend = "cmp",
+    },
   })
 end
 
@@ -70,28 +130,25 @@ return {
     init = setup_indent_blankline,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
-  { "folke/zen-mode.nvim",         init = setup_zen_mode },
-  { "folke/twilight.nvim",         init = setup_twilight },
+  {
+    "folke/zen-mode.nvim",
+    cmd = "ZenMode",
+    init = init_zen_mode,
+    config = setup_zen_mode,
+  },
+  {
+    "folke/twilight.nvim",
+    cmd = "Twilight",
+    init = init_twilight,
+    config = setup_twilight,
+  },
   { "folke/todo-comments.nvim",    event = "BufRead",        requires = "nvim-lua/plenary.nvim", config = true },
   { "nvim-tree/nvim-web-devicons", opts = { default = true } },
   { "norcalli/nvim-colorizer.lua", event = "BufRead" },
   {
     "folke/noice.nvim",
     event = "VeryLazy",
-    opts = {
-      lsp = {
-        override = {
-          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-          ["vim.lsp.util.stylize_markdown"] = true,
-          ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-        },
-      },
-      presets = {
-        lsp_doc_border = true,
-        command_palette = true,
-        bottom_search = true,
-      },
-    },
+    config = config_noice,
     dependencies = {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
