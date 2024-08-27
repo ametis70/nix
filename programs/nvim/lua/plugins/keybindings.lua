@@ -43,13 +43,13 @@ local config = function()
           function()
             vim.fn.setreg("+", vim.fn.expand("%:p"))
           end,
-          "Yank absolute path"
+          "Yank absolute path",
         },
         r = {
           function()
             vim.fn.setreg("+", vim.fn.expand("%"))
           end,
-          "Yank relative path"
+          "Yank relative path",
         },
       },
     },
@@ -57,6 +57,20 @@ local config = function()
       name = "Buffer",
       d = { "<cmd>bdel<CR>", "Delete buffer" },
       s = { "<cmd>write<CR>", "Save buffer" },
+      D = {
+        function()
+          local current_buf = vim.fn.bufnr()
+          local current_win = vim.fn.win_getid()
+          local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+          for _, buf in ipairs(bufs) do
+            if buf.bufnr ~= current_buf then
+              vim.cmd("silent! bdelete " .. buf.bufnr)
+            end
+          end
+          vim.fn.win_gotoid(current_win)
+        end,
+        "Delete all buffers except this",
+      },
     },
     c = {
       name = "Code",
