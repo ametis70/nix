@@ -18,7 +18,8 @@
       packages = {
         "x86_64-linux" = {
           pkgs = (nixpkgs.legacyPackages."x86_64-linux".extend nixgl.overlay);
-          pkgs-unstable = (nixpkgs-unstable.legacyPackages."x86_64-linux".extend nixgl.overlay);
+          pkgs-unstable = (nixpkgs-unstable.legacyPackages."x86_64-linux".extend
+            nixgl.overlay);
         };
         "aarch64-darwin" = {
           pkgs = nixpkgs.legacyPackages."aarch64-darwin";
@@ -45,6 +46,12 @@
           username = "ametis70";
           system = "x86_64-linux";
         };
+        hypervisor = {
+          id = "hypervisor";
+          hostname = "ametis70-hypervisor-nixos";
+          username = "ametis70";
+          system = "x86_64-linux";
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -53,17 +60,32 @@
         home-manager.lib.homeManagerConfiguration {
           pkgs = packages.${host.system}.pkgs;
           modules = [ ./hosts/${host.id}/home.nix ];
-          extraSpecialArgs = { host = host; pkgs-unstable = packages.${host.system}.pkgs-unstable; };
+          extraSpecialArgs = {
+            host = host;
+            pkgs-unstable = packages.${host.system}.pkgs-unstable;
+          };
         };
-    in
-    {
+
+      configureNixOs = host:
+        nixpkgs.lib.nixosSystem {
+          system = host.system;
+          modules = [ ./hosts/${host.id}/configuration.nix ];
+          specialArgs = { host = host; };
+        };
+
+    in {
       homeConfigurations = with hosts; {
         "${getHost work}" = configureHomeManager work;
         "${getHost deck}" = configureHomeManager deck;
         "${getHost windows10}" = configureHomeManager windows10;
       };
 
+      nixosConfigurations = with hosts; {
+        "${hypervisor.hostname}" = configureNixOs hypervisor;
+      };
+
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
-      formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixpkgs-fmt;
+      formatter.aarch64-darwin =
+        nixpkgs.legacyPackages.aarch64-darwin.nixpkgs-fmt;
     };
 }
