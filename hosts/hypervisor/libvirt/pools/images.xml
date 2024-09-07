@@ -1,0 +1,12 @@
+<pool type='dir'>
+  <name>images</name>
+  <uuid>1fe2c8a1-0df3-4da7-9147-51921badf795</uuid>
+  <capacity unit='bytes'>0</capacity>
+  <allocation unit='bytes'>0</allocation>
+  <available unit='bytes'>0</available>
+  <source>
+  </source>
+  <target>
+    <path>/var/lib/libvirt/images</path>
+  </target>
+</pool>

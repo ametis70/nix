@@ -3,6 +3,18 @@
 {
   imports = [ ./hardware-configuration.nix ];
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  users.users.ametis70 = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "libvirtd" ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAvjO5PcjSiiAnAV3oRFDNgzGiV7HdlkocRw6uJCs0/w"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDA07n+GRqAPcZa8EGh4LvF57RjUOHXdp+942VJrjWqk"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGTMwKGTiKKaOXosdBnAlCl7MC6CT8JAI1nZsB/1VLKV"
+    ];
+  };
+
   boot.loader = {
     efi.canTouchEfiVariables = true;
     grub = {
@@ -14,7 +26,12 @@
     };
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  systemd.targets = {
+    sleep.enable = false;
+    suspend.enable = false;
+    hibernate.enable = false;
+    hybrid-sleep.enable = false;
+  };
 
   networking = {
     hostName = specialArgs.host.hostname;
@@ -44,24 +61,20 @@
     keyMap = "us";
   };
 
-  services.pipewire = {
+  programs.neovim = {
     enable = true;
-    pulse.enable = true;
+    viAlias = true;
+    vimAlias = true;
   };
 
-  users.users.ametis70 = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAvjO5PcjSiiAnAV3oRFDNgzGiV7HdlkocRw6uJCs0/w"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDA07n+GRqAPcZa8EGh4LvF57RjUOHXdp+942VJrjWqk"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGTMwKGTiKKaOXosdBnAlCl7MC6CT8JAI1nZsB/1VLKV"
-    ];
-  };
+  environment.systemPackages = with pkgs; [
+    curl
+    git
+    lazygit
+    tmux
+    ungoogled-chromium
+  ];
 
-  environment.systemPackages = with pkgs; [ neovim curl git ];
-
-  programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
@@ -74,6 +87,71 @@
       PermitRootLogin = "no";
       KbdInteractiveAuthentication = false;
     };
+  };
+
+  services.cockpit.enable = true;
+
+  # Virtualisation
+
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      ovmf.enable = true;
+      ovmf.packages = [ pkgs.OVMFFull.fd ];
+    };
+  };
+
+  virtualisation.libvirt = {
+    enable = true;
+    swtpm.enable = false;
+    connections."qemu:///system" = {
+      domains = [
+        {
+          definition = ./libvirt/domains/windows10.xml;
+          active = false;
+        }
+        {
+          definition = ./libvirt/domains/archlinux.xml;
+          active = false;
+        }
+      ];
+      pools = [
+        {
+          definition = ./libvirt/pools/images.xml;
+          active = true;
+        }
+        {
+          definition = ./libvirt/pools/nvram.xml;
+          active = true;
+        }
+      ];
+    };
+  };
+
+  programs.virt-manager.enable = true;
+
+  environment.etc = {
+    "ovmf/edk2-x86_64-secure-code.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package
+        + "/share/qemu/edk2-x86_64-secure-code.fd";
+    };
+
+    "ovmf/edk2-i386-vars.fd" = {
+      source = config.virtualisation.libvirtd.qemu.package
+        + "/share/qemu/edk2-i386-vars.fd";
+    };
+  };
+
+  # GUI
+  services.xserver.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
+  services.displayManager.defaultSession = "plasma";
+  services.desktopManager.plasma6.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
   };
 
   system.copySystemConfiguration = false;

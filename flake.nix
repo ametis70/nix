@@ -10,10 +10,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    NixVirt = {
+      url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixgl.url = "github:nix-community/nixGL";
   };
 
-  outputs = { nixpkgs, nixpkgs-unstable, home-manager, nixgl, ... }:
+  outputs =
+    { nixpkgs, nixpkgs-unstable, home-manager, nixgl, NixVirt, ... }@inputs:
     let
       packages = {
         "x86_64-linux" = {
@@ -69,8 +75,14 @@
       configureNixOs = host:
         nixpkgs.lib.nixosSystem {
           system = host.system;
-          modules = [ ./hosts/${host.id}/configuration.nix ];
-          specialArgs = { host = host; };
+          modules = [
+            NixVirt.nixosModules.default
+            ./hosts/${host.id}/configuration.nix
+          ];
+          specialArgs = {
+            inherit inputs;
+            host = host;
+          };
         };
 
     in {

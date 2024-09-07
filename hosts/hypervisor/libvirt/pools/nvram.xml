@@ -1,0 +1,12 @@
+<pool type='dir'>
+  <name>nvram</name>
+  <uuid>8bafbbab-d13d-4f19-b6c8-137268dd6655</uuid>
+  <capacity unit='bytes'>0</capacity>
+  <allocation unit='bytes'>0</allocation>
+  <available unit='bytes'>0</available>
+  <source>
+  </source>
+  <target>
+    <path>/var/lib/libvirt/qemu/nvram</path>
+  </target>
+</pool>
