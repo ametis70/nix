@@ -48,7 +48,7 @@
         };
         windows10 = {
           id = "windows10";
-          hostname = "ianmethyst-vm-windows";
+          hostname = "ametis70-vm-windows";
           username = "ametis70";
           system = "x86_64-linux";
         };
@@ -77,23 +77,29 @@
           system = host.system;
           modules = [
             NixVirt.nixosModules.default
+            home-manager.nixosModules.home-manager {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${host.username} = import ./hosts/${host.id}/home.nix;
+              home-manager.extraSpecialArgs = {
+                host = host;
+                pkgs-unstable = packages.${host.system}.pkgs-unstable;
+              };
+            }
             ./hosts/${host.id}/configuration.nix
           ];
-          specialArgs = {
-            inherit inputs;
-            host = host;
-          };
+          specialArgs = { host = host; };
         };
 
     in {
+      nixosConfigurations = with hosts; {
+        "${hypervisor.hostname}" = configureNixOs hypervisor;
+      };
+
       homeConfigurations = with hosts; {
         "${getHost work}" = configureHomeManager work;
         "${getHost deck}" = configureHomeManager deck;
         "${getHost windows10}" = configureHomeManager windows10;
-      };
-
-      nixosConfigurations = with hosts; {
-        "${hypervisor.hostname}" = configureNixOs hypervisor;
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;

@@ -5,7 +5,7 @@
 
   boot.initrd.availableKernelModules =
     [ "nvme" "ahci" "xhci_pci" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "vfio_pci" "vfio" "vfio_iommu_type1" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
@@ -17,6 +17,7 @@
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/5187-7E28";
     fsType = "vfat";
+    options = [ "umask=0077" ];
   };
 
   swapDevices = [ ];
