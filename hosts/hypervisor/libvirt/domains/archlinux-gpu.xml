@@ -1,6 +1,6 @@
 <domain type='kvm'>
-  <name>archlinux</name>
-  <uuid>0b63e87d-fec4-4014-94e5-cb19a23cf117</uuid>
+  <name>archlinux-gpu</name>
+  <uuid>e0cb4d76-cf9f-47bf-b085-1823fab7c873</uuid>
   <metadata xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
     <libosinfo:libosinfo>
       <libosinfo:os id="http://archlinux.org/archlinux/rolling"/>
@@ -20,7 +20,9 @@
     <vmport state='off'/>
     <smm state='on'/>
   </features>
-  <cpu mode='host-passthrough' check='none' migratable='on'/>
+  <cpu mode='host-passthrough' check='none' migratable='on'>
+    <topology sockets='2' dies='1' clusters='1' cores='2' threads='1'/>
+  </cpu>
   <clock offset='utc'>
     <timer name='rtc' tickpolicy='catchup'/>
     <timer name='pit' tickpolicy='delay'/>
@@ -135,10 +137,9 @@
       <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </controller>
     <interface type='bridge'>
-      <mac address='52:54:00:d6:2c:03'/>
+      <mac address='52:54:00:a3:8a:94'/>
       <source bridge='br0'/>
       <model type='virtio'/>
-      <boot order='2'/>
       <address type='pci' domain='0x0000' bus='0x07' slot='0x00' function='0x0'/>
     </interface>
     <serial type='pty'>
@@ -153,29 +154,19 @@
       <target type='virtio' name='org.qemu.guest_agent.0'/>
       <address type='virtio-serial' controller='0' bus='0' port='1'/>
     </channel>
-    <channel type='spicevmc'>
-      <target type='virtio' name='com.redhat.spice.0'/>
-      <address type='virtio-serial' controller='0' bus='0' port='2'/>
-    </channel>
     <input type='tablet' bus='usb'>
       <address type='usb' bus='0' port='1'/>
     </input>
     <input type='mouse' bus='ps2'/>
     <input type='keyboard' bus='ps2'/>
-    <graphics type='vnc' port='-1' autoport='yes' listen='0.0.0.0'>
-      <listen type='address' address='0.0.0.0'/>
-    </graphics>
-    <graphics type='spice' autoport='yes' listen='0.0.0.0'>
-      <listen type='address' address='0.0.0.0'/>
+    <graphics type='spice' autoport='yes'>
+      <listen type='address'/>
       <image compression='off'/>
+      <gl enable='no'/>
     </graphics>
-    <sound model='ich9'>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x1b' function='0x0'/>
-    </sound>
-    <audio id='1' type='spice'/>
+    <audio id='1' type='none'/>
     <video>
-      <model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1' primary='yes'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x0'/>
+      <model type='none'/>
     </video>
     <hostdev mode='subsystem' type='pci' managed='yes'>
       <source>
@@ -183,12 +174,30 @@
       </source>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </hostdev>
-    <redirdev bus='usb' type='spicevmc'>
-      <address type='usb' bus='0' port='2'/>
-    </redirdev>
-    <redirdev bus='usb' type='spicevmc'>
-      <address type='usb' bus='0' port='3'/>
-    </redirdev>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <source>
+        <address domain='0x0000' bus='0x23' slot='0x00' function='0x0'/>
+      </source>
+      <address type='pci' domain='0x0000' bus='0x09' slot='0x00' function='0x0'/>
+    </hostdev>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <source>
+        <address domain='0x0000' bus='0x23' slot='0x00' function='0x1'/>
+      </source>
+      <address type='pci' domain='0x0000' bus='0x0a' slot='0x00' function='0x0'/>
+    </hostdev>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <source>
+        <address domain='0x0000' bus='0x2a' slot='0x00' function='0x1'/>
+      </source>
+      <address type='pci' domain='0x0000' bus='0x0b' slot='0x00' function='0x0'/>
+    </hostdev>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <source>
+        <address domain='0x0000' bus='0x2a' slot='0x00' function='0x3'/>
+      </source>
+      <address type='pci' domain='0x0000' bus='0x0c' slot='0x00' function='0x0'/>
+    </hostdev>
     <watchdog model='itco' action='reset'/>
     <memballoon model='virtio'>
       <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
