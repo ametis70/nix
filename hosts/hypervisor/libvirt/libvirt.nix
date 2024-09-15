@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  boot.kernelParams = lib.mkDefault [
+  boot.kernelParams = [
     "amd_iommu=on"
     "iommu=pt"
     "kvm.ignore_msrs=1"
