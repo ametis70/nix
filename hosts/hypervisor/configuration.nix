@@ -102,6 +102,58 @@
 
   services.cockpit.enable = true;
 
+  services.grafana = {
+    enable = true;
+    settings = {
+      server = {
+        http_addr = "0.0.0.0";
+        http_port = 3000;
+      };
+    };
+    provision.datasources.settings.datasources = [
+      {
+        name = "prometheus";
+        type = "prometheus";
+        url = "http://localhost:${toString config.services.prometheus.port}";
+      }
+    ];
+  };
 
+  services.prometheus = {
+    enable = true;
+    globalConfig.scrape_interval = "15s";
+    port = 3001;
 
+    exporters.node = {
+      enable = true;
+      port = 9000;
+    };
+
+    scrapeConfigs = [
+      {
+        job_name = "node";
+        static_configs = [
+          {
+            targets = [ "localhost:${toString config.services.prometheus.exporters.node.port}" ];
+          }
+        ];
+      }
+      {
+        job_name = "windows";
+        static_configs = [
+          {
+            targets = [ "192.168.10.92:9182" ];
+          }
+        ];
+      }
+      {
+        job_name = "nvidia_gpu";
+        static_configs = [
+          {
+            targets = [ "192.168.10.92:9835" ];
+          }
+        ];
+      }
+    ];
+  };
 }
