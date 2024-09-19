@@ -1,5 +1,9 @@
 { config, lib, pkgs, ... }:
 
+let
+  cockpit-machines = pkgs.callPackage ../../../packages/cockpit-machines/default.nix { inherit pkgs; };
+  libvirt-dbus = pkgs.callPackage ../../../packages/libvirt-dbus/default.nix { inherit pkgs; };
+in
 {
   boot.kernelParams = [
     "amd_iommu=on"
@@ -9,6 +13,11 @@
     "vfio-pci.ids=10de:2208,10de:1aef"
     "vfio-pci.disable-vga=1"
     "video=efifb:off"
+  ];
+
+  environment.systemPackages = [
+    cockpit-machines
+    libvirt-dbus
   ];
 
   virtualisation.libvirtd = {
