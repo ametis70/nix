@@ -82,6 +82,11 @@
     usbutils
     likwid
     tree
+    dig
+    iperf
+    tcpdump
+    nmap
+    mtr
   ];
 
   programs.tmux.enable = true;
