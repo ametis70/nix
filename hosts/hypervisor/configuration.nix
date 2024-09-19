@@ -41,7 +41,7 @@
     firewall.enable = false;
     networkmanager.enable = false;
     useDHCP = false;
-    enableIPv6 = false;
+    enableIPv6 = true;
     bridges = { "br0" = { interfaces = [ "enp39s0" ]; }; };
     interfaces = {
       "br0" = {
@@ -52,7 +52,7 @@
       };
     };
     defaultGateway = "192.168.10.1";
-    nameservers = [ "192.168.10.1" ];
+    nameservers = [ "192.168.10.1" "1.1.1.1" ];
   };
 
   time.timeZone = "America/Argentina/Buenos_Aires";
