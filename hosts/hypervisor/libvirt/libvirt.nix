@@ -10,14 +10,15 @@ in
     "iommu=pt"
     "kvm.ignore_msrs=1"
     "kvm_amd.nested=1"
-    "vfio-pci.ids=10de:2208,10de:1aef"
+    "vfio-pci.ids=10de:2208,10de:1aef,1002:699f,1002:aae0"
     "vfio-pci.disable-vga=1"
     "video=efifb:off"
   ];
 
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
     cockpit-machines
     libvirt-dbus
+    virt-viewer
   ];
 
   virtualisation.libvirtd = {
@@ -39,6 +40,14 @@ in
         }
         {
           definition = ./domains/windows10.xml;
+          active = false;
+        }
+        {
+          definition = ./domains/nixos-gpu.xml;
+          active = true;
+        }
+        {
+          definition = ./domains/nixos.xml;
           active = false;
         }
         {
