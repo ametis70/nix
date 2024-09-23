@@ -15,6 +15,8 @@ in
     "video=efifb:off"
   ];
 
+  users.users.ametis70.extraGroups = [ "libvirtd" ];
+
   environment.systemPackages = with pkgs; [
     cockpit-machines
     libvirt-dbus
