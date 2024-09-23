@@ -3,10 +3,9 @@
 let
   nixgl = import ../../utils/nixgl.nix { inherit pkgs; inherit lib; };
 in {
-  imports = [ ../../systems/linux.nix ];
+  imports = [ ../../modules/home/linux.nix ];
 
   home.packages = with pkgs; [
     (nixgl.wrapMesa kitty)
   ];
-
 }

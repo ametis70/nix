@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  imports = [ ../../systems/linux.nix ];
+  imports = [ ../../modules/home/linux.nix ];
 
   services = {
     gpg-agent = {

@@ -1,5 +1,5 @@
 { ... }:
 
 {
-  imports = [ ../../systems/macos.nix ];
+  imports = [ ../../modules/home/macos.nix ];
 }

@@ -1,5 +1,5 @@
 { ... }:
 
 {
-  imports = [ ../../systems/nixos.nix ];
+  imports = [ ../../modules/home/nixos.nix ];
 }

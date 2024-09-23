@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ../programs/nvim/nvim.nix
-    ../programs/zsh/zsh.nix
+    ./nvim/nvim.nix
+    ./zsh/zsh.nix
   ];
 
   home.stateVersion = "24.05";
@@ -12,19 +12,13 @@
   home.username = specialArgs.host.username;
 
   home.packages = with pkgs; [
-    timewarrior
-    taskwarrior
-    taskwarrior-tui
     pass
     fd
     curl
     jq
     asdf-vm
     ranger
-    (nerdfonts.override { fonts = [ "Iosevka" ]; })
   ];
-
-  fonts.fontconfig.enable = true;
 
   programs = {
     fzf = {

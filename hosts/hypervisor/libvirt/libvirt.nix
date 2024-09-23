@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 
 let
-  cockpit-machines = pkgs.callPackage ../../../packages/cockpit-machines/default.nix { inherit pkgs; };
-  libvirt-dbus = pkgs.callPackage ../../../packages/libvirt-dbus/default.nix { inherit pkgs; };
+  cockpit-machines = pkgs.callPackage ../../../modules/nixos/packages/cockpit-machines/default.nix { inherit pkgs; };
+  libvirt-dbus = pkgs.callPackage ../../../modules/nixos/packages/libvirt-dbus/default.nix { inherit pkgs; };
 in
 {
   boot.kernelParams = [
