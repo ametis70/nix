@@ -19,7 +19,10 @@
     <apic/>
     <vmport state='off'/>
   </features>
-  <cpu mode='host-passthrough' check='none' migratable='on'/>
+  <cpu mode='host-passthrough' check='none' migratable='on'>
+    <cache mode='passthrough'/>
+    <feature policy="require" name="topoext"/>
+  </cpu>
   <clock offset='utc'>
     <timer name='rtc' tickpolicy='catchup'/>
     <timer name='pit' tickpolicy='delay'/>
