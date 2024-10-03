@@ -58,6 +58,12 @@
           username = "ametis70";
           system = "x86_64-linux";
         };
+        nixos-vm = {
+          id = "nixos-vm";
+          hostname = "ametis70-vm-nixos";
+          username = "ametis70";
+          system = "x86_64-linux";
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -94,12 +100,14 @@
     in {
       nixosConfigurations = with hosts; {
         "${hypervisor.hostname}" = configureNixOs hypervisor;
+        "${nixos-vm.hostname}" = configureNixOs nixos-vm;
       };
 
       homeConfigurations = with hosts; {
         "${getHost work}" = configureHomeManager work;
         "${getHost deck}" = configureHomeManager deck;
         "${getHost windows10}" = configureHomeManager windows10;
+        "${getHost nixos-vm}" = configureHomeManager nixos-vm;
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
