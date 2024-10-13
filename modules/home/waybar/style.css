@@ -1,0 +1,67 @@
+@define-color bg #24283b;
+@define-color fg #c0caf5;
+@define-color alt-fg-1 #414868;
+@define-color alt-fg-2 #737aa2;
+
+* {
+  border: none;
+  border-radius: 0px;
+  font-family: 'Symbols Nerd Font', 'Iosevka';
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.modules-left {
+  padding-left: 16px;
+}
+
+.modules-right {
+  padding-right: 16px;
+}
+
+window#waybar {
+  background: rgba(0, 0, 0, 0);
+  color: @fg;
+}
+
+#workspaces {
+  border: 0;
+  padding-right: 24px;
+}
+
+#workspaces button {
+  color: @fg;
+  padding: 0px 5px;
+}
+
+#workspaces button.empty {
+  color: @alt-fg-1;
+}
+
+#workspaces button:hover {
+  border: 0;
+  box-shadow: none;
+  text-shadow: none;
+  background: none;
+}
+
+#tray {
+  padding: 8px;
+}
+
+#clock {
+  padding: 0 8px;
+}
+
+#cpu, #memory, #disk {
+  color: @alt-fg-2;
+  padding: 0 8px;
+}
+
+tooltip {
+  background: @bg;
+}
+tooltip label {
+  color: @fg;
+  font-weight: bold;
+}

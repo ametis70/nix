@@ -1,0 +1,100 @@
+{
+    "position": "top",
+    "layer": "top",
+    "height": 36,
+    "margin-top": 8,
+    "margin-bottom": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "modules-left": ["hyprland/workspaces", "cpu", "memory", "disk"],
+    "modules-center": ["clock#1", "clock#2" ],
+    "modules-right": ["tray" ],
+
+    // Modules configuration
+
+   "clock#1": {
+     "format": "{:%A, %B %Od}",
+     "timezone": "America/Argentina/Buenos_Aires",
+     "tooltip-format": "<tt><small>{calendar}</small></tt>",
+     "calendar": {
+       "mode": "month",
+       "mode-mon-col": 3,
+       "weeks-pos": "right",
+       "on-scroll": 1,
+       "format": {
+         "months": "<span color='#737aa2'><b>{}</b></span>",
+         "days": "<b>{}</b>",
+         "weeks": "<span color='#bb9af7'><b>W{}</b></span>",
+         "weekdays": "<span color='#ffc777'><b>{}</b></span>",
+         "today": "<span color='#c3e88d'><b><u>{}</u></b></span>"
+       }
+     },
+     "actions": {
+       "on-click": "shift_up",
+       "on-click-right": "shift_down",
+       "on-click-middle": "mode"
+     }
+   },
+
+  "clock#2": {
+    "format": "{:%R %p}",
+    "timezone": "America/Argentina/Buenos_Aires",
+    "tooltip-format": "{:%F at %T in %Z (UTC%Ez)}"
+  },
+
+  "hyprland/workspaces": {
+    "active-only": false,
+    "all-outputs": true,
+    "disable-scroll": false,
+    "on-scroll-up": "hyprctl dispatch workspace -1",
+    "on-scroll-down": "hyprctl dispatch workspace +1",
+		"format": "{icon}",
+		"on-click": "activate",
+    "persistent-workspaces": {
+      "*": 10,
+    },
+		"format-icons": {
+		  "urgent": "",
+		  "active": "",
+		  "default": "󰧞",
+    "sort-by-number": true
+    },
+  },
+
+  "memory": {
+    "format": "RAM {}%",
+    "format-alt": "RAM {used}/{total} GiB",
+    "interval": 5
+  },
+
+  "cpu": {
+    "format": "CPU {usage}%",
+    "format-alt": "CPU {avg_frequency} GHz",
+    "interval": 5
+  },
+
+  "disk": {
+    "format": "SSD {percentage_used}%",
+    "format-alt": "SSD {used}/{total} GiB",
+    "interval": 5,
+    "path": "/"
+  },
+
+	"tray": {
+		"icon-size": 20,
+		"spacing": 10,
+	},
+
+	"pulseaudio": {
+		"format": "{icon} {volume}%",
+    "format-muted": "󰝟",
+		"format-icons": {
+			"default": ["󰕿", "󰖀", "󰕾"]
+		},
+		"on-click": "bash ~/.scripts/volume mute",
+    "on-scroll-up": "bash ~/.scripts/volume up",
+    "on-scroll-down": "bash ~/.scripts/volume down",
+    "scroll-step": 5,
+		"on-click-right": "pavucontrol"
+  },
+}
