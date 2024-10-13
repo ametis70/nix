@@ -1,10 +1,18 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports = [
     ../../modules/home/nixos.nix
     ../../modules/home/discord/discord.nix
     ../../modules/home/kitty/kitty.nix
+    ../../modules/home/hyprland/hyprland.nix
+    ../../modules/home/waybar/waybar.nix
+
+  ];
+
+  home.packages = with pkgs; [
+    ungoogled-chromium
+    telegram-desktop
   ];
 
   home.pointerCursor = {
@@ -30,5 +38,9 @@
         gtk-application-prefer-dark-theme=1
       '';
     };
+  };
+
+  wayland.windowManager.hyprland.settings = {
+    monitor = "HDMI-A-1, 2560x1440@143.98, 0x0, 1";
   };
 }

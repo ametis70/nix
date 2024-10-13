@@ -10,6 +10,10 @@
     ./hardware-configuration.nix
   ];
 
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "discord"
+  ];
+
   networking = {
     hostName = specialArgs.host.hostname;
     networkmanager.enable = true;
@@ -21,28 +25,9 @@
     pulse.enable = true;
   };
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "discord"
-  ];
-
   environment.systemPackages = with pkgs; [
-    dunst
     xdg-desktop-portal-hyprland
     kdePackages.polkit-kde-agent-1
-
-    wofi
-    waybar
-    pavucontrol
-    wl-clipboard
-    ungoogled-chromium
-    telegram-desktop
-    discord
-    pasystray
-    networkmanagerapplet
-    hyprpaper
-    slurp
-    grim
-    qt6ct
   ];
 
   fonts.packages = with pkgs; [

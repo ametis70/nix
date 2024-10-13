@@ -86,6 +86,7 @@
             home-manager.nixosModules.home-manager {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
               home-manager.users.${host.username} = import ./hosts/${host.id}/home.nix;
               home-manager.extraSpecialArgs = {
                 host = host;
@@ -107,7 +108,6 @@
         "${getHost work}" = configureHomeManager work;
         "${getHost deck}" = configureHomeManager deck;
         "${getHost windows10}" = configureHomeManager windows10;
-        "${getHost nixos-vm}" = configureHomeManager nixos-vm;
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
