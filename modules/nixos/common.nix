@@ -48,5 +48,9 @@
     tree
     dig
     mtr
+    killall
+
+    usbutils
+    pciutils
   ];
 }

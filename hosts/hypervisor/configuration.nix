@@ -32,8 +32,6 @@
 
   environment.systemPackages = with pkgs; [
     dmidecode
-    pciutils
-    usbutils
     likwid
     iperf
     tcpdump
