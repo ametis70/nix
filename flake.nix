@@ -19,13 +19,19 @@
   };
 
   outputs =
-    { nixpkgs, nixpkgs-unstable, home-manager, nixgl, NixVirt, ... }@inputs:
+    {
+      nixpkgs,
+      nixpkgs-unstable,
+      home-manager,
+      nixgl,
+      NixVirt,
+      ...
+    }@inputs:
     let
       packages = {
         "x86_64-linux" = {
           pkgs = (nixpkgs.legacyPackages."x86_64-linux".extend nixgl.overlay);
-          pkgs-unstable = (nixpkgs-unstable.legacyPackages."x86_64-linux".extend
-            nixgl.overlay);
+          pkgs-unstable = (nixpkgs-unstable.legacyPackages."x86_64-linux".extend nixgl.overlay);
         };
         "aarch64-darwin" = {
           pkgs = nixpkgs.legacyPackages."aarch64-darwin";
@@ -68,7 +74,8 @@
 
       getHost = host: with host; "${username}@${hostname}";
 
-      configureHomeManager = host:
+      configureHomeManager =
+        host:
         home-manager.lib.homeManagerConfiguration {
           pkgs = packages.${host.system}.pkgs;
           modules = [ ./hosts/${host.id}/home.nix ];
@@ -78,12 +85,14 @@
           };
         };
 
-      configureNixOs = host:
+      configureNixOs =
+        host:
         nixpkgs.lib.nixosSystem {
           system = host.system;
           modules = [
             NixVirt.nixosModules.default
-            home-manager.nixosModules.home-manager {
+            home-manager.nixosModules.home-manager
+            {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
@@ -95,10 +104,15 @@
             }
             ./hosts/${host.id}/configuration.nix
           ];
-          specialArgs = { host = host; };
+          specialArgs = {
+            host = host;
+          };
         };
 
-    in {
+    in
+    {
+      nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+
       nixosConfigurations = with hosts; {
         "${hypervisor.hostname}" = configureNixOs hypervisor;
         "${nixos-vm.hostname}" = configureNixOs nixos-vm;
@@ -110,8 +124,7 @@
         "${getHost windows10}" = configureHomeManager windows10;
       };
 
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
-      formatter.aarch64-darwin =
-        nixpkgs.legacyPackages.aarch64-darwin.nixpkgs-fmt;
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+      formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-rfc-style;
     };
 }
