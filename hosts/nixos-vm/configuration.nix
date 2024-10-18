@@ -6,12 +6,14 @@
     ../../modules/nixos/openssh.nix
     ../../modules/nixos/user.nix
     ../../modules/nixos/guest.nix
+    ../../modules/nixos/scanning.nix
 
     ./hardware-configuration.nix
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "discord"
+    "imagescan-plugin-networkscan"
   ];
 
   networking = {
