@@ -8,6 +8,7 @@
     ../../modules/home/hyprland/hyprland.nix
     ../../modules/home/waybar/waybar.nix
     ../../modules/home/wofi/wofi.nix
+    ../../modules/home/design/design.nix
   ];
 
   home.packages = with pkgs; [
