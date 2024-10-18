@@ -6,6 +6,7 @@
     ../../modules/nixos/openssh.nix
     ../../modules/nixos/user.nix
     ../../modules/nixos/guest.nix
+    ../../modules/nixos/printing.nix
     ../../modules/nixos/scanning.nix
 
     ./hardware-configuration.nix
