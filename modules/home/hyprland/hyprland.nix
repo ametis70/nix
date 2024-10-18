@@ -2,9 +2,12 @@
 
 {
 
+imports = [
+  ../wofi/wofi.nix
+];
+
 home.packages = with pkgs; [
     dunst
-    wofi
     networkmanagerapplet
     slurp
     grim
@@ -103,7 +106,7 @@ home.packages = with pkgs; [
       };
       "$mainMod" = "SUPER";
       "$terminal" = "kitty";
-      "$menu" = "wofi --show drun";
+      "$menu" = "wofi --show run";
 
       bind = [
         "$mainMod, return, exec, $terminal"

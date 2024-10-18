@@ -7,7 +7,7 @@
     ../../modules/home/kitty/kitty.nix
     ../../modules/home/hyprland/hyprland.nix
     ../../modules/home/waybar/waybar.nix
-
+    ../../modules/home/wofi/wofi.nix
   ];
 
   home.packages = with pkgs; [
