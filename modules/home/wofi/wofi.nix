@@ -1,17 +1,25 @@
 { pkgs, ... }:
 
 let
-  wrapped = pkgs.writeShellScriptBin "wofi" ''
-    flock --nonblock /tmp/.wofi.lock ${pkgs.wofi}/bin/wofi "$@"
-  '';
+  writeSingleInstanceWrapper =
+    pkg: name:
+    pkgs.writeShellScriptBin "${name}" ''
+      [ $(pgrep -c 'wofi') -eq 1 ] && exec ${pkg}/bin/${name} "$@"
+    '';
 
-  wofi-wrapped = pkgs.symlinkJoin {
-    name = "wofi";
-    paths = [
-      wrapped
-      pkgs.wofi
-    ];
-  };
+  joinSingleInstanceWrapper =
+    pkg: name:
+    pkgs.symlinkJoin {
+      name = name;
+      paths = [
+        (writeSingleInstanceWrapper pkg name)
+        pkg
+      ];
+    };
+
+  wofi-wrapped = (joinSingleInstanceWrapper pkgs.wofi "wofi");
+  wofi-pass-wrapped = (joinSingleInstanceWrapper pkgs.wofi-pass "wofi-pass");
+  wofi-emoji-wrapped = (joinSingleInstanceWrapper pkgs.wofi-emoji "wofi-emoji");
 in
 
 {
@@ -23,14 +31,14 @@ in
       key_expand = "Tab";
       key_backward = "Ctrl-p";
       key_forward = "Ctrl-n";
-      key_pgup="Ctrl-u";
-      key_pgdn="Ctrl-d";
+      key_pgup = "Ctrl-u";
+      key_pgdn = "Ctrl-d";
     };
   };
 
   home.packages = with pkgs; [
-    wofi-pass
-    wofi-emoji
+    wofi-pass-wrapped
+    wofi-emoji-wrapped
     wtype
     wl-clipboard
   ];
