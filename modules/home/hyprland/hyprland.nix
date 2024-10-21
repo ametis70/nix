@@ -107,6 +107,9 @@ home.packages = with pkgs; [
       "$mainMod" = "SUPER";
       "$terminal" = "kitty";
       "$menu" = "wofi --show run";
+      "$emojiPicker" = "wofi-emoji";
+      "$passPicker" = "wofi-pass -s -c";
+
 
       bind = [
         "$mainMod, return, exec, $terminal"
@@ -114,6 +117,8 @@ home.packages = with pkgs; [
         "$mainMod, M, exit,"
         "$mainMod SHIFT, space, togglefloating,"
         "$mainMod, D, exec, $menu"
+        "$mainMod SHIFT, E, exec, $emojiPicker"
+        "$mainMod SHIFT, P, exec, $passPicker"
         "$mainMod, B, pseudo" # dwindle
         "$mainMod, V, togglesplit" # dwindle
         "$mainMod, f, fullscreen" # dwindle

@@ -1,14 +1,10 @@
 { pkgs, ... }:
 
 {
-  imports = [ ../../modules/home/linux.nix ];
+  imports = [
+    ../../modules/home/linux.nix
+    ../../modules/home/gpg-agent/gpg-agent.nix
+  ];
 
-  services = {
-    gpg-agent = {
-      enable = true;
-      enableScDaemon = false;
-      enableZshIntegration = false;
-      pinentryPackage = pkgs.pinentry-curses;
-    };
-  };
+  services.gpg-agent.pinentryPackage = pkgs.pinentry-curses;
 }

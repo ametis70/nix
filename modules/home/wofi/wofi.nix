@@ -27,5 +27,13 @@ in
       key_pgdn="Ctrl-d";
     };
   };
+
+  home.packages = with pkgs; [
+    wofi-pass
+    wofi-emoji
+    wtype
+    wl-clipboard
+  ];
+
   xdg.configFile."wofi/style.css".source = ./style.css;
 }

@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -9,6 +9,7 @@
     ../../modules/home/waybar/waybar.nix
     ../../modules/home/wofi/wofi.nix
     ../../modules/home/design/design.nix
+    ../../modules/home/gpg-agent/gpg-agent.nix
   ];
 
   home.packages = with pkgs; [
