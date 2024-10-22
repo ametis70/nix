@@ -1,4 +1,3 @@
-
 # This is a hacky workaround for the Discord desktop app tray icons being
 # blurry. It adds a script to the top of the app's wrapper script that unpacks
 # `core.asar` (the archive containing the icons), replaces the 24x24 icons with
@@ -19,7 +18,7 @@
 #  Author: InternetUnexplorer
 # License: CC0
 
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
 let
   tray-icons = pkgs.runCommandNoCC "discord-tray-icons" { } ''
@@ -65,7 +64,8 @@ let
     done
   '';
 
-  inject-tray-icon-fix = pkg:
+  inject-tray-icon-fix =
+    pkg:
     pkgs.symlinkJoin {
       inherit (pkg) name;
       paths = [ pkg ];
@@ -74,4 +74,7 @@ let
       '';
     };
 
-in { home.packages = [ (inject-tray-icon-fix pkgs.discord) ]; }
+in
+{
+  home.packages = [ (inject-tray-icon-fix pkgs.discord) ];
+}

@@ -3,12 +3,23 @@
 {
   hardware.sane = {
     enable = true;
-    extraBackends = with pkgs; [ utsushi utsushi-networkscan sane-airscan ];
+    extraBackends = with pkgs; [
+      utsushi
+      utsushi-networkscan
+      sane-airscan
+    ];
   };
 
-  users.users.ametis70.extraGroups = [ "scanner" "lp" ];
+  users.users.ametis70.extraGroups = [
+    "scanner"
+    "lp"
+  ];
 
-  services.udev.packages = with pkgs; [ utsushi utsushi-networkscan sane-airscan ];
+  services.udev.packages = with pkgs; [
+    utsushi
+    utsushi-networkscan
+    sane-airscan
+  ];
 
   services.avahi = {
     enable = true;

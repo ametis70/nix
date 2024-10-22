@@ -1,4 +1,9 @@
-{ config, lib, pkgs, specialArgs, ... }:
+{
+  lib,
+  pkgs,
+  specialArgs,
+  ...
+}:
 
 {
   imports = [
@@ -12,10 +17,12 @@
     ./hardware-configuration.nix
   ];
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "discord"
-    "imagescan-plugin-networkscan"
-  ];
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "discord"
+      "imagescan-plugin-networkscan"
+    ];
 
   networking = {
     hostName = specialArgs.host.hostname;

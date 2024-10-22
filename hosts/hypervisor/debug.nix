@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }: 
+{ lib, pkgs, ... }:
 
 {
   specialisation = {
@@ -6,14 +6,19 @@
       system.nixos.tags = [ "debug" ];
       system.nixos.variant_id = "debug";
 
-      boot.kernelParams = lib.mkForce [ "amd_iommu=on" "iommu=pt" "kvm.ignore_msrs=1" "kvm_amd.nested=1" ];
+      boot.kernelParams = lib.mkForce [
+        "amd_iommu=on"
+        "iommu=pt"
+        "kvm.ignore_msrs=1"
+        "kvm_amd.nested=1"
+      ];
 
-      systemd.services.nixvirt.wantedBy = lib.mkForce [];
-      systemd.services.libvirtd.wantedBy = lib.mkForce [];
-      systemd.services.libvirt-guests.wantedBy = lib.mkForce [];
-      systemd.sockets.libvirtd.wantedBy = lib.mkForce [];
-      systemd.sockets.libvirt-admin.wantedBy = lib.mkForce [];
-      systemd.sockets.libvirt-ro.wantedBy = lib.mkForce [];
+      systemd.services.nixvirt.wantedBy = lib.mkForce [ ];
+      systemd.services.libvirtd.wantedBy = lib.mkForce [ ];
+      systemd.services.libvirt-guests.wantedBy = lib.mkForce [ ];
+      systemd.sockets.libvirtd.wantedBy = lib.mkForce [ ];
+      systemd.sockets.libvirt-admin.wantedBy = lib.mkForce [ ];
+      systemd.sockets.libvirt-ro.wantedBy = lib.mkForce [ ];
 
       environment.systemPackages = with pkgs; [
         wl-clipboard

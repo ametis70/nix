@@ -7,7 +7,10 @@
 
   users.users.ametis70 = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "libvirtd" ];
+    extraGroups = [
+      "wheel"
+      "libvirtd"
+    ];
     shell = pkgs.zsh;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKdeXLsyF3y5W8Xy/MI5G0qttr+7M+Opd03w7dzrJLJ7"

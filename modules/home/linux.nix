@@ -1,7 +1,7 @@
 { pkgs, specialArgs, ... }:
 
 {
-  imports = [ ./common.nix  ];
+  imports = [ ./common.nix ];
 
   home.homeDirectory = "/home/${specialArgs.host.username}";
 

@@ -5,7 +5,5 @@
 
   home.homeDirectory = "/Users/${specialArgs.host.username}";
 
-  home.packages = with pkgs; [
-    pngpaste
-  ];
+  home.packages = with pkgs; [ pngpaste ];
 }
