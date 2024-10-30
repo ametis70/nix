@@ -10,6 +10,7 @@
     ../../modules/home/wofi/wofi.nix
     ../../modules/home/design/design.nix
     ../../modules/home/gpg-agent/gpg-agent.nix
+    ../../modules/home/fonts/fonts.nix
   ];
 
   home.packages = with pkgs; [

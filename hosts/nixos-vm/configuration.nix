@@ -40,11 +40,6 @@
     kdePackages.polkit-kde-agent-1
   ];
 
-  fonts.packages = with pkgs; [
-    iosevka
-    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
-  ];
-
   security.polkit.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   programs.hyprland.enable = true;
