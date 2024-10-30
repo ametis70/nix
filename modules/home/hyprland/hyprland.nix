@@ -2,18 +2,18 @@
 
 {
 
-imports = [
-  ../wofi/wofi.nix
-];
+  imports = [
+    ../wofi/wofi.nix
+    ../desktop-theme/desktop-theme.nix
+  ];
 
-home.packages = with pkgs; [
+  home.packages = with pkgs; [
     dunst
     networkmanagerapplet
     slurp
     grim
     wl-clipboard
     pasystray
-    qt6ct
     pavucontrol
   ];
 
@@ -88,7 +88,6 @@ home.packages = with pkgs; [
         "QT_AUTO_SCREEN_SCALE_FACTOR,1"
         "QT_QPA_PLATFORM,wayland;xcb"
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
-        "QT_QPA_PLATFORMTHEME,qt5ct"
       ];
       input = {
         kb_layout = "us";
@@ -98,18 +97,17 @@ home.packages = with pkgs; [
         sensitivity = 0;
 
         touchpad = {
-            natural_scroll = false;
+          natural_scroll = false;
         };
       };
       binds = {
-          allow_workspace_cycles = true;
+        allow_workspace_cycles = true;
       };
       "$mainMod" = "SUPER";
       "$terminal" = "kitty";
-      "$menu" = "wofi --show run";
+      "$menu" = "wofi --show run -f";
       "$emojiPicker" = "wofi-emoji";
       "$passPicker" = "wofi-pass -s -c";
-
 
       bind = [
         "$mainMod, return, exec, $terminal"
@@ -176,8 +174,8 @@ home.packages = with pkgs; [
 
       bindm = [
         # Move/resize windows with mainMod + LMB/RMB and dragging
-      "$mainMod, mouse:272, movewindow"
-      "$mainMod, mouse:273, resizewindow"
+        "$mainMod, mouse:272, movewindow"
+        "$mainMod, mouse:273, resizewindow"
       ];
 
       # Volume control
@@ -185,9 +183,7 @@ home.packages = with pkgs; [
         ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
         ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
       ];
-      bindl = [
-        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-      ];
+      bindl = [ ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" ];
 
       windowrulev2 = [ "suppressevent maximize, class:.*" ];
     };
