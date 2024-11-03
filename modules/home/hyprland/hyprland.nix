@@ -4,11 +4,11 @@
 
   imports = [
     ../wofi/wofi.nix
+    ../dunst/dunst.nix
     ../desktop-theme/desktop-theme.nix
   ];
 
   home.packages = with pkgs; [
-    dunst
     networkmanagerapplet
     slurp
     grim

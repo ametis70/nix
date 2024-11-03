@@ -27,7 +27,7 @@
     enable = true;
     theme = {
       name = "Adwaita-dark";
-      #       package = pkgs.gnome.gnome-themes-extra;
+      package = pkgs.gnome.gnome-themes-extra;
     };
     font = {
       name = "Noto Sans";
@@ -35,7 +35,7 @@
     };
     iconTheme = {
       name = "Papirus-Dark";
-      #       package = pkgs.papirus-icon-theme;
+      package = pkgs.papirus-icon-theme;
     };
     gtk3.extraConfig = {
       Settings = ''
