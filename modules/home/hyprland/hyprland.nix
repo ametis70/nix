@@ -4,6 +4,7 @@
 
   imports = [
     ../wofi/wofi.nix
+    ../waybar/waybar.nix
     ../dunst/dunst.nix
     ../desktop-theme/desktop-theme.nix
   ];

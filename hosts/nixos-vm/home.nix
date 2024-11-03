@@ -6,9 +6,8 @@
     ../../modules/home/discord/discord.nix
     ../../modules/home/kitty/kitty.nix
     ../../modules/home/hyprland/hyprland.nix
-    ../../modules/home/waybar/waybar.nix
-    ../../modules/home/wofi/wofi.nix
     ../../modules/home/design/design.nix
+    ../../modules/home/zathura/zathura.nix
     ../../modules/home/gpg-agent/gpg-agent.nix
   ];
 
