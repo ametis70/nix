@@ -1,6 +1,15 @@
-{ ... }:
+{ lib, config, ... }:
 
 {
+  xdg.mimeApps = lib.mkIf config.xdg.mimeApps.enable {
+    associations.added = {
+      "application/pdf" = [ "org.pwmt.zathura.desktop" ];
+    };
+    defaultApplications = {
+      "application/pdf" = [ "org.pwmt.zathura.desktop" ];
+    };
+  };
+
   programs.zathura = {
     enable = true;
 

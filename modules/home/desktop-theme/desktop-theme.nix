@@ -78,7 +78,7 @@
       text = lib.generators.toINI { } {
         Appearance = {
           icon_theme = "Papirus-Dark";
-          style = "Adwaita-Dark";
+          style = "Adwaita-dark";
         };
         Fonts = {
           fixed = "Iosevka,14,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Regular";
