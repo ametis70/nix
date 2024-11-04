@@ -31,6 +31,17 @@
         allow_tearing = false;
         layout = "dwindle";
       };
+      group = {
+        "col.border_active" = "rgb(7aa2f7)";
+        "col.border_inactive" = "rgb(292e42)";
+        groupbar = {
+          font_size = 12;
+          height = 28;
+          "col.active" = "rgb(24283B)";
+          "col.inactive" = "rgb(1D202F)";
+          text_color = "rgb(C0CAF5)";
+        };
+      };
       decoration = {
         rounding = 10;
         active_opacity = 1.0;
@@ -67,6 +78,7 @@
         new_status = "master";
       };
       misc = {
+        font_family = "Iosevka Medium";
         force_default_wallpaper = 1;
         disable_hyprland_logo = true;
       };
@@ -118,9 +130,12 @@
         "$mainMod, D, exec, $menu"
         "$mainMod SHIFT, E, exec, $emojiPicker"
         "$mainMod SHIFT, P, exec, $passPicker"
+        "$mainMod SHIFT, C, exec, chromium-browser"
+
         "$mainMod, B, pseudo" # dwindle
         "$mainMod, V, togglesplit" # dwindle
         "$mainMod, f, fullscreen" # dwindle
+        "$mainMod, e, togglegroup"
 
         # Move focus with mainMod + arrow keys
         "$mainMod, left, movefocus, l"
@@ -128,10 +143,18 @@
         "$mainMod, up, movefocus, u"
         "$mainMod, down, movefocus, d"
 
+        "$mainMod, left, changegroupactive, b"
+        "$mainMod, right, changegroupactive, f"
+
         "$mainMod, h, movefocus, l"
         "$mainMod, l, movefocus, r"
         "$mainMod, k, movefocus, u"
         "$mainMod, j, movefocus, d"
+
+        "$mainMod, h, changegroupactive, b"
+        "$mainMod, l, changegroupactive, f"
+
+        "$mainMod, w, changegroupactive, f" # Backup cycle tabs in group
 
         # Switch workspaces with mainMod + [0-9]
         "$mainMod, 1, workspace, 1"
@@ -186,7 +209,16 @@
       ];
       bindl = [ ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" ];
 
-      windowrulev2 = [ "suppressevent maximize, class:.*" ];
+      windowrulev2 = [
+        "suppressevent maximize, class:.*"
+        "float, class:(pavucontrol)"
+        "center, floating:1, class:(pavucontrol)"
+        "workspace 2, class:(chromium-browser)"
+        "workspace 4, class:(org.telegram.desktop)"
+        "workspace 4, class:(discord)"
+        "group set always,class:(org.telegram.desktop)"
+        "group set always,class:(discord)"
+      ];
     };
   };
 
