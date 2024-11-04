@@ -14,6 +14,8 @@
     papirus-icon-theme
     adwaita-qt
     adwaita-qt6
+    libsForQt5.qt5ct
+    kdePackages.qt6ct
   ];
 
   home.pointerCursor = {
@@ -78,7 +80,7 @@
       text = lib.generators.toINI { } {
         Appearance = {
           icon_theme = "Papirus-Dark";
-          style = "Adwaita-dark";
+          style = "Adwaita-Dark";
         };
         Fonts = {
           fixed = "Iosevka,14,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Regular";
