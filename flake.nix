@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/4aa36568d413aca0ea84a1684d2d46f55dbabad7";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-24.05";
@@ -11,12 +11,27 @@
     };
 
     home-manager-unstable.url = "github:nix-community/home-manager";
+
     NixVirt = {
       url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixgl.url = "github:nix-community/nixGL";
+
+    nixos-raspberrypi = {
+      url = "github:nvmd/nixos-raspberrypi";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+      };
+    };
+  };
+
+  nixConfig = {
+    extra-substituters = [ "https://nixos-raspberrypi.cachix.org" ];
+    extra-trusted-public-keys = [
+      "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
+    ];
   };
 
   outputs =
@@ -27,6 +42,7 @@
       home-manager-unstable,
       nixgl,
       NixVirt,
+      nixos-raspberrypi,
       ...
     }@inputs:
     let
@@ -104,6 +120,18 @@
           extraNixosModules = [ ];
           version = "stable";
         };
+        trovadores-rpi4 = {
+          id = "trovadores-rpi4";
+          hostname = "trovadores-rpi4";
+          username = "trovadores";
+          system = "aarch64-linux";
+          extraNixosModules = with nixos-raspberrypi.nixosModules; [
+            raspberry-pi-4.base
+            raspberry-pi-4.display-vc4
+            # raspberry-pi-4.case-argonone
+          ];
+          version = "unstable";
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -142,6 +170,7 @@
       nixosConfigurations = with hosts; {
         "${hypervisor.hostname}" = configureNixOs hypervisor;
         "${nixos-vm.hostname}" = configureNixOs nixos-vm;
+        "${trovadores-rpi4.hostname}" = configureNixOs trovadores-rpi4;
       };
 
       homeConfigurations = with hosts; {
