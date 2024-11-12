@@ -1,13 +1,16 @@
-{ pkgs, ... }:
+{ pkgs, specialArgs, ... }:
 
 {
-  system.stateVersion = "24.05";
+  system.stateVersion = "${specialArgs.version}";
   system.copySystemConfiguration = false;
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix.settings = {
+    trusted-users = [ "${specialArgs.host.username}" ];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+  };
 
   boot.loader = {
     efi.canTouchEfiVariables = true;
@@ -53,6 +56,8 @@
     mtr
     killall
 
+    e2fsprogs
+    cloud-utils
     usbutils
     pciutils
   ];

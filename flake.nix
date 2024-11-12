@@ -10,6 +10,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    home-manager-unstable.url = "github:nix-community/home-manager";
     NixVirt = {
       url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,6 +24,7 @@
       nixpkgs,
       nixpkgs-unstable,
       home-manager,
+      home-manager-unstable,
       nixgl,
       NixVirt,
       ...
@@ -30,13 +32,35 @@
     let
       packages = {
         "x86_64-linux" = {
-          pkgs = (nixpkgs.legacyPackages."x86_64-linux".extend nixgl.overlay);
-          pkgs-unstable = (nixpkgs-unstable.legacyPackages."x86_64-linux".extend nixgl.overlay);
+          stable = (nixpkgs.legacyPackages."x86_64-linux".extend nixgl.overlay);
+          unstable = (nixpkgs-unstable.legacyPackages."x86_64-linux".extend nixgl.overlay);
         };
         "aarch64-darwin" = {
-          pkgs = nixpkgs.legacyPackages."aarch64-darwin";
-          pkgs-unstable = nixpkgs-unstable.legacyPackages."aarch64-darwin";
+          stable = nixpkgs.legacyPackages."aarch64-darwin";
+          unstable = nixpkgs-unstable.legacyPackages."aarch64-darwin";
         };
+      };
+
+      nixosSystem = {
+        stable = nixpkgs.lib.nixosSystem;
+        unstable = nixpkgs-unstable.lib.nixosSystem;
+      };
+
+      homeManager = {
+        stable = home-manager;
+        unstable = home-manager-unstable;
+      };
+
+      stateVersion = {
+        stable = "24.05";
+        unstable = "24.11";
+      };
+
+      getHostSpecialArgs = host: {
+        inherit inputs;
+        inherit host;
+        pkgs-unstable = packages.${host.system}.unstable;
+        version = stateVersion.${host.version};
       };
 
       hosts = {
@@ -45,30 +69,40 @@
           hostname = "AR0FVFGD3PFQ05N";
           username = "imancini";
           system = "aarch64-darwin";
+          extraNixosModules = [ ];
+          version = "stable";
         };
         deck = {
           id = "deck";
           hostname = "steamdeck";
           username = "deck";
           system = "x86_64-linux";
+          extraNixosModules = [ ];
+          version = "stable";
         };
         windows10 = {
           id = "windows10";
           hostname = "ametis70-vm-windows";
           username = "ametis70";
           system = "x86_64-linux";
+          extraNixosModules = [ ];
+          version = "stable";
         };
         hypervisor = {
           id = "hypervisor";
           hostname = "ametis70-hypervisor-nixos";
           username = "ametis70";
           system = "x86_64-linux";
+          extraNixosModules = [ NixVirt.nixosModules.default ];
+          version = "stable";
         };
         nixos-vm = {
           id = "nixos-vm";
           hostname = "ametis70-vm-nixos";
           username = "ametis70";
           system = "x86_64-linux";
+          extraNixosModules = [ ];
+          version = "stable";
         };
       };
 
@@ -76,41 +110,33 @@
 
       configureHomeManager =
         host:
-        home-manager.lib.homeManagerConfiguration {
-          pkgs = packages.${host.system}.pkgs;
+        homeManager.${host.version}.lib.homeManagerConfiguration {
+          pkgs = packages.${host.system}.${host.version};
           modules = [ ./hosts/${host.id}/home.nix ];
-          extraSpecialArgs = {
-            host = host;
-            pkgs-unstable = packages.${host.system}.pkgs-unstable;
-          };
+          extraSpecialArgs = getHostSpecialArgs host;
         };
 
       configureNixOs =
         host:
-        nixpkgs.lib.nixosSystem {
+        nixosSystem.${host.version} {
           system = host.system;
-          modules = [
-            NixVirt.nixosModules.default
-            home-manager.nixosModules.home-manager
+          modules = host.extraNixosModules ++ [
+            homeManager.${host.version}.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
               home-manager.users.${host.username} = import ./hosts/${host.id}/home.nix;
-              home-manager.extraSpecialArgs = {
-                host = host;
-                pkgs-unstable = packages.${host.system}.pkgs-unstable;
-              };
+              home-manager.extraSpecialArgs = getHostSpecialArgs host;
             }
             ./hosts/${host.id}/configuration.nix
           ];
-          specialArgs = {
-            host = host;
-          };
+          specialArgs = getHostSpecialArgs host;
         };
 
     in
     {
+      # https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md
       nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
       nixosConfigurations = with hosts; {

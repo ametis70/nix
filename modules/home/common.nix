@@ -6,7 +6,7 @@
     ./zsh/zsh.nix
   ];
 
-  home.stateVersion = "24.05";
+  home.stateVersion = specialArgs.version;
   programs.home-manager.enable = true;
 
   home.username = specialArgs.host.username;
