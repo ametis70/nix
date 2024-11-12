@@ -33,6 +33,7 @@ in
       key_forward = "Ctrl-n";
       key_pgup = "Ctrl-u";
       key_pgdn = "Ctrl-d";
+      matching = "multi-contains";
     };
   };
 
