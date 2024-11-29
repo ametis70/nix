@@ -66,7 +66,6 @@ in
       html-tidy
       nixfmt-rfc-style
       rustfmt
-      selene
       gawk
     ];
 
@@ -185,7 +184,7 @@ in
           }
           nvim-lspconfig
           neoconf-nvim
-          neodev-nvim
+          lazydev-nvim
           {
             name = "schemastore.nvim";
             path = SchemaStore-nvim;
@@ -367,5 +366,5 @@ in
 
   # Normal LazyVim config here, see https://github.com/LazyVim/starter/tree/main/lua
   xdg.configFile."nvim/lua".source = ./lua;
-  xdg.configFile."nvim/.luarc.json".source = ./luarc.json;
+  xdg.configFile."nvim/stylua.toml".source = ../../../stylua.toml;
 }

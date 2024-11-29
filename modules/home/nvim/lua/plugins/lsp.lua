@@ -248,7 +248,6 @@ return {
           null_ls.builtins.formatting.remark,
 
           -- Lua
-          null_ls.builtins.diagnostics.selene,
           null_ls.builtins.formatting.stylua,
 
           -- Python
@@ -270,7 +269,11 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
-      { "folke/neodev.nvim",  opts = {} },
+      {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        config = true,
+      },
       "kosayoda/nvim-lightbulb",
       "hrsh7th/cmp-nvim-lsp",
       "b0o/schemastore.nvim",
