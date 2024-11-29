@@ -130,6 +130,27 @@ local config_lsp = function()
     },
   }))
 
+  require("lspconfig").nixd.setup({
+    cmd = { "nixd" },
+    settings = {
+      nixd = {
+        nixpkgs = {
+          expr = "import <nixpkgs> { }",
+        },
+        options = {
+          nixos = vim.g.NIXOS and {
+            expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations."' ..
+                vim.g.NIX_HOST .. '".options',
+          } or nil,
+          home_manager = vim.g.NIXOS and nil or {
+            expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."' ..
+                vim.g.NIX_USER .. '@' .. vim.g.NIX_HOST .. '".options',
+          },
+        },
+      },
+    },
+  });
+
   -- Typescript
   require("typescript").setup({
     disable_commands = false,

@@ -71,6 +71,7 @@
           system = "aarch64-darwin";
           extraNixosModules = [ ];
           version = "stable";
+          nixos = false;
         };
         deck = {
           id = "deck";
@@ -79,6 +80,7 @@
           system = "x86_64-linux";
           extraNixosModules = [ ];
           version = "stable";
+          nixos = false;
         };
         windows10 = {
           id = "windows10";
@@ -87,6 +89,7 @@
           system = "x86_64-linux";
           extraNixosModules = [ ];
           version = "stable";
+          nixos = false;
         };
         hypervisor = {
           id = "hypervisor";
@@ -95,6 +98,7 @@
           system = "x86_64-linux";
           extraNixosModules = [ NixVirt.nixosModules.default ];
           version = "stable";
+          nixos = true;
         };
         nixos-vm = {
           id = "nixos-vm";
@@ -103,6 +107,7 @@
           system = "x86_64-linux";
           extraNixosModules = [ ];
           version = "stable";
+          nixos = true;
         };
       };
 

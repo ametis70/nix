@@ -259,6 +259,9 @@ in
       in
       ''
         vim.g.NIX = true
+        vim.g.NIX_USER = "${specialArgs.host.username}"
+        vim.g.NIX_HOST = "${specialArgs.host.hostname}"
+        vim.g.NIXOS = ${if specialArgs.host.nixos then "true" else "false"}
         vim.g.mapleader = " "
         vim.g.maplocalleader = ","
 
