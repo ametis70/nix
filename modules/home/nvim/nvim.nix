@@ -41,9 +41,9 @@ in
       clang-tools
       rust-analyzer
       gopls
-      tailwindcss
+      tailwindcss-language-server
+      vscode-langservers-extracted
       nodePackages.pyright
-      nodePackages.vscode-json-languageserver
       nodePackages.typescript-language-server
       nodePackages.bash-language-server
 

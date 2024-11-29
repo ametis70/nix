@@ -104,8 +104,11 @@ local config_lsp = function()
     "pyright",
     "rust_analyzer",
     "gopls",
+    "eslint",
+    "html",
+    "cssls",
+    "cssmodules_ls",
     "tailwindcss",
-    "jsonls",
     "lua_ls",
     "nixd",
     "bashls",
@@ -151,8 +154,9 @@ return {
         "shellcheck",
         "shfmt",
         "editorconfig-checker",
-        "eslint_d",
+        "prettier",
         "prettierd",
+        "eslint",
         "flake8",
         "black",
         "js-debug-adapter",
@@ -235,13 +239,10 @@ return {
           null_ls.builtins.formatting.cmake_format,
 
           -- Web
-          null_ls.builtins.formatting.prettier,
+          null_ls.builtins.formatting.prettierd,
           null_ls.builtins.diagnostics.stylelint,
           null_ls.builtins.formatting.stylelint,
           null_ls.builtins.formatting.rustywind,
-          require("none-ls.formatting.jq"),
-          require("none-ls.code_actions.eslint"),
-          require("none-ls.diagnostics.eslint"),
 
           -- Markdown
           null_ls.builtins.formatting.remark,
