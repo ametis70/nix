@@ -13,6 +13,7 @@
     ../../modules/nixos/guest.nix
     ../../modules/nixos/printing.nix
     ../../modules/nixos/scanning.nix
+    ../../modules/nixos/docker.nix
 
     ./hardware-configuration.nix
   ];
