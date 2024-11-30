@@ -130,7 +130,7 @@ local config_lsp = function()
     },
   }))
 
-  require("lspconfig").nixd.setup({
+  require("lspconfig").nixd.setup(vim.tbl_deep_extend("force", settings, {
     cmd = { "nixd" },
     settings = {
       nixd = {
@@ -152,7 +152,7 @@ local config_lsp = function()
         },
       },
     },
-  });
+  }));
 
   -- Typescript
   require("typescript").setup({
