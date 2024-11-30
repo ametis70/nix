@@ -5,6 +5,6 @@
     enable = true;
     enableScDaemon = false;
     enableZshIntegration = false;
-    pinentryPackage = pkgs.pinentry-qt;
+    pinentryPackage = pkgs.pinentry-gnome3;
   };
 }

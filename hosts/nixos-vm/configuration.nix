@@ -1,9 +1,4 @@
-{
-  lib,
-  pkgs,
-  specialArgs,
-  ...
-}:
+{ lib, specialArgs, ... }:
 
 {
   imports = [
@@ -14,6 +9,9 @@
     ../../modules/nixos/printing.nix
     ../../modules/nixos/scanning.nix
     ../../modules/nixos/docker.nix
+    ../../modules/nixos/pipewire.nix
+    ../../modules/nixos/hyprland.nix
+    ../../modules/nixos/keyring.nix
 
     ./hardware-configuration.nix
   ];
@@ -30,19 +28,4 @@
     networkmanager.enable = true;
     firewall.enable = false;
   };
-
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-  };
-
-  environment.systemPackages = with pkgs; [
-    xdg-desktop-portal-hyprland
-    kdePackages.polkit-kde-agent-1
-  ];
-
-  security.polkit.enable = true;
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
-  programs.hyprland.enable = true;
-  services.xserver.exportConfiguration = true;
 }
