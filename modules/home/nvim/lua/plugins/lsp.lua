@@ -107,7 +107,6 @@ local config_lsp = function()
     "eslint",
     "html",
     "cssls",
-    "cssmodules_ls",
     "tailwindcss",
     "lua_ls",
     "nixd",
