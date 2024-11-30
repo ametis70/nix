@@ -135,14 +135,17 @@ local config_lsp = function()
     settings = {
       nixd = {
         nixpkgs = {
-          expr = "import <nixpkgs> { }",
+          expr = 'import (builtins.getFlake ("git+file://" + toString ./.)).inputs.nixpkgs { }',
         },
         options = {
           nixos = vim.g.NIXOS and {
             expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations."' ..
                 vim.g.NIX_HOST .. '".options',
           } or nil,
-          home_manager = vim.g.NIXOS and nil or {
+          home_manager = vim.g.NIXOS and {
+            expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations."' ..
+                vim.g.NIX_HOST .. '".options.home-manager.users.type.getSubOptions []',
+          } or {
             expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."' ..
                 vim.g.NIX_USER .. '@' .. vim.g.NIX_HOST .. '".options',
           },
