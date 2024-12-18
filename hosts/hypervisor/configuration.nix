@@ -17,6 +17,8 @@
     ./libvirt/libvirt.nix
   ];
 
+  users.users.ametis70.extraGroups = [ "libvirtd" ];
+
   networking = {
     hostName = specialArgs.host.hostname;
     firewall.enable = false;

@@ -82,6 +82,15 @@
           version = "stable";
           nixos = false;
         };
+        deck-nixos = {
+          id = "deck-nixos";
+          hostname = "ametis70-deck-nixos";
+          username = "ametis70";
+          system = "x86_64-linux";
+          extraNixosModules = [ ];
+          version = "unstable";
+          nixos = true;
+        };
         windows10 = {
           id = "windows10";
           hostname = "ametis70-vm-windows";

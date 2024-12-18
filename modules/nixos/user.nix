@@ -7,10 +7,7 @@
 
   users.users.ametis70 = {
     isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "libvirtd"
-    ];
+    extraGroups = [ "wheel" ];
     shell = pkgs.zsh;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKdeXLsyF3y5W8Xy/MI5G0qttr+7M+Opd03w7dzrJLJ7"
@@ -20,6 +17,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGTMwKGTiKKaOXosdBnAlCl7MC6CT8JAI1nZsB/1VLKV"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGWznt23SwzkAuVook9PU9fvYvbvmFpoxhPTzHRnTvNI"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFNw8/9D/Fb2Dn5z55CR+NPBcpniFD/Ha9dgNClBe2Ha"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOXppnPzjidpMwWVZKN3XTX1KoXaYOGkvwM54Mo+j5ES"
     ];
   };
 }
