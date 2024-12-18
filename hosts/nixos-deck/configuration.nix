@@ -10,6 +10,8 @@
     ../../modules/nixos/hyprland.nix
     ../../modules/nixos/keyring.nix
 
+    ../../modules/nixos/guest-user.nix
+
     ./hardware-configuration.nix
   ];
 

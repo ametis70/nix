@@ -22,7 +22,7 @@
     portal = {
       enable = true;
       config.common.default = "*";
-      extraPortals = [
+      extraPortals = lib.mkDefault [
         pkgs.xdg-desktop-portal-hyprland
         pkgs.xdg-desktop-portal-gtk
       ];
