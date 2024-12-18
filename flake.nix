@@ -82,8 +82,8 @@
           version = "stable";
           nixos = false;
         };
-        deck-nixos = {
-          id = "deck-nixos";
+        nixos-deck = {
+          id = "nixos-deck";
           hostname = "ametis70-deck-nixos";
           username = "ametis70";
           system = "x86_64-linux";
@@ -156,6 +156,7 @@
       nixosConfigurations = with hosts; {
         "${hypervisor.hostname}" = configureNixOs hypervisor;
         "${nixos-vm.hostname}" = configureNixOs nixos-vm;
+        "${nixos-deck.hostname}" = configureNixOs nixos-deck;
       };
 
       homeConfigurations = with hosts; {
