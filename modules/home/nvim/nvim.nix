@@ -43,7 +43,7 @@ in
       gopls
       tailwindcss-language-server
       vscode-langservers-extracted
-      nodePackages.pyright
+      pyright
       nodePackages.typescript-language-server
       nodePackages.bash-language-server
 
