@@ -134,7 +134,6 @@ return {
       },
       "nvim-telescope/telescope-file-browser.nvim",
       "nvim-telescope/telescope-ui-select.nvim",
-      "ahmedkhalf/project.nvim",
     },
     init = init,
     config = config,

@@ -103,7 +103,10 @@ in
           }
           nvim-cmp
           nvim-autopairs
-          lspkind-nvim
+          {
+            name = "lspkind-nvim";
+            path = (fromGithub "d79a1c3299ad0ef94e255d045bed9fa26025dab6" "master" "onsails/lspkind.nvim");
+          }
           cmp-nvim-lsp
           cmp-nvim-lsp-signature-help
           cmp-buffer
