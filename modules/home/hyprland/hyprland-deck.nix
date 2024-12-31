@@ -17,19 +17,19 @@ let
     }
 
     enable_external() {
-        hyprctl -q keyword monitor eDP-1, disable
-        sleep ${sleepTime}
         hyprctl -q keyword monitor ${modes."DP-1"}
         sleep ${sleepTime}
-        move_workspaces
+        hyprctl -q keyword monitor eDP-1, disable
+        # sleep ${sleepTime}
+        # move_workspaces
     }
 
     enable_internal() {
-        hyprctl -q keyword monitor DP-1, disable
-        sleep ${sleepTime}
         hyprctl -q keyword monitor ${modes."eDP-1"}
         sleep ${sleepTime}
-        move_workspaces
+        hyprctl -q keyword monitor DP-1, disable
+        # sleep ${sleepTime}
+        # move_workspaces
     }
 
     hyprctl monitors | grep -q eDP-1
@@ -57,8 +57,8 @@ in
     bind = [ "$mainMod, p, exec, ${screenSwitchScript}/bin/hyprland-switch-screen" ];
     monitor = [
       "${modes."eDP-1"}"
-      # ${modes."DP-1"}"
-      "DP-1, disabled"
+      "${modes."DP-1"}"
+      # "DP-1, disabled"
     ];
   };
 }
