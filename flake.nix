@@ -17,6 +17,8 @@
     };
 
     nixgl.url = "github:nix-community/nixGL";
+
+    Jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
   };
 
   outputs =
@@ -27,6 +29,7 @@
       home-manager-unstable,
       nixgl,
       NixVirt,
+      Jovian,
       ...
     }@inputs:
     let
@@ -87,7 +90,7 @@
           hostname = "ametis70-deck-nixos";
           username = "ametis70";
           system = "x86_64-linux";
-          extraNixosModules = [ ];
+          extraNixosModules = [ Jovian.nixosModules.default ];
           version = "unstable";
           nixos = true;
         };

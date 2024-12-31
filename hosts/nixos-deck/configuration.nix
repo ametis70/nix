@@ -15,7 +15,25 @@
     ./hardware-configuration.nix
   ];
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "discord" ];
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "discord"
+      "steamdeck-hw-theme"
+      "steam-run"
+      "steam-original"
+      "steam"
+      "steam-jupiter-unwrapped"
+    ];
+
+  jovian.steam = {
+    enable = true;
+    autoStart = true;
+    desktopSession = "hyprland";
+    user = specialArgs.host.username;
+  };
+
+  jovian.devices.steamdeck.enable = true;
 
   networking = {
     hostName = specialArgs.host.hostname;
