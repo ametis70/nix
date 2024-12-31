@@ -10,6 +10,7 @@
     ../../modules/nixos/scanning.nix
     ../../modules/nixos/docker.nix
     ../../modules/nixos/pipewire.nix
+    ../../modules/nixos/greetd.nix
     ../../modules/nixos/hyprland.nix
     ../../modules/nixos/keyring.nix
 
