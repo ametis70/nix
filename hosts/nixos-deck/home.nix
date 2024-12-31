@@ -15,6 +15,6 @@
   home.packages = with pkgs; [
     ungoogled-chromium
     telegram-desktop
-    gnome.nautilus
+    nautilus
   ];
 }

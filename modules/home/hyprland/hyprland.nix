@@ -1,5 +1,25 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  inputs,
+  specialArgs,
+  ...
+}:
 
+let
+  hyprexit = pkgs.writeShellScriptBin "hyprexit" ''
+    ${pkgs.hyprland}/bin/hyprctl dispatch exit
+    ${pkgs.systemd}/bin/loginctl terminate-user ${specialArgs.host.username}
+  '';
+
+  # Script for creating initial workspaces
+  hyprws = pkgs.writeShellScriptBin "hyprws" ''
+    for w in $(seq 10); do
+      ${pkgs.hyprland}/bin/hyprctl dispatch workspace $w;
+    done;
+    ${pkgs.hyprland}/bin/hyprctl dispatch workspace 1
+  '';
+
+in
 {
 
   imports = [
@@ -16,6 +36,9 @@
     wl-clipboard
     pasystray
     pavucontrol
+    hyprexit
+    hyprws
+    foot
   ];
 
   wayland.windowManager.hyprland = {
@@ -46,10 +69,12 @@
         rounding = 10;
         active_opacity = 1.0;
         inactive_opacity = 1.0;
-        drop_shadow = true;
-        shadow_range = 4;
-        shadow_render_power = 3;
-        "col.shadow" = "rgba(1a1a1aee)";
+        shadow = {
+          enabled = true;
+          range = 4;
+          render_power = 3;
+          color = "rgba(1a1a1aee)";
+        };
 
         blur = {
           enabled = true;
@@ -125,7 +150,8 @@
       bind = [
         "$mainMod, return, exec, $terminal"
         "$mainMod SHIFT, Q, killactive,"
-        "$mainMod, M, exit,"
+        # "$mainMod, M, exit,"
+        "$mainMod, M, exec, ${hyprexit}/bin/hyprexit"
         "$mainMod SHIFT, space, togglefloating,"
         "$mainMod, D, exec, $menu"
         "$mainMod SHIFT, E, exec, $emojiPicker"

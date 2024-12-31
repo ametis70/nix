@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   home.packages = with pkgs; [
@@ -8,7 +8,7 @@
     noto-fonts-cjk-serif
     noto-fonts-color-emoji
     iosevka
-    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+    pkgs-unstable.nerd-fonts.symbols-only
   ];
 
   fonts.fontconfig = {

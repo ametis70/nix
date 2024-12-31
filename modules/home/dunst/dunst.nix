@@ -11,7 +11,6 @@
     settings = {
       global = {
         width = 400;
-        height = 320;
         gap_size = 6;
         padding = 12;
         offset = "12x6";

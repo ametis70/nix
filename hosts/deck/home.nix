@@ -26,6 +26,6 @@ in
     nixgl.nixVulkanIntel
     ungoogled-chromium
     telegram-desktop
-    gnome.nautilus
+    nautilus
   ];
 }
