@@ -19,6 +19,12 @@
     nixgl.url = "github:nix-community/nixGL";
 
     Jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
+
+    hyprland.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.46.2";
+    hy3 = {
+      url = "github:outfoxxed/hy3?ref=hl0.46.0";
+      inputs.hyprland.follows = "hyprland";
+    };
   };
 
   outputs =
@@ -30,6 +36,7 @@
       nixgl,
       NixVirt,
       Jovian,
+      hyprland,
       ...
     }@inputs:
     let

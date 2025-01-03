@@ -43,6 +43,7 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     settings = {
       general = {
         gaps_in = 5;
@@ -143,7 +144,7 @@ in
       };
       "$mainMod" = "SUPER";
       "$terminal" = "kitty";
-      "$menu" = "wofi --show run -f";
+      "$menu" = "wofi --show run";
       "$emojiPicker" = "wofi-emoji";
       "$passPicker" = "wofi-pass -s -c";
 
@@ -257,6 +258,10 @@ in
         "8, persistent:true"
         "9, persistent:true"
         "10, persistent:true"
+      ];
+
+      plugin = [
+        "${inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
       ];
     };
   };
