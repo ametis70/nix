@@ -9,27 +9,30 @@ let
   sleepTime = "1";
 
   screenSwitchScript = pkgs.writeShellScriptBin "hyprland-switch-screen" ''
+    get_monitor_id() {
+      hyprctl -j monitors | jq -r --arg ID "$1" '.[] | select(.name == $ID) | .id'
+    }
 
     move_workspaces() {
-      for ws in $(hyprctl workspaces | grep "^workspace ID" | cut -d " " -f3); do
-      hyprctl dispatch moveworkspacetomonitor $ws current 2>&1 > /dev/null;
+      for ws in $(hyprctl -j workspaces | jq '.[] | .id'); do
+      hyprctl dispatch moveworkspacetomonitor $ws $1 2>&1 > /dev/null;
       done
     }
 
     enable_external() {
         hyprctl -q keyword monitor ${modes."DP-1"}
         sleep ${sleepTime}
+        move_workspaces get_monitor_id "DP-1"
+        sleep ${sleepTime}
         hyprctl -q keyword monitor eDP-1, disable
-        # sleep ${sleepTime}
-        # move_workspaces
     }
 
     enable_internal() {
         hyprctl -q keyword monitor ${modes."eDP-1"}
         sleep ${sleepTime}
+        move_workspaces get_monitor_id "eDP-1"
+        sleep ${sleepTime}
         hyprctl -q keyword monitor DP-1, disable
-        # sleep ${sleepTime}
-        # move_workspaces
     }
 
     hyprctl monitors | grep -q eDP-1
