@@ -1,4 +1,9 @@
-{ pkgs, specialArgs, ... }:
+{
+  pkgs,
+  specialArgs,
+  lib,
+  ...
+}:
 
 {
   system.stateVersion = "${specialArgs.version}";
@@ -22,10 +27,10 @@
   };
 
   systemd.targets = {
-    sleep.enable = false;
-    suspend.enable = false;
-    hibernate.enable = false;
-    hybrid-sleep.enable = false;
+    sleep.enable = lib.mkDefault false;
+    suspend.enable = lib.mkDefault false;
+    hibernate.enable = lib.mkDefault false;
+    hybrid-sleep.enable = lib.mkDefault false;
   };
 
   time.timeZone = "America/Argentina/Buenos_Aires";

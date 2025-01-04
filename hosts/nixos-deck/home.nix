@@ -16,5 +16,15 @@
     ungoogled-chromium
     telegram-desktop
     nautilus
+    cbatticon
   ];
+
+  wayland.windowManager.hyprland = {
+    settings = {
+      exec-once = [
+        "steam"
+        "cbatticon"
+      ];
+    };
+  };
 }

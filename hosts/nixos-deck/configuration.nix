@@ -35,6 +35,11 @@
 
   jovian.devices.steamdeck.enable = true;
 
+  systemd.targets = {
+    sleep.enable = true;
+    suspend.enable = true;
+  };
+
   networking = {
     hostName = specialArgs.host.hostname;
     networkmanager.enable = true;
