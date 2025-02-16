@@ -21,29 +21,40 @@
   networking = {
     hostName = specialArgs.host.hostname;
     firewall.enable = false;
-    networkmanager.enable = false;
-    useDHCP = false;
-    enableIPv6 = true;
-    bridges = {
-      "br0" = {
-        interfaces = [ "enp39s0" ];
+    useNetworkd = true;
+  };
+
+  systemd.network = {
+    enable = true;
+    netdevs = {
+      "30-br0" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br0";
+          MACAddress = "none";
+        };
       };
     };
-    interfaces = {
-      "br0" = {
-        ipv4.addresses = [
-          {
-            address = "192.168.10.90";
-            prefixLength = 24;
-          }
-        ];
+    networks = {
+      "30-enp39s0" = {
+        name = "enp39s0";
+        bridge = [ "br0" ];
+      };
+      "30-br0" = {
+        name = "br0";
+        DHCP = "yes";
       };
     };
-    defaultGateway = "192.168.10.1";
-    nameservers = [
-      "192.168.10.1"
-      "1.1.1.1"
-    ];
+    links = {
+      "30-br0" = {
+        matchConfig = {
+          OriginalName = "br0";
+        };
+        linkConfig = {
+          MACAddressPolicy = "none";
+        };
+      };
+    };
   };
 
   environment.systemPackages = with pkgs; [
@@ -110,11 +121,11 @@
       }
       {
         job_name = "windows";
-        static_configs = [ { targets = [ "192.168.10.92:9182" ]; } ];
+        static_configs = [ { targets = [ "windows.local:9182" ]; } ];
       }
       {
         job_name = "nvidia_gpu";
-        static_configs = [ { targets = [ "192.168.10.92:9835" ]; } ];
+        static_configs = [ { targets = [ "windows.local:9835" ]; } ];
       }
     ];
   };
