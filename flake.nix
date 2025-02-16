@@ -2,11 +2,11 @@
   description = "ametis70's nix config";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/release-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -20,11 +20,21 @@
 
     Jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
 
-    hyprland.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.46.2";
+    hyprland.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.45.2";
+
     hy3 = {
-      url = "github:outfoxxed/hy3?ref=hl0.46.0";
+      url = "github:outfoxxed/hy3?ref=hl0.45.0";
       inputs.hyprland.follows = "hyprland";
     };
+  };
+
+  nixConfig = {
+    extra-substituters = [
+      "https://hyprland.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+    ];
   };
 
   outputs =
@@ -33,17 +43,15 @@
       nixpkgs-unstable,
       home-manager,
       home-manager-unstable,
-      nixgl,
       NixVirt,
       Jovian,
-      hyprland,
       ...
     }@inputs:
     let
       packages = {
         "x86_64-linux" = {
-          stable = (nixpkgs.legacyPackages."x86_64-linux".extend nixgl.overlay);
-          unstable = (nixpkgs-unstable.legacyPackages."x86_64-linux".extend nixgl.overlay);
+          stable = nixpkgs.legacyPackages."x86_64-linux";
+          unstable = nixpkgs-unstable.legacyPackages."x86_64-linux";
         };
         "aarch64-darwin" = {
           stable = nixpkgs.legacyPackages."aarch64-darwin";

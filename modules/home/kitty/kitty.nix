@@ -1,16 +1,9 @@
 { pkgs, host, ... }:
 
-let
-  themeSettings =
-    if (host.version == "unstable") then
-      { themeFile = "tokyo_night_storm"; }
-    else
-      { theme = "Tokyo Night Storm"; };
-in
-
 {
   programs.kitty = {
     enable = true;
+    themeFile = "tokyo_night_storm";
     shellIntegration = {
       enableBashIntegration = true;
       enableZshIntegration = true;
@@ -29,5 +22,5 @@ in
       update_check_interval = 0;
       window_padding_width = 12;
     };
-  } // themeSettings;
+  };
 }
