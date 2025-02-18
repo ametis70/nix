@@ -15,8 +15,14 @@
       zplug = {
         enable = true;
         plugins = [
-          { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
-          { name = "Aloxaf/fzf-tab"; }
+          {
+            name = "romkatv/powerlevel10k";
+            tags = [
+              "as:theme"
+              "depth:1"
+            ];
+          }
+          { name = "jeffreytse/zsh-vi-mode"; }
         ];
       };
       plugins = [
@@ -44,13 +50,23 @@
         fpath=(''${ASDF_DIR}/completions $fpath)
       '';
       initExtra = ''
-        bindkey "^[[3~"   delete-char
-        bindkey "^[[5~"   beginning-of-buffer-or-history
-        bindkey "^[[6~"   end-of-buffer-or-history
-        bindkey "^[[H"    beginning-of-line
-        bindkey "^[[F"    end-of-line
-        bindkey '^[[1;5C' forward-word
-        bindkey '^[[1;5D' backward-word
+        function after_zvm_init() {
+          source <(fzf --zsh)
+          source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+
+          bindkey "^[[3~"   delete-char
+          bindkey "^[[5~"   beginning-of-buffer-or-history
+          bindkey "^[[6~"   end-of-buffer-or-history
+          bindkey "^[[H"    beginning-of-line
+          bindkey "^[[F"    end-of-line
+          bindkey '^[[1;5C' forward-word
+          bindkey '^[[1;5D' backward-word
+        }
+
+        zvm_after_init_commands+=(after_zvm_init)
+
+        ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+        source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
       '';
     };
   };
