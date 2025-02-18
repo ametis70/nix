@@ -26,14 +26,18 @@
       url = "github:outfoxxed/hy3?ref=hl0.45.0";
       inputs.hyprland.follows = "hyprland";
     };
+
+    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
   };
 
   nixConfig = {
     extra-substituters = [
       "https://hyprland.cachix.org"
+      "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys = [
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
@@ -45,6 +49,7 @@
       home-manager-unstable,
       NixVirt,
       Jovian,
+      raspberry-pi-nix,
       ...
     }@inputs:
     let
@@ -56,6 +61,10 @@
         "aarch64-darwin" = {
           stable = nixpkgs.legacyPackages."aarch64-darwin";
           unstable = nixpkgs-unstable.legacyPackages."aarch64-darwin";
+        };
+        "aarch64-linux" = {
+          stable = nixpkgs.legacyPackages."aarch64-linux";
+          unstable = nixpkgs-unstable.legacyPackages."aarch64-linux";
         };
       };
 
@@ -136,6 +145,18 @@
           version = "stable";
           nixos = true;
         };
+        rpi4-juglares = {
+          id = "rpi4-juglares";
+          hostname = "rpi4-juglares";
+          username = "ametis70";
+          system = "aarch64-linux";
+          extraNixosModules = [
+            raspberry-pi-nix.nixosModules.raspberry-pi
+            raspberry-pi-nix.nixosModules.sd-image
+          ];
+          version = "stable";
+          nixos = true;
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -175,6 +196,7 @@
         "${hypervisor.hostname}" = configureNixOs hypervisor;
         "${nixos-vm.hostname}" = configureNixOs nixos-vm;
         "${nixos-deck.hostname}" = configureNixOs nixos-deck;
+        "${rpi4-juglares.hostname}" = configureNixOs rpi4-juglares;
       };
 
       homeConfigurations = with hosts; {
