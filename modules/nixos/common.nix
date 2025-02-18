@@ -64,6 +64,13 @@
     dig
     mtr
     killall
+    htop
+
+    gzip
+    zip
+    xz
+    zstd
+    p7zip
 
     e2fsprogs
     cloud-utils
