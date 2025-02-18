@@ -13,7 +13,7 @@
 
   networking = {
     hostName = specialArgs.host.hostname;
-    networkmanager.enable = true;
+    useDHCP = true;
     firewall.enable = false;
   };
 
