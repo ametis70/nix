@@ -29,4 +29,10 @@
     networkmanager.enable = true;
     firewall.enable = false;
   };
+
+  systemd.services.nix-daemon.serviceConfig = {
+    MemoryAccounting = true;
+    MemoryMax = "85%";
+    OOMScoreAdjust = 500;
+  };
 }
