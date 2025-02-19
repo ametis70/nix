@@ -28,6 +28,11 @@
     };
 
     raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
+
+    argononed = {
+      url = "github:nvmd/argononed";
+      flake = false;
+    };
   };
 
   nixConfig = {
