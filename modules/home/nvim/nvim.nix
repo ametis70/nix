@@ -34,6 +34,8 @@ in
       vim # for xxd
       gh
       nodejs_22
+      luarocks
+      lua51Packages.lua
 
       # LSP
       nixd
@@ -364,6 +366,7 @@ in
               xml
               yaml
               org
+              http
             ]
           )).dependencies;
       };
