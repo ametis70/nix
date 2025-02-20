@@ -4,6 +4,7 @@
   imports = [
     ./nvim/nvim.nix
     ./zsh/zsh.nix
+    ./zk/zk.nix
   ];
 
   home.stateVersion = specialArgs.version;
