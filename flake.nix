@@ -33,6 +33,9 @@
       url = "github:nvmd/argononed";
       flake = false;
     };
+
+    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   nixConfig = {
@@ -55,6 +58,7 @@
       NixVirt,
       Jovian,
       raspberry-pi-nix,
+      nix-darwin,
       ...
     }@inputs:
     let
@@ -98,7 +102,7 @@
       hosts = {
         work = {
           id = "work";
-          hostname = "AR0FVFGD3PFQ05N";
+          hostname = "AR000H4F609LXL5";
           username = "imancini";
           system = "aarch64-darwin";
           extraNixosModules = [ ];
@@ -179,6 +183,7 @@
         nixosSystem.${host.version} {
           system = host.system;
           modules = host.extraNixosModules ++ [
+            ./hosts/${host.id}/configuration.nix
             homeManager.${host.version}.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -187,7 +192,24 @@
               home-manager.users.${host.username} = import ./hosts/${host.id}/home.nix;
               home-manager.extraSpecialArgs = getHostSpecialArgs host;
             }
+          ];
+          specialArgs = getHostSpecialArgs host;
+        };
+
+      configureDarwin =
+        host:
+        nix-darwin.lib.darwinSystem {
+          system = host.system;
+          modules = host.extraNixosModules ++ [
             ./hosts/${host.id}/configuration.nix
+            homeManager.${host.version}.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.${host.username} = import ./hosts/${host.id}/home.nix;
+              home-manager.extraSpecialArgs = getHostSpecialArgs host;
+            }
           ];
           specialArgs = getHostSpecialArgs host;
         };
@@ -205,9 +227,12 @@
       };
 
       homeConfigurations = with hosts; {
-        "${getHost work}" = configureHomeManager work;
         "${getHost deck}" = configureHomeManager deck;
         "${getHost windows10}" = configureHomeManager windows10;
+      };
+
+      darwinConfigurations = with hosts; {
+        "${work.hostname}" = configureDarwin work;
       };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
