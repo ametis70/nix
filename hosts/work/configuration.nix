@@ -77,7 +77,10 @@ in
       cleanup = "zap";
     };
     brews = [
+      "gettext"
       "choose-gui"
+      "colima"
+      "openssl"
     ];
     casks = [
       "alt-tab"
