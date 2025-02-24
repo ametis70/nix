@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports = [
@@ -7,6 +7,10 @@
   ];
 
   programs.kitty.package = pkgs.emptyDirectory;
+
+  programs.zsh.initExtra = lib.mkAfter ''
+    PATH=$PATH:/opt/homebrew/bin
+  '';
 
   home.stateVersion = "24.11";
 }
