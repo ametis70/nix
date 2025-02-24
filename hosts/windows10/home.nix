@@ -7,4 +7,6 @@
   ];
 
   services.gpg-agent.pinentryPackage = pkgs.pinentry-curses;
+
+  home.stateVersion = "24.11";
 }

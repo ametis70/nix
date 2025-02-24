@@ -6,7 +6,6 @@
 }:
 
 {
-  system.stateVersion = "${specialArgs.version}";
   system.copySystemConfiguration = false;
 
   nix.settings = {

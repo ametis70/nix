@@ -36,6 +36,9 @@
 
     nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-darwin-unstable.url = "github:LnL7/nix-darwin/master";
+    nix-darwin-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
   nixConfig = {
@@ -59,6 +62,7 @@
       Jovian,
       raspberry-pi-nix,
       nix-darwin,
+      nix-darwin-unstable,
       ...
     }@inputs:
     let
@@ -82,21 +86,20 @@
         unstable = nixpkgs-unstable.lib.nixosSystem;
       };
 
+      darwinSystem = {
+        stable = nix-darwin.lib.darwinSystem;
+        unstable = nix-darwin-unstable.lib.darwinSystem;
+      };
+
       homeManager = {
         stable = home-manager;
         unstable = home-manager-unstable;
-      };
-
-      stateVersion = {
-        stable = "24.05";
-        unstable = "24.11";
       };
 
       getHostSpecialArgs = host: {
         inherit inputs;
         inherit host;
         pkgs-unstable = packages.${host.system}.unstable;
-        version = stateVersion.${host.version};
       };
 
       hosts = {
@@ -106,7 +109,7 @@
           username = "imancini";
           system = "aarch64-darwin";
           extraNixosModules = [ ];
-          version = "stable";
+          channel = "unstable";
           nixos = false;
         };
         deck = {
@@ -115,7 +118,7 @@
           username = "deck";
           system = "x86_64-linux";
           extraNixosModules = [ ];
-          version = "stable";
+          channel = "stable";
           nixos = false;
         };
         nixos-deck = {
@@ -124,7 +127,7 @@
           username = "ametis70";
           system = "x86_64-linux";
           extraNixosModules = [ Jovian.nixosModules.default ];
-          version = "unstable";
+          channel = "unstable";
           nixos = true;
         };
         windows10 = {
@@ -133,7 +136,7 @@
           username = "ametis70";
           system = "x86_64-linux";
           extraNixosModules = [ ];
-          version = "stable";
+          channel = "stable";
           nixos = false;
         };
         hypervisor = {
@@ -142,7 +145,7 @@
           username = "ametis70";
           system = "x86_64-linux";
           extraNixosModules = [ NixVirt.nixosModules.default ];
-          version = "stable";
+          channel = "stable";
           nixos = true;
         };
         nixos-vm = {
@@ -151,7 +154,7 @@
           username = "ametis70";
           system = "x86_64-linux";
           extraNixosModules = [ ];
-          version = "stable";
+          channel = "stable";
           nixos = true;
         };
         rpi4-juglares = {
@@ -163,7 +166,7 @@
             raspberry-pi-nix.nixosModules.raspberry-pi
             raspberry-pi-nix.nixosModules.sd-image
           ];
-          version = "stable";
+          channel = "stable";
           nixos = true;
         };
       };
@@ -172,19 +175,19 @@
 
       configureHomeManager =
         host:
-        homeManager.${host.version}.lib.homeManagerConfiguration {
-          pkgs = packages.${host.system}.${host.version};
+        homeManager.${host.channel}.lib.homeManagerConfiguration {
+          pkgs = packages.${host.system}.${host.channel};
           modules = [ ./hosts/${host.id}/home.nix ];
           extraSpecialArgs = getHostSpecialArgs host;
         };
 
       configureNixOs =
         host:
-        nixosSystem.${host.version} {
+        nixosSystem.${host.channel} {
           system = host.system;
           modules = host.extraNixosModules ++ [
             ./hosts/${host.id}/configuration.nix
-            homeManager.${host.version}.nixosModules.home-manager
+            homeManager.${host.channel}.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
@@ -198,11 +201,11 @@
 
       configureDarwin =
         host:
-        nix-darwin.lib.darwinSystem {
+        darwinSystem.${host.channel} {
           system = host.system;
           modules = host.extraNixosModules ++ [
             ./hosts/${host.id}/configuration.nix
-            homeManager.${host.version}.darwinModules.home-manager
+            homeManager.${host.channel}.darwinModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;

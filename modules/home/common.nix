@@ -7,7 +7,6 @@
     ./zk/zk.nix
   ];
 
-  home.stateVersion = specialArgs.version;
   programs.home-manager.enable = true;
 
   home.username = specialArgs.host.username;

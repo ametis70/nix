@@ -45,4 +45,6 @@
     networkmanager.enable = true;
     firewall.enable = false;
   };
+
+  system.stateVersion = "24.11";
 }

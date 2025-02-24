@@ -35,4 +35,6 @@
     MemoryMax = "85%";
     OOMScoreAdjust = 500;
   };
+
+  system.stateVersion = "24.11";
 }

@@ -59,4 +59,6 @@
       hysteresis = 4;
     };
   };
+
+  system.stateVersion = "24.11";
 }

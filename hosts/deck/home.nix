@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 let
 in
@@ -28,4 +28,6 @@ in
     telegram-desktop
     nautilus
   ];
+
+  home.stateVersion = "24.11";
 }

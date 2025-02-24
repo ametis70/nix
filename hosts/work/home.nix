@@ -8,4 +8,5 @@
 
   programs.kitty.package = pkgs.emptyDirectory;
 
+  home.stateVersion = "24.11";
 }

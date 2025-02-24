@@ -20,4 +20,6 @@
   wayland.windowManager.hyprland.settings = {
     monitor = "HDMI-A-1, 2560x1440@143.98, 0x0, 1";
   };
+
+  home.stateVersion = "24.11";
 }
