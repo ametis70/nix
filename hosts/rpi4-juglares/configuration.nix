@@ -30,6 +30,9 @@
     systemd-boot.enable = false;
   };
 
+  virtualisation.docker.daemon.settings = {
+    live-restore = false; # Required for docker swarm
+  };
   # Argon ONE V2 case
   # FIXME: The argonone overlay for argononed is not working and the settings are not being picked up
 
