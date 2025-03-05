@@ -37,5 +37,13 @@
     };
   };
 
+  home.activation = {
+    asdf-completion = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run rm -rf "''${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
+      run mkdir -p "''${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
+      run /opt/homebrew/bin/asdf completion zsh > "''${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
+    '';
+  };
+
   home.stateVersion = "24.11";
 }
