@@ -40,14 +40,7 @@
           source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
         fi
 
-        # Source asdf
-        . "${pkgs.lib.getBin pkgs.asdf-vm}/share/asdf-vm/asdf.sh"
-
         export GPG_TTY=$TTY
-      '';
-      initExtraBeforeCompInit = ''
-        # asdf completion
-        fpath=(''${ASDF_DIR}/completions $fpath)
       '';
       initExtra = ''
         function after_zvm_init() {

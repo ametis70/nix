@@ -80,6 +80,7 @@ in
       "choose-gui"
       "colima"
       "openssl"
+      "asdf"
     ];
     casks = [
       "alt-tab"

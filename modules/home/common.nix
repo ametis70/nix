@@ -16,7 +16,6 @@
     fd
     curl
     jq
-    asdf-vm
     ranger
   ];
 
