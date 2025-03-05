@@ -19,5 +19,13 @@
     export PATH="$PATH:$FURY_BIN_LOCATION"
   '';
 
+  programs.git.extraConfig = {
+    url = {
+      "ssh://git@github.com/" = {
+        insteadOf = "https://github.com/";
+      };
+    };
+  };
+
   home.stateVersion = "24.11";
 }
