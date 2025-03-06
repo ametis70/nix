@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   services.gpg-agent = {
     enable = true;
     enableScDaemon = false;
     enableZshIntegration = false;
-    pinentryPackage = pkgs.pinentry-gnome3;
+    pinentryPackage = lib.mkDefault pkgs.pinentry-gnome3;
   };
 }

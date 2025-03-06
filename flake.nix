@@ -132,7 +132,7 @@
         };
         windows10 = {
           id = "windows10";
-          hostname = "ametis70-vm-windows";
+          hostname = "ametis70-vm-windows10";
           username = "ametis70";
           system = "x86_64-linux";
           extraNixosModules = [ ];
