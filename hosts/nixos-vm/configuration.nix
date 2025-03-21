@@ -50,15 +50,17 @@
         /export/docker/data    192.168.88.0/24(rw,sync,nohide,no_subtree_check,insecure,no_root_squash)
       '';
     };
-    nfsd = {
-      UDP = false;
-      vers2 = false;
-      vers3 = false;
-      vers4 = true;
-      "vers4.0" = false;
-      "vers4.1" = false;
-      "vers4.2" = true;
-      rdma = true; # Remote Direct Memory Access
+    settings = {
+      nfsd = {
+        UDP = false;
+        vers2 = false;
+        vers3 = false;
+        vers4 = true;
+        "vers4.0" = false;
+        "vers4.1" = false;
+        "vers4.2" = true;
+        rdma = true; # Remote Direct Memory Access
+      };
     };
   };
 

@@ -3,6 +3,7 @@
 {
   imports = [
     ../../modules/home/linux.nix
+    ../../modules/home/dev.nix
     ../../modules/home/gpg-agent/gpg-agent.nix
   ];
 

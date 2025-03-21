@@ -55,6 +55,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+    neovim
+
     curl
     fd
     fzf

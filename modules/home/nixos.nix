@@ -1,4 +1,4 @@
-{ pkgs, specialArgs, ... }:
+{ specialArgs, ... }:
 
 {
   imports = [ ./common.nix ];

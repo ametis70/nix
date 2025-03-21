@@ -2,9 +2,7 @@
 
 {
   imports = [
-    ./nvim/nvim.nix
     ./zsh/zsh.nix
-    ./zk/zk.nix
   ];
 
   programs.home-manager.enable = true;
