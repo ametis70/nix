@@ -9,7 +9,7 @@
       enableZshIntegration = true;
     };
     font = {
-      size = 14;
+      size = 18;
       package = pkgs.iosevka;
       name = "Iosevka Medium";
     };

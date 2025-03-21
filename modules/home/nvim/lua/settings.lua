@@ -27,6 +27,7 @@ vim.o.scrolloff = 10
 vim.o.laststatus = 3
 vim.o.termguicolors = true
 vim.opt.list = false
+vim.opt.signcolumn = "yes:2"
 vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
 vim.opt.listchars:append("tab:⟶ ")

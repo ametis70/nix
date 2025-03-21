@@ -37,6 +37,15 @@
     };
   };
 
+  home.packages = with pkgs; [
+    pandoc
+  ];
+
+  programs.texlive = {
+    enable = true;
+    extraPackages = tpkgs: { inherit (tpkgs) scheme-small pgfopts beamertheme-metropolis; };
+  };
+
   home.activation = {
     asdf-completion = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       run rm -rf "''${ASDF_DATA_DIR:-$HOME/.asdf}/completions"

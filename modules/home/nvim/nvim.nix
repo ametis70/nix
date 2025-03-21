@@ -36,6 +36,7 @@ in
       nodejs_22
       luarocks
       lua51Packages.lua
+      imagemagick
 
       # LSP
       nixd
@@ -70,6 +71,8 @@ in
       rustfmt
       gawk
     ];
+
+    extraLuaPackages = ps: [ ps.magick ];
 
     plugins = with specialArgs.pkgs-unstable.vimPlugins; [ lazy-nvim ];
 
@@ -169,6 +172,7 @@ in
           nvim-notify
           noice-nvim
           alpha-nvim
+          fidget-nvim
 
           # Keybindings
           which-key-nvim
@@ -199,6 +203,7 @@ in
           # Notes
           zk-nvim
           clipboard-image-nvim
+          image-nvim
           mkdnflow-nvim
 
           # Projects

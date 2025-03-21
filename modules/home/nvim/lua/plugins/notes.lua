@@ -201,4 +201,9 @@ return {
       "nvim-telescope/telescope.nvim",
     },
   },
+  {
+    "3rd/image.nvim",
+    opts = {},
+    lazy = false,
+  },
 }
