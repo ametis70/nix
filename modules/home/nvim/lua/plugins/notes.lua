@@ -202,8 +202,19 @@ return {
     },
   },
   {
-    "3rd/image.nvim",
-    opts = {},
+    "folke/snacks.nvim",
+    priority = 1000,
     lazy = false,
+    ---@type snacks.Config
+    opts = {
+      image = {
+        enabled = true,
+        doc = {
+          enabled = true,
+          inline = false,
+          float = true,
+        },
+      },
+    },
   },
 }

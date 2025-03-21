@@ -16,6 +16,7 @@ let
         ref = ref;
         rev = rev;
       };
+      doCheck = false;
     };
 in
 
@@ -28,10 +29,10 @@ in
     vimAlias = true;
     vimdiffAlias = true;
 
-    extraPackages = with pkgs; [
+    extraPackages = with specialArgs.pkgs-unstable; [
       # Deps
       ripgrep
-      vim # for xxd
+      tinyxxd
       gh
       nodejs_22
       luarocks
@@ -51,7 +52,7 @@ in
       nodePackages.bash-language-server
 
       # DAP
-      # js-debug-adapter?
+      vscode-js-debug
 
       # Tooling
       stylua
@@ -62,8 +63,8 @@ in
       nodePackages.eslint
       prettierd
       nodePackages.prettier
-      python311Packages.flake8
-      python311Packages.black
+      python312Packages.flake8
+      python312Packages.black
       rustywind
       stylelint
       html-tidy
@@ -96,21 +97,18 @@ in
           {
             name = "neovim-session-manager";
             path = (
-              fromGithub "35c154a4b904cbe2aa7acce00a8c1c54a8831780" "master" "Shatur/neovim-session-manager"
+              fromGithub "3409dc920d40bec4c901c0a122a80bee03d6d1e1" "master" "Shatur/neovim-session-manager"
             );
           }
 
           # Autocomplete
           copilot-lua
-          {
-            name = "LuaSnip";
-            path = luasnip;
-          }
+          luasnip
           nvim-cmp
           nvim-autopairs
           {
             name = "lspkind-nvim";
-            path = (fromGithub "d79a1c3299ad0ef94e255d045bed9fa26025dab6" "master" "onsails/lspkind.nvim");
+            path = lspkind-nvim;
           }
           cmp-nvim-lsp
           cmp-nvim-lsp-signature-help
@@ -127,10 +125,7 @@ in
           tokyonight-nvim
 
           # Comments
-          {
-            name = "Comment.nvim";
-            path = (fromGithub "e30b7f2008e52442154b66f7c519bfd2f1e32acb" "master" "numToStr/Comment.nvim");
-          }
+          comment-nvim
           nvim-ts-context-commentstring
 
           # Debugging
@@ -188,28 +183,24 @@ in
           {
             name = "none-ls-extras.nvim";
             path = (
-              fromGithub "958db3b4575bb96373cb20846b4cc76f3499a9bb" "main" "nvimtools/none-ls-extras.nvim"
+              fromGithub "6557f20e631d2e9b2a9fd27a5c045d701a3a292c" "main" "nvimtools/none-ls-extras.nvim"
             );
           }
           nvim-lspconfig
           neoconf-nvim
           lazydev-nvim
-          {
-            name = "schemastore.nvim";
-            path = SchemaStore-nvim;
-          }
+          SchemaStore-nvim
           typescript-nvim
 
           # Notes
           zk-nvim
           clipboard-image-nvim
-          image-nvim
           mkdnflow-nvim
 
           # Projects
           {
             name = "neovim-project";
-            path = (fromGithub "16594823c2a3e2214ed8c7d676e5e5beefbe96fd" "main" "coffebar/neovim-project");
+            path = (fromGithub "3ca01f19a6405334bf1f652126e63f1229ad0e74" "main" "coffebar/neovim-project");
           }
 
           # REST
@@ -218,7 +209,7 @@ in
           # Statusline
           {
             name = "incline.nvim";
-            path = (fromGithub "16fc9c073e3ea4175b66ad94375df6d73fc114c0" "main" "b0o/incline.nvim");
+            path = (fromGithub "0eb5b7f6fc6636a4e7b2eb2800b7650fd6d164a2" "main" "b0o/incline.nvim");
           }
           lualine-nvim
 
@@ -226,10 +217,7 @@ in
           toggleterm-nvim
 
           # Testing
-          {
-            name = "neotest";
-            path = neotest;
-          }
+          neotest
           neotest-jest
           neotest-go
           neotest-python
@@ -239,6 +227,7 @@ in
           nvim-ts-autotag
 
           # Utils
+          snacks-nvim
           mini-nvim
           leap-nvim
           vim-repeat
@@ -370,7 +359,6 @@ in
               vue
               xml
               yaml
-              org
               http
             ]
           )).dependencies;
