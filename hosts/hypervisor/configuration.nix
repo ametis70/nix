@@ -65,26 +65,6 @@
     nmap
   ];
 
-  services.cockpit = {
-    enable = true;
-
-    package = pkgs.cockpit.overrideAttrs (old: {
-      postBuild = ''
-        ${old.postBuild}
-
-        rm -rf \
-          dist/apps \
-          dist/kdump \
-          dist/networkmanager \
-          dist/packagekit \
-          dist/playground \
-          dist/selinux \
-          dist/sosreport \
-          dist/storaged
-      '';
-    });
-  };
-
   services.grafana = {
     enable = true;
     settings = {

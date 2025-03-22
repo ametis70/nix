@@ -5,14 +5,6 @@
   ...
 }:
 
-let
-  cockpit-machines = pkgs.callPackage ../../../modules/nixos/packages/cockpit-machines/default.nix {
-    inherit pkgs;
-  };
-  libvirt-dbus = pkgs.callPackage ../../../modules/nixos/packages/libvirt-dbus/default.nix {
-    inherit pkgs;
-  };
-in
 {
   boot.kernelParams = [
     "amd_iommu=on"
@@ -25,8 +17,6 @@ in
   ];
 
   environment.systemPackages = with pkgs; [
-    cockpit-machines
-    libvirt-dbus
     virt-viewer
   ];
 
