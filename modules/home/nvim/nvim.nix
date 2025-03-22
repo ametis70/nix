@@ -103,7 +103,10 @@ in
 
           # Autocomplete
           copilot-lua
-          luasnip
+          {
+            name = "LuaSnip";
+            path = luasnip;
+          }
           nvim-cmp
           nvim-autopairs
           {
@@ -125,7 +128,10 @@ in
           tokyonight-nvim
 
           # Comments
-          comment-nvim
+          {
+            name = "Comment.nvim";
+            path = comment-nvim;
+          }
           nvim-ts-context-commentstring
 
           # Debugging
@@ -189,7 +195,10 @@ in
           nvim-lspconfig
           neoconf-nvim
           lazydev-nvim
-          SchemaStore-nvim
+          {
+            name = "schemastore-nvim";
+            path = SchemaStore-nvim;
+          }
           typescript-nvim
 
           # Notes

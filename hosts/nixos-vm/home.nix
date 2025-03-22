@@ -3,7 +3,7 @@
 {
   imports = [
     ../../modules/home/nixos.nix
-    ../../modules/nixos/dev.nix
+    ../../modules/home/dev.nix
     ../../modules/home/discord/discord.nix
     ../../modules/home/kitty/kitty.nix
     ../../modules/home/hyprland/hyprland.nix
