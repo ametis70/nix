@@ -196,7 +196,7 @@ in
           neoconf-nvim
           lazydev-nvim
           {
-            name = "schemastore-nvim";
+            name = "schemastore.nvim";
             path = SchemaStore-nvim;
           }
           typescript-nvim
