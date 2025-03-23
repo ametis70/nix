@@ -12,7 +12,7 @@ let
       pname = "${lib.strings.sanitizeDerivationName repo}";
       version = ref;
       src = builtins.fetchGit {
-        url = "https://github.com/${repo}.git";
+        url = "https://github.com/${repo}";
         ref = ref;
         rev = rev;
       };

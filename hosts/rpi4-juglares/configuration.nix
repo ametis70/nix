@@ -5,6 +5,9 @@
   ...
 }:
 
+let
+  nutPasswordPath = "/etc/nut/password";
+in
 {
   imports = [
     ../../modules/nixos/common.nix
@@ -36,6 +39,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    nut
     nfs-utils
   ];
 
@@ -55,6 +59,49 @@
       device = "nas.lan:/export/docker/data";
       fsType = "nfs";
     };
+  };
+
+  power.ups = {
+    enable = true;
+    mode = "netserver";
+
+    ups."eaton" = {
+      driver = "usbhid-ups";
+      port = "auto";
+      # vendorId = "0463";
+      # productId = "FFFF";
+    };
+
+    upsmon = {
+      enable = true;
+      monitor.eaton = {
+        user = "nut";
+        system = "localhost@eaton";
+        type = "master";
+        powerValue = 1;
+        passwordFile = nutPasswordPath;
+      };
+    };
+
+    users."nut" = {
+      upsmon = "primary";
+      passwordFile = nutPasswordPath;
+    };
+
+    upsd = {
+      enable = true;
+      listen = [
+        {
+          address = "0.0.0.0";
+        }
+      ];
+    };
+  };
+
+  services.prometheus.exporters.nut = {
+    enable = true;
+    nutUser = "nut";
+    passwordPath = nutPasswordPath;
   };
 
   # Argon ONE V2 case

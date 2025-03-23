@@ -101,11 +101,22 @@
       }
       {
         job_name = "windows";
-        static_configs = [ { targets = [ "windows.local:9182" ]; } ];
+        static_configs = [ { targets = [ "windows.lan:9182" ]; } ];
       }
       {
         job_name = "nvidia_gpu";
-        static_configs = [ { targets = [ "windows.local:9835" ]; } ];
+        static_configs = [ { targets = [ "windows.lan:9835" ]; } ];
+      }
+      {
+        job_name = "nut";
+        static_configs = [
+          {
+            targets = [ "rpi4.lan:9199" ];
+            labels = {
+              "__metrics_path__" = "/ups_metrics";
+            };
+          }
+        ];
       }
     ];
   };
