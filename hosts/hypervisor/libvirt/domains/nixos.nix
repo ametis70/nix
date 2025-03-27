@@ -1,6 +1,7 @@
 { inputs, ... }:
 
 let
+  utils = import ./templates/utils.nix;
   template = import ./templates/linux.nix;
   common = {
     ram = 24;
@@ -13,35 +14,11 @@ let
       name = "nixos-gpu";
       uuid = "ca5872f8-67e3-4bd4-8f07-c82354e92826";
       video = false;
-      pci = [
-        {
-          # USB Controller function 0x1
-          domain = 0;
-          bus = 42; # 0x2a
-          slot = 0;
-          function = 1;
-        }
-        {
-          # USB Controller function 0x3
-          domain = 0;
-          bus = 42; # 0x2a
-          slot = 0;
-          function = 3;
-        }
-        {
-          # GPU Video
-          domain = 0;
-          bus = 35; # 0x23
-          slot = 0;
-          function = 0;
-        }
-        {
-          # GPU audio
-          domain = 0;
-          bus = 35; # 0x23
-          slot = 0;
-          function = 1;
-        }
+      pci = with utils; [
+        (pciDevice 0 42 0 1) # USB Controller function 0x1
+        (pciDevice 0 42 0 3) # USB Controller function 0x3
+        (pciDevice 0 35 0 0) # GPU Video
+        (pciDevice 0 35 0 1) # GPU Audio
       ];
     };
     basic = common // {
