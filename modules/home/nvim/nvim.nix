@@ -378,4 +378,5 @@ in
   # Normal LazyVim config here, see https://github.com/LazyVim/starter/tree/main/lua
   xdg.configFile."nvim/lua".source = ./lua;
   xdg.configFile."nvim/stylua.toml".source = ../../../stylua.toml;
+  xdg.dataFile."nvim/site/ftplugin".source = ./ftplugin;
 }
