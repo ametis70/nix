@@ -8,6 +8,7 @@
   imports = [
     ./domains/truenas-scale.nix
     ./domains/nixos.nix
+    ./domains/archlinux.nix
   ];
 
   boot.kernelParams = [
@@ -43,14 +44,6 @@
         }
         {
           definition = ./domains/windows10.xml;
-          active = false;
-        }
-        {
-          definition = ./domains/archlinux-gpu.xml;
-          active = false;
-        }
-        {
-          definition = ./domains/archlinux.xml;
           active = false;
         }
       ];
