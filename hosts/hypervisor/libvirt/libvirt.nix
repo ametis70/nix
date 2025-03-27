@@ -7,6 +7,7 @@
 {
   imports = [
     ./domains/truenas-scale.nix
+    ./domains/nixos.nix
   ];
 
   boot.kernelParams = [
@@ -42,14 +43,6 @@
         }
         {
           definition = ./domains/windows10.xml;
-          active = false;
-        }
-        {
-          definition = ./domains/nixos-gpu.xml;
-          active = true;
-        }
-        {
-          definition = ./domains/nixos.xml;
           active = false;
         }
         {

@@ -45,6 +45,12 @@ in
   };
   cpu = {
     mode = "host-passthrough";
+    feature = [
+      {
+        policy = "require";
+        name = "topoext";
+      }
+    ];
   };
   os = {
     type = "hvm";
@@ -83,6 +89,14 @@ in
         present = false;
       }
     ];
+  };
+  pm = {
+    "suspend-to-mem" = {
+      enabled = false;
+    };
+    "suspend-to-disk" = {
+      enabled = false;
+    };
   };
   devices =
     {
