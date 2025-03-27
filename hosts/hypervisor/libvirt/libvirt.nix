@@ -1,11 +1,14 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
 
 {
+  imports = [
+    ./domains/truenas-scale.nix
+  ];
+
   boot.kernelParams = [
     "amd_iommu=on"
     "iommu=pt"

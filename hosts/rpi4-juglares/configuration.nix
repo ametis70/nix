@@ -7,6 +7,8 @@
 
 let
   nutPasswordPath = "/etc/nut/password";
+  iscsiIqn = "iqn.2025-03.lan.juglares";
+  iscsiPortal = "truenas.lan";
 in
 {
   imports = [
@@ -102,6 +104,38 @@ in
     enable = true;
     nutUser = "nut";
     passwordPath = nutPasswordPath;
+  };
+
+  services.openiscsi = {
+    enable = true;
+    name = "${iscsiIqn}:rpi-juglares";
+    discoverPortal = iscsiPortal;
+  };
+
+  systemd.services.iscsi-login = {
+    description = "Login to iSCSI target";
+    after = [
+      "network.target"
+      "iscsid.service"
+    ];
+    wants = [ "iscsid.service" ];
+    serviceConfig = {
+      ExecStartPre = "${pkgs.openiscsi}/bin/iscsiadm -m discovery -t sendtargets -p truenas.lan";
+      ExecStart = "${pkgs.openiscsi}/bin/iscsiadm -m node -T ${iscsiIqn}:truenas:rpi-swarm -p ${iscsiPortal} --login";
+      ExecStop = "${pkgs.openiscsi}/bin/iscsiadm -m node -T ${iscsiIqn}:truenas:rpi-swarm -p ${iscsiPortal} --logout";
+      Restart = "on-failure";
+      RemainAfterExit = true;
+    };
+    wantedBy = [ "multi-user.target" ];
+  };
+
+  fileSystems."/media/swarm" = {
+    device = "/dev/disk/by-path/ip-192.168.88.60:3260-iscsi-${iscsiIqn}:truenas:rpi-swarm-lun-0-part1";
+    fsType = "ext4";
+    options = [
+      "_netdev"
+      "nofail"
+    ];
   };
 
   # Argon ONE V2 case
