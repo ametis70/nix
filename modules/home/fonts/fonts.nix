@@ -9,6 +9,7 @@
     noto-fonts-color-emoji
     iosevka
     pkgs-unstable.nerd-fonts.symbols-only
+    pkgs-unstable.nerd-fonts.hack
   ];
 
   fonts.fontconfig = {
