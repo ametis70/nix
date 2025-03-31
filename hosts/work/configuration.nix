@@ -86,7 +86,12 @@ in
       "alt-tab"
       "redquits"
       "kitty"
+      "moonlight"
     ];
+    masApps = {
+      "iBar-Menubar icon control tool" = 6443843900;
+      WireGuard = 1441195209;
+    };
   };
 
   security.pam.services.sudo_local.touchIdAuth = true;

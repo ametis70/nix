@@ -42,6 +42,7 @@
     scrcpy
     android-tools
     pandoc
+    wireguard-tools
   ];
 
   programs.texlive = {
