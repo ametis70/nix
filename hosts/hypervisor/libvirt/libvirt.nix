@@ -9,6 +9,7 @@
     ./domains/truenas-scale.nix
     ./domains/nixos.nix
     ./domains/archlinux.nix
+    ./domains/server.nix
   ];
 
   boot.kernelParams = [

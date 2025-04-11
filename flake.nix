@@ -10,6 +10,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager-unstable.url = "github:nix-community/home-manager";
     NixVirt = {
       url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
@@ -63,6 +68,7 @@
       raspberry-pi-nix,
       nix-darwin,
       nix-darwin-unstable,
+      disko,
       ...
     }@inputs:
     let
@@ -169,6 +175,15 @@
           channel = "stable";
           nixos = true;
         };
+        nixos-vm-server = {
+          id = "nixos-vm-server";
+          hostname = "ametis70-vm-server";
+          username = "ametis70";
+          system = "x86_64-linux";
+          extraNixosModules = [ disko.nixosModules.disko ];
+          channel = "stable";
+          nixos = true;
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -227,6 +242,7 @@
         "${nixos-vm.hostname}" = configureNixOs nixos-vm;
         "${nixos-deck.hostname}" = configureNixOs nixos-deck;
         "${rpi4-juglares.hostname}" = configureNixOs rpi4-juglares;
+        "${nixos-vm-server.hostname}" = configureNixOs nixos-vm-server;
       };
 
       homeConfigurations = with hosts; {
