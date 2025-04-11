@@ -7,7 +7,7 @@
 
 let
   nutPasswordPath = "/etc/nut/password";
-  iscsiIqn = "iqn.2025-03.lan.juglares";
+  iscsiIqn = "iqn.2025-03.local.nas";
   iscsiPortal = "truenas.lan";
 in
 {
@@ -108,7 +108,7 @@ in
 
   services.openiscsi = {
     enable = true;
-    name = "${iscsiIqn}:rpi-juglares";
+    name = "${iscsiIqn}:rpi4-juglares";
     discoverPortal = iscsiPortal;
   };
 
@@ -121,21 +121,62 @@ in
     wants = [ "iscsid.service" ];
     serviceConfig = {
       ExecStartPre = "${pkgs.openiscsi}/bin/iscsiadm -m discovery -t sendtargets -p truenas.lan";
-      ExecStart = "${pkgs.openiscsi}/bin/iscsiadm -m node -T ${iscsiIqn}:truenas:rpi-swarm -p ${iscsiPortal} --login";
-      ExecStop = "${pkgs.openiscsi}/bin/iscsiadm -m node -T ${iscsiIqn}:truenas:rpi-swarm -p ${iscsiPortal} --logout";
+      ExecStart = "${pkgs.openiscsi}/bin/iscsiadm -m node -T ${iscsiIqn}:truenas:rpi4-juglares -p ${iscsiPortal} --login";
+      ExecStop = "${pkgs.openiscsi}/bin/iscsiadm -m node -T ${iscsiIqn}:truenas:rpi4-juglares -p ${iscsiPortal} --logout";
       Restart = "on-failure";
       RemainAfterExit = true;
     };
     wantedBy = [ "multi-user.target" ];
   };
 
-  fileSystems."/media/swarm" = {
-    device = "/dev/disk/by-path/ip-192.168.88.60:3260-iscsi-${iscsiIqn}:truenas:rpi-swarm-lun-0-part1";
-    fsType = "ext4";
-    options = [
-      "_netdev"
-      "nofail"
+  systemd.mounts = [
+    {
+      name = "data-docker.mount";
+      after = [ "iscsi-login.service" ];
+      what = "/dev/disk/by-path/ip-192.168.88.60:3260-iscsi-${iscsiIqn}:truenas:rpi4-juglares-lun-0-part1";
+      where = "/data/docker";
+      type = "ext4";
+      options = "_netdev,nofail";
+    }
+    {
+      name = "data-gfs-brick1.mount";
+      after = [ "iscsi-login.service" ];
+      what = "/dev/disk/by-path/ip-192.168.88.60:3260-iscsi-${iscsiIqn}:truenas:rpi4-juglares-lun-1-part1";
+      where = "/data/gfs/brick1";
+      type = "ext4";
+      options = "_netdev,nofail";
+
+    }
+    {
+      name = "srv-gfs.mount";
+      after = [ "glusterd.service" ];
+      what = "localhost:/gv0";
+      where = "/srv/gfs";
+      type = "glusterfs";
+      options = "defaults";
+    }
+  ];
+
+  services.glusterfs.enable = true;
+
+  systemd.services.glusterd = {
+    after = [ "data-gfs-brick1.mount" ];
+    wants = [ "data-gfs-brick1.mount" ];
+  };
+
+  systemd.services.docker = {
+    wants = [
+      "data-docker.mount"
+      "srv-gfs.mount"
     ];
+    after = [
+      "data-docker.mount"
+      "srv-gfs.mount"
+    ];
+  };
+
+  virtualisation.docker.daemon.settings = {
+    data-root = "/data/docker/daemon";
   };
 
   # Argon ONE V2 case
