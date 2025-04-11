@@ -1,5 +1,14 @@
-{ lib, specialArgs, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  specialArgs,
+  ...
+}:
 
+let
+  hyprland-nixpkgs = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+in
 {
   imports = [
     ../../modules/nixos/common.nix
@@ -62,6 +71,12 @@
         rdma = true; # Remote Direct Memory Access
       };
     };
+  };
+
+  hardware.graphics = {
+    package = hyprland-nixpkgs.mesa.drivers;
+    enable32Bit = true;
+    package32 = hyprland-nixpkgs.pkgsi686Linux.mesa.drivers;
   };
 
   system.stateVersion = "24.11";
