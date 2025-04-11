@@ -184,6 +184,15 @@
           channel = "stable";
           nixos = true;
         };
+        intel-juglares = {
+          id = "intel-juglares";
+          hostname = "intel-juglares";
+          username = "ametis70";
+          system = "x86_64-linux";
+          extraNixosModules = [ disko.nixosModules.disko ];
+          channel = "stable";
+          nixos = true;
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -243,6 +252,7 @@
         "${nixos-deck.hostname}" = configureNixOs nixos-deck;
         "${rpi4-juglares.hostname}" = configureNixOs rpi4-juglares;
         "${nixos-vm-server.hostname}" = configureNixOs nixos-vm-server;
+        "${intel-juglares.hostname}" = configureNixOs intel-juglares;
       };
 
       homeConfigurations = with hosts; {
