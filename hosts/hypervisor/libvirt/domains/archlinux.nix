@@ -6,7 +6,7 @@ let
   common = {
     ram = 24;
     cpu = 12;
-    disk = "archlinux.qcow2";
+    disks = [ "archlinux.qcow2" ];
     mac = "52:54:00:d6:2c:03";
   };
   settings = {

@@ -3,7 +3,7 @@
   uuid,
   ram ? 2,
   cpu ? 2,
-  disk,
+  disks ? [ ],
   mac,
   video ? false,
   pci ? [ ],
@@ -87,25 +87,7 @@ in
     {
       emulator = "/run/libvirt/nix-emulators/qemu-system-x86_64";
 
-      disk = [
-        {
-          type = "file";
-          device = "disk";
-          driver = {
-            name = "qemu";
-            type = "qcow2";
-            cache = "none";
-            discard = "unmap";
-          };
-          source = {
-            file = "/var/lib/libvirt/images/${disk}";
-          };
-          target = {
-            dev = "vda";
-            bus = "virtio";
-          };
-        }
-      ];
+      disk = utils.mkDisks disks;
 
       interface =
         {

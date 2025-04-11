@@ -6,7 +6,7 @@ let
   common = {
     ram = 24;
     cpu = 12;
-    disk = "nixos.qcow2";
+    disks = [ "nixos.qcow2" ];
     mac = "52:54:00:54:b6:36";
   };
   settings = {
