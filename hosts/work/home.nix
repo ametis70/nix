@@ -59,6 +59,18 @@
     '';
   };
 
+  programs.git.extraConfig = {
+    commit = {
+      gpgsign = true;
+    };
+    user = {
+      signingkey = "~/.ssh/id_ed25519_melisource.pub";
+    };
+    gpg = {
+      format = "ssh";
+    };
+  };
+
   programs.kitty.font.size = 16;
   home.stateVersion = "24.11";
 }

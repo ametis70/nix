@@ -83,13 +83,13 @@ in
       "asdf"
     ];
     casks = [
+      "jordanbaird-ice"
       "alt-tab"
       "redquits"
       "kitty"
       "moonlight"
     ];
     masApps = {
-      "iBar-Menubar icon control tool" = 6443843900;
       WireGuard = 1441195209;
     };
   };
