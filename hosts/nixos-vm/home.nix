@@ -25,8 +25,6 @@ in
 
     virt-manager
     hypervisor-virt-manager
-
-    orca-slicer
   ];
 
   wayland.windowManager.hyprland.settings = {
