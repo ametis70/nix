@@ -52,7 +52,15 @@
 
   programs.texlive = {
     enable = true;
-    extraPackages = tpkgs: { inherit (tpkgs) scheme-small pgfopts beamertheme-metropolis; };
+    extraPackages = tpkgs: {
+      inherit (tpkgs)
+        latexmk
+        biber
+        scheme-small
+        pgfopts
+        beamertheme-metropolis
+        ;
+    };
   };
 
   home.activation = {

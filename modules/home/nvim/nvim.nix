@@ -38,6 +38,8 @@ in
       luarocks
       lua51Packages.lua
       imagemagick
+      ghostscript
+      mermaid-cli
 
       # LSP
       nixd
@@ -50,6 +52,18 @@ in
       pyright
       nodePackages.typescript-language-server
       nodePackages.bash-language-server
+      docker-compose-language-service
+      dockerfile-language-server-nodejs
+      marksman
+      neocmakelsp
+      nil
+      ruff
+      svelte-language-server
+      taplo
+      texlab
+      vue-language-server
+      vtsls
+      yaml-language-server
 
       # DAP
       vscode-js-debug
@@ -71,6 +85,10 @@ in
       nixfmt-rfc-style
       rustfmt
       gawk
+      gofumpt
+      markdownlint-cli2
+      gotools
+      sqlfluff
     ];
 
     extraLuaPackages = ps: [ ps.magick ];
@@ -80,169 +98,101 @@ in
     extraLuaConfig =
       let
         luaRocks = with specialArgs.pkgs-unstable.luajitPackages; [
-          luautf8
-          lua-curl
-          mimetypes
-          xml2lua
         ];
 
         plugins = with specialArgs.pkgs-unstable.vimPlugins; [
-          # Deps
-          plenary-nvim
+          LazyVim
+
+          blink-cmp
+          bufferline-nvim
+          catppuccin-nvim
+          conform-nvim
+          flash-nvim
+          friendly-snippets
+          gitsigns-nvim
+          grug-far-nvim
+          lazydev-nvim
+          noice-nvim
+          lualine-nvim
+          mini-nvim
           nui-nvim
-          promise-async
-          nvim-web-devicons
-          nvim-nio
-          nvim-window-picker
+          nvim-lint
+          nvim-lspconfig
+          nvim-treesitter
+          nvim-treesitter-textobjects
+          nvim-ts-autotag
+          persistence-nvim
+          plenary-nvim
+          snacks-nvim
+          todo-comments-nvim
+          tokyonight-nvim
+          trouble-nvim
+          ts-comments-nvim
+          which-key-nvim
           {
-            name = "neovim-session-manager";
+            name = "mini.ai";
+            path = mini-nvim;
+          }
+          {
+            name = "mini.icons";
+            path = mini-nvim;
+          }
+          {
+            name = "mini.pairs";
+            path = mini-nvim;
+          }
+          {
+            name = "catppuccin";
+            path = catppuccin-nvim;
+          }
+          {
+            name = "blink-cmp-copilot";
             path = (
-              fromGithub "3409dc920d40bec4c901c0a122a80bee03d6d1e1" "master" "Shatur/neovim-session-manager"
+              fromGithub "439cff78780c033aa23cf061d7315314b347e3c1" "main" "giuxtaposition/blink-cmp-copilot"
             );
           }
-
-          # Autocomplete
+          cmake-tools-nvim
           copilot-lua
           {
-            name = "LuaSnip";
-            path = luasnip;
-          }
-          nvim-cmp
-          nvim-autopairs
-          {
-            name = "lspkind-nvim";
-            path = lspkind-nvim;
-          }
-          cmp-nvim-lsp
-          cmp-nvim-lsp-signature-help
-          cmp-buffer
-          cmp-path
-          cmp-cmdline
-          cmp-omni
-          cmp-git
-          copilot-cmp
-          cmp_luasnip
-          friendly-snippets
-
-          # Colorscheme
-          tokyonight-nvim
-
-          # Comments
-          {
-            name = "Comment.nvim";
-            path = comment-nvim;
-          }
-          nvim-ts-context-commentstring
-
-          # Debugging
-          nvim-dap
-          nvim-dap-ui
-
-          # Files
-          neo-tree-nvim
-          rnvimr
-
-          # Filetypes
-          hex-nvim
-          package-info-nvim
-          orgmode
-
-          # Finder
-          telescope-nvim
-          telescope-fzf-native-nvim
-          telescope-file-browser-nvim
-          telescope-ui-select-nvim
-
-          # Folding
-          nvim-ufo
-
-          # Git
-          octo-nvim
-          neogit
-          gitsigns-nvim
-          git-blame-nvim
-          diffview-nvim
-
-          # GUI
-          dressing-nvim
-          indent-blankline-nvim
-          zen-mode-nvim
-          twilight-nvim
-          todo-comments-nvim
-          nvim-colorizer-lua
-          nvim-notify
-          noice-nvim
-          alpha-nvim
-          fidget-nvim
-
-          # Keybindings
-          which-key-nvim
-
-          # LSP
-          mason-nvim
-          mason-tool-installer-nvim
-          mason-lspconfig-nvim
-          nvim-lightbulb
-          aerial-nvim
-          trouble-nvim
-          none-ls-nvim
-          {
-            name = "none-ls-extras.nvim";
+            name = "CopilotChat.nvim";
             path = (
-              fromGithub "6557f20e631d2e9b2a9fd27a5c045d701a3a292c" "main" "nvimtools/none-ls-extras.nvim"
+              fromGithub "4dce4d2fc185a935024511811139b68e91b2d2a8" "main" "CopilotC-Nvim/CopilotChat.nvim"
             );
           }
-          nvim-lspconfig
-          neoconf-nvim
-          lazydev-nvim
+          crates-nvim
+          dial-nvim
+          inc-rename-nvim
+          markdown-preview-nvim
           {
-            name = "schemastore.nvim";
+            name = "mini.hipatterns";
+            path = mini-nvim;
+          }
+          neotest
+          neotest-golang
+          neotest-python
+          neotest-jest
+          neotest-vitest
+          nvim-dap
+          nvim-dap-go
+          nvim-dap-python
+          nvim-dap-ui
+          nvim-dap-virtual-text
+          nvim-nio
+          one-small-step-for-vimkind
+          overseer-nvim
+          render-markdown-nvim
+          rustaceanvim
+          {
+            name = "SchemaStore.nvim";
             path = SchemaStore-nvim;
           }
-          typescript-nvim
-
-          # Notes
-          zk-nvim
-          clipboard-image-nvim
-          mkdnflow-nvim
-
-          # Projects
-          {
-            name = "neovim-project";
-            path = (fromGithub "3ca01f19a6405334bf1f652126e63f1229ad0e74" "main" "coffebar/neovim-project");
-          }
-
-          # REST
-          rest-nvim
-
-          # Statusline
-          {
-            name = "incline.nvim";
-            path = (fromGithub "0eb5b7f6fc6636a4e7b2eb2800b7650fd6d164a2" "main" "b0o/incline.nvim");
-          }
-          lualine-nvim
-
-          # Term
-          toggleterm-nvim
-
-          # Testing
-          neotest
-          neotest-jest
-          neotest-go
-          neotest-python
-
-          # TreeSitter
-          nvim-treesitter
-          nvim-ts-autotag
-
-          # Utils
-          snacks-nvim
-          mini-nvim
-          leap-nvim
-          vim-repeat
-          vim-table-mode
-          vim-eunuch
-          refactoring-nvim
+          vim-dadbod
+          vim-dadbod-ui
+          vim-dadbod-completion
+          vimtex
+          yanky-nvim
+          clangd_extensions-nvim
+          kulala-nvim
         ];
 
         mkEntryFromDrv =
@@ -270,30 +220,17 @@ in
         vim.g.NIX_USER = "${specialArgs.host.username}"
         vim.g.NIX_HOST = "${specialArgs.host.hostname}"
         vim.g.NIXOS = ${if specialArgs.host.nixos then "true" else "false"}
+        vim.g.PLUGINS_PATH = "${pluginsPath}"
         vim.g.mapleader = " "
         vim.g.maplocalleader = ","
 
         package.cpath = "${luarocks.cpath}" .. package.cpath
         package.path = "${luarocks.path}" .. package.path
 
-        require("lazy").setup({
-          defaults = {
-            lazy = true,
-          },
-          dev = {
-            path = "${pluginsPath}",
-            patterns = { "." },
-            fallback = false,
-          },
-          spec = {
-            { import = "plugins" },
-          },
-        })
-        require("settings")
+        require("LazyVim")
       '';
   };
 
-  # https://github.com/nvim-treesitter/nvim-treesitter#i-get-query-error-invalid-node-type-at-position
   xdg.configFile."nvim/parser".source =
     let
       parsers = pkgs.symlinkJoin {
@@ -369,14 +306,15 @@ in
               xml
               yaml
               http
+              norg
+              svelte
+              typst
             ]
           )).dependencies;
       };
     in
     "${parsers}/parser";
 
-  # Normal LazyVim config here, see https://github.com/LazyVim/starter/tree/main/lua
   xdg.configFile."nvim/lua".source = ./lua;
   xdg.configFile."nvim/stylua.toml".source = ../../../stylua.toml;
-  xdg.dataFile."nvim/site/ftplugin".source = ./ftplugin;
 }
