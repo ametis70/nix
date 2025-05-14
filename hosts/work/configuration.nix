@@ -75,12 +75,16 @@ in
       autoUpdate = true;
       cleanup = "zap";
     };
+    taps = [
+      "d12frosted/emacs-plus"
+    ];
     brews = [
       "gettext"
       "choose-gui"
       "colima"
       "openssl"
       "asdf"
+      "emacs-plus@30"
     ];
     casks = [
       "jordanbaird-ice"
