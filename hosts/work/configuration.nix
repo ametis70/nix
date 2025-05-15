@@ -87,6 +87,8 @@ in
       "emacs-plus@30"
     ];
     casks = [
+      "gimp"
+      "inkscape"
       "jordanbaird-ice"
       "alt-tab"
       "redquits"

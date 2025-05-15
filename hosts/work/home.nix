@@ -7,6 +7,7 @@
     ../../modules/home/fonts/fonts.nix
     ../../modules/home/kitty/kitty.nix
     ../../modules/home/emacs/emacs.nix
+    ../../modules/home/pdf/pdf.nix
   ];
 
   programs.kitty.package = pkgs.emptyDirectory;
