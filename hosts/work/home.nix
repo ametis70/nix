@@ -8,6 +8,7 @@
     ../../modules/home/kitty/kitty.nix
     ../../modules/home/emacs/emacs.nix
     ../../modules/home/pdf/pdf.nix
+    ../../modules/home/hypervisor-virt-manager/hvm.nix
   ];
 
   programs.kitty.package = pkgs.emptyDirectory;

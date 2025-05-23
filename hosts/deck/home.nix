@@ -1,7 +1,5 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
-let
-in
 {
   imports = [
     ../../modules/home/linux.nix
@@ -13,6 +11,8 @@ in
     ../../modules/home/design/design.nix
     ../../modules/home/zathura/zathura.nix
     ../../modules/home/gpg-agent/gpg-agent.nix
+    ../../modules/home/hypervisor-virt-manager/hvm.nix
+
   ];
 
   nixpkgs.config.allowUnfreePredicate =
@@ -25,9 +25,6 @@ in
   home.packages = with pkgs; [
     nixgl.nixGLIntel
     nixgl.nixVulkanIntel
-    ungoogled-chromium
-    telegram-desktop
-    nautilus
   ];
 
   home.stateVersion = "24.11";

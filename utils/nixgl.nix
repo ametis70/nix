@@ -1,6 +1,6 @@
 { pkgs, lib, ... }:
-let
 
+let
   makeNixGLWrapper =
     bin: pkg:
     pkgs.runCommand "${pkg.name}-nixgl-wrapper" { } ''
@@ -18,7 +18,6 @@ let
   wrapMesa = makeNixGLWrapper "${lib.getExe pkgs.nixgl.nixGLIntel}";
   wrapVulkan = makeNixGLWrapper "${lib.getExe pkgs.nixgl.nixVulkanIntel}";
   wrapVulkanMesa = makeNixGLWrapper "${lib.getExe pkgs.nixgl.nixGLIntel} ${lib.getExe pkgs.nixgl.nixVulkanIntel}";
-
 in
 {
   wrapMesa = wrapMesa;

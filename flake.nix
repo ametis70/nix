@@ -21,7 +21,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixgl.url = "github:nix-community/nixGL";
+    nixgl = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixgl-unstable = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
 
     Jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
 
@@ -69,21 +76,37 @@
       nix-darwin,
       nix-darwin-unstable,
       disko,
+      nixgl,
+      nixgl-unstable,
       ...
     }@inputs:
     let
       packages = {
         "x86_64-linux" = {
-          stable = nixpkgs.legacyPackages."x86_64-linux";
-          unstable = nixpkgs-unstable.legacyPackages."x86_64-linux";
+          stable = import nixpkgs {
+            system = "x86_64-linux";
+            overlays = [ nixgl.overlay ];
+          };
+          unstable = import nixpkgs-unstable {
+            system = "x86_64-linux";
+            overlays = [ nixgl-unstable.overlay ];
+          };
         };
         "aarch64-darwin" = {
-          stable = nixpkgs.legacyPackages."aarch64-darwin";
-          unstable = nixpkgs-unstable.legacyPackages."aarch64-darwin";
+          stable = import nixpkgs {
+            system = "aarch64-darwin";
+          };
+          unstable = import nixpkgs-unstable {
+            system = "aarch64-darwin";
+          };
         };
         "aarch64-linux" = {
-          stable = nixpkgs.legacyPackages."aarch64-linux";
-          unstable = nixpkgs-unstable.legacyPackages."aarch64-linux";
+          stable = import nixpkgs {
+            system = "aarch64-linux";
+          };
+          unstable = import nixpkgs-unstable {
+            system = "aarch64-linux";
+          };
         };
       };
 

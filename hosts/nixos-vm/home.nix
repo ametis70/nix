@@ -1,10 +1,5 @@
 { pkgs, ... }:
 
-let
-  hypervisor-virt-manager = pkgs.writeShellScriptBin "hvm" ''
-    ${pkgs.virt-manager}/bin/virt-manager -c 'qemu+ssh://ametis70@hypervisor.lan/system'
-  '';
-in
 {
   imports = [
     ../../modules/home/nixos.nix
@@ -15,6 +10,7 @@ in
     ../../modules/home/design/design.nix
     ../../modules/home/zathura/zathura.nix
     ../../modules/home/gpg-agent/gpg-agent.nix
+    ../../modules/home/hypervisor-virt-manager/hvm.nix
   ];
 
   home.packages = with pkgs; [
@@ -22,9 +18,6 @@ in
     telegram-desktop
     nautilus
     file-roller
-
-    virt-manager
-    hypervisor-virt-manager
   ];
 
   wayland.windowManager.hyprland.settings = {
