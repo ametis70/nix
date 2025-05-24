@@ -5,6 +5,7 @@
     ../../modules/home/linux.nix
     ../../modules/home/dev.nix
     ../../modules/home/gpg-agent/gpg-agent.nix
+    ../../modules/home/hypervisor-virt-manager/hvm.nix
   ];
 
   services.gpg-agent = {
@@ -32,11 +33,6 @@
     enable = true;
     addKeysToAgent = "yes";
   };
-
-  home.packages = [
-    pkgs.virt-manager
-    inputs.nixgl.packages.x86_64-linux.nixGLIntel
-  ];
 
   home.stateVersion = "24.11";
 }

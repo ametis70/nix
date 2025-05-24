@@ -1,13 +1,18 @@
-{ pkgs, host, ... }:
+{
+  pkgs,
+  lib,
+  host,
+  ...
+}:
 
 let
   nixgl = import ../../../utils/nixgl.nix {
-    inherit pkgs;
+    inherit pkgs lib;
   };
 
   hypervisor-virt-manager = pkgs.writeShellScriptBin "hvm" ''
-    trap 'ssh -S ~/tmp/ssh-hvm-socket -O exit ametis70@hypervisor.lan' EXIT
-    ssh -f -N -M -S ~/tmp/ssh-hvm-socket ametis70@hypervisor.lan
+    trap 'ssh -S /tmp/ssh-hvm-socket -O exit ametis70@hypervisor.lan' EXIT
+    ssh -f -N -M -S /tmp/ssh-hvm-socket ametis70@hypervisor.lan
     ${pkgs.virt-manager}/bin/virt-manager -c 'qemu+ssh://ametis70@hypervisor.lan/system'
   '';
 in
