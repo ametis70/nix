@@ -5,6 +5,9 @@
   ...
 }:
 
+let
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
+in
 {
   home.sessionVariables = {
     DOOMDIR = "${config.xdg.configHome}/doom";
@@ -15,14 +18,18 @@
 
   home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
 
-  programs.emacs = {
-    enable = lib.mkIf pkgs.stdenv.hostPlatform.isLinux true;
-    package = pkgs.emacs;
-    extraPackages = with pkgs; [
+  home.packages = lib.optionals isLinux (
+    with pkgs;
+    [
       ripgrep
       fd
       emacs-all-the-icons-fonts
-    ];
+    ]
+  );
+
+  programs.emacs = {
+    enable = lib.mkIf isLinux true;
+    package = pkgs.emacs;
   };
 
   xdg.configFile."emacs".source = builtins.fetchGit {
