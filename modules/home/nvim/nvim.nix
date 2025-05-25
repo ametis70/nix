@@ -306,7 +306,6 @@ in
               xml
               yaml
               http
-              norg
               svelte
               typst
             ]
