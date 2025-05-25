@@ -39,6 +39,13 @@
       inputs.hyprland.follows = "hyprland";
     };
 
+    hyprland-unstable.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.49.0";
+
+    hy3-unstable = {
+      url = "github:outfoxxed/hy3?ref=hl0.49.0";
+      inputs.hyprland.follows = "hyprland-unstable";
+    };
+
     raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
 
     argononed = {
@@ -125,9 +132,21 @@
         unstable = home-manager-unstable;
       };
 
+      hyprland = {
+        stable = inputs.hyprland;
+        unstable = inputs.hyprland-unstable;
+      };
+
+      hy3 = {
+        stable = inputs.hy3;
+        unstable = inputs.hy3-unstable;
+      };
+
       getHostSpecialArgs = host: {
         inherit inputs;
         inherit host;
+        inherit hyprland;
+        inherit hy3;
         pkgs-unstable = packages.${host.system}.unstable;
       };
 
@@ -183,7 +202,7 @@
           username = "ametis70";
           system = "x86_64-linux";
           extraNixosModules = [ ];
-          channel = "stable";
+          channel = "unstable";
           nixos = true;
         };
         rpi4-juglares = {

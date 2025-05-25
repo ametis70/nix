@@ -1,13 +1,14 @@
 {
   pkgs,
   lib,
-  inputs,
-  specialArgs,
+  hyprland,
+  host,
   ...
 }:
 
 let
-  hyprland-nixpkgs = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  hyprland-nixpkgs =
+    hyprland.${host.channel}.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   imports = [
@@ -34,7 +35,7 @@ in
     ];
 
   networking = {
-    hostName = specialArgs.host.hostname;
+    hostName = host.hostname;
     networkmanager.enable = true;
     firewall.enable = false;
   };

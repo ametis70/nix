@@ -1,14 +1,15 @@
 {
   pkgs,
-  inputs,
-  specialArgs,
+  host,
+  hyprland,
+  hy3,
   ...
 }:
 
 let
   hyprexit = pkgs.writeShellScriptBin "hyprexit" ''
     ${pkgs.hyprland}/bin/hyprctl dispatch exit
-    ${pkgs.systemd}/bin/loginctl terminate-user ${specialArgs.host.username}
+    ${pkgs.systemd}/bin/loginctl terminate-user ${host.username}
   '';
 
   # Script for creating initial workspaces
@@ -18,7 +19,6 @@ let
     done;
     ${pkgs.hyprland}/bin/hyprctl dispatch workspace 1
   '';
-
 in
 {
 
@@ -43,7 +43,7 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    package = hyprland.${host.channel}.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     settings = {
       general = {
         gaps_in = 5;
@@ -261,7 +261,7 @@ in
       ];
 
       plugin = [
-        "${inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
+        "${hy3.${host.channel}.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
       ];
     };
   };
@@ -270,7 +270,6 @@ in
     enable = true;
     settings = {
       ipc = "on";
-
       preload = [ "~/Pictures/wallpaper.jpg" ];
       wallpaper = [ ", ~/Pictures/wallpaper.jpg" ];
     };
