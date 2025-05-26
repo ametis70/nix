@@ -1,9 +1,26 @@
-{ lib, ... }:
+{
+  pkgs,
+  lib,
+  host,
+  ...
+}:
 
+let
+  nixgl = import ../../../utils/nixgl.nix {
+    inherit pkgs lib;
+  };
+in
 {
   programs.kitty = {
     enable = true;
     themeFile = "tokyo_night_storm";
+    package =
+      if (host.system == "x86_64-linux" && !host.nixos) then
+        (nixgl.wrapMesa pkgs.kitty)
+      else if (host.system == "x86_64-linux" && host.nixos) then
+        pkgs.kitty
+      else
+        null;
     shellIntegration = {
       enableBashIntegration = true;
       enableZshIntegration = true;

@@ -10,7 +10,7 @@ let
       mkdir $out/bin
       for bin in ${pkg}/bin/*; do
         wrapped_bin=$out/bin/$(basename $bin)
-        echo "exec ${bin} $bin \$@" > $wrapped_bin
+        printf "#!/bin/sh\nexec ${bin} $bin \$@" > $wrapped_bin
         chmod +x $wrapped_bin
       done
     '';
