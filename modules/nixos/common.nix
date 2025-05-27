@@ -2,6 +2,7 @@
   pkgs,
   specialArgs,
   lib,
+  inputs,
   ...
 }:
 
@@ -77,5 +78,8 @@
     cloud-utils
     usbutils
     pciutils
+
+    inputs.agenix.packages.${system}.default
   ];
+
 }

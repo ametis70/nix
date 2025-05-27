@@ -1,0 +1,14 @@
+let
+  system1 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4w3SsDRhk3px5UgqQtfArKTartXA30NXgGffpn80XY";
+  system2 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKyy8MljGwjygWJSeuoVDAcL+vyqFT/SHO1YqAk2l64B";
+  system3 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBm5o2OnlwYvzjS7rPGlchYoZSEK4We93I5xj2Xxu0sw";
+  system4 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBE355tY3B+HGAkEPeNitmkxkEuCjVznBpgWXM5OWU4t";
+in
+{
+  "k3s.age".publicKeys = [
+    system1
+    system2
+    system3
+    system4
+  ];
+}

@@ -10,12 +10,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    home-manager-unstable = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    home-manager-unstable.url = "github:nix-community/home-manager";
     NixVirt = {
       url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,6 +29,7 @@
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     nixgl-unstable = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -53,11 +58,20 @@
       flake = false;
     };
 
-    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    nix-darwin-unstable.url = "github:LnL7/nix-darwin/master";
-    nix-darwin-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nix-darwin-unstable = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.darwin.follows = "";
+    };
   };
 
   nixConfig = {
@@ -85,6 +99,7 @@
       disko,
       nixgl,
       nixgl-unstable,
+      agenix,
       ...
     }@inputs:
     let
@@ -261,6 +276,7 @@
               home-manager.users.${host.username} = import ./hosts/${host.id}/home.nix;
               home-manager.extraSpecialArgs = getHostSpecialArgs host;
             }
+            agenix.nixosModules.default
           ];
           specialArgs = getHostSpecialArgs host;
         };
