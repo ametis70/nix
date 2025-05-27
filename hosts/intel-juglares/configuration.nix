@@ -103,5 +103,7 @@
     }
   ];
 
+  custom.k3s.enable = true;
+
   system.stateVersion = "24.11";
 }

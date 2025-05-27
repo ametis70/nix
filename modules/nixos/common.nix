@@ -7,6 +7,8 @@
 }:
 
 {
+  imports = [ ./k3s.nix ];
+
   system.copySystemConfiguration = false;
 
   nix.settings = {

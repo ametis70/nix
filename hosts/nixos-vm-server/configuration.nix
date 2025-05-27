@@ -78,5 +78,10 @@
 
   boot.supportedFilesystems = [ "nfs" ];
 
+  custom.k3s = {
+    enable = true;
+    init = true;
+  };
+
   system.stateVersion = "24.11";
 }
