@@ -51,7 +51,7 @@
       inputs.hyprland.follows = "hyprland-unstable";
     };
 
-    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     argononed = {
       url = "github:nvmd/argononed";
@@ -93,13 +93,13 @@
       home-manager-unstable,
       NixVirt,
       Jovian,
-      raspberry-pi-nix,
       nix-darwin,
       nix-darwin-unstable,
       disko,
       nixgl,
       nixgl-unstable,
       agenix,
+      nixos-hardware,
       ...
     }@inputs:
     let
@@ -226,8 +226,7 @@
           username = "ametis70";
           system = "aarch64-linux";
           extraNixosModules = [
-            raspberry-pi-nix.nixosModules.raspberry-pi
-            raspberry-pi-nix.nixosModules.sd-image
+            nixos-hardware.nixosModules.raspberry-pi-4
           ];
           channel = "stable";
           nixos = true;
@@ -308,9 +307,9 @@
         "${hypervisor.hostname}" = configureNixOs hypervisor;
         "${nixos-vm.hostname}" = configureNixOs nixos-vm;
         "${nixos-deck.hostname}" = configureNixOs nixos-deck;
-        "${rpi4-juglares.hostname}" = configureNixOs rpi4-juglares;
         "${nixos-vm-server.hostname}" = configureNixOs nixos-vm-server;
         "${intel-juglares.hostname}" = configureNixOs intel-juglares;
+        # "${rpi4-juglares.hostname}" = configureNixOs rpi4-juglares;
       };
 
       homeConfigurations = with hosts; {

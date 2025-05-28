@@ -6,22 +6,20 @@
 }:
 
 let
-  nutPasswordPath = "/etc/nut/password";
   iscsiIqn = "iqn.2025-03.local.nas";
   iscsiPortal = "truenas.lan";
   k3sMountUnits = [ "data-k3s.mount" ];
 in
 {
-  imports = with inputs.nixos-raspberrypi.nixosModules; [
-    raspberry-pi-4.base
-
+  imports = [
     ../../modules/nixos/common.nix
     ../../modules/nixos/openssh.nix
     ../../modules/nixos/user.nix
-    #    ../../modules/nixos/docker.nix
 
     "${inputs.argononed}/OS/nixos"
   ];
+
+  boot.loader.systemd-boot.enable = false;
 
   fileSystems = {
     "/boot/firmware" = {
@@ -49,97 +47,18 @@ in
 
   users.users.root.initialPassword = "root";
 
-  hardware.raspberry-pi.config = {
-    all = {
-      base-dt-params = {
-        i2c = {
-          enable = true;
-          value = "on";
-        };
-      };
-      dt-overlays = {
-        argonone = {
-          enable = true;
-          params = { };
-        };
-      };
-    };
+  # iSCSI
 
-  };
-
-  boot.loader = {
-    systemd-boot.enable = false;
-  };
-
-  # virtualisation.docker.daemon.settings = {
-  #   live-restore = false; # Required for docker swarm
-  # };
-
-  environment.systemPackages = with pkgs; [
-    nut
-    # nfs-utils
+  systemd.mounts = [
+    {
+      name = "data-k3s.mount";
+      after = [ "iscsi-login.service" ];
+      what = "/dev/disk/by-path/ip-192.168.88.60:3260-iscsi-${iscsiIqn}:truenas:rpi4-juglares-lun-2-part1";
+      where = "/data/k3s";
+      type = "ext4";
+      options = "_netdev,nofail";
+    }
   ];
-
-  # systemd.tmpfiles.rules = [
-  #   "d /mnt/nfs               755 0    0"
-  #   "d /mnt/nfs/docker/config 755 1000 100"
-  #   "d /mnt/nfs/docker/data   755 1000 100"
-  # ];
-  #
-  # fileSystems = {
-  #   "/mnt/nfs/docker/config" = {
-  #     device = "nas.lan:/export/docker/config";
-  #     fsType = "nfs";
-  #   };
-  #
-  #   "/mnt/nfs/docker/data" = {
-  #     device = "nas.lan:/export/docker/data";
-  #     fsType = "nfs";
-  #   };
-  # };
-
-  power.ups = {
-    enable = true;
-    mode = "netserver";
-
-    ups."eaton" = {
-      driver = "usbhid-ups";
-      port = "auto";
-      # vendorId = "0463";
-      # productId = "FFFF";
-    };
-
-    upsmon = {
-      enable = true;
-      monitor.eaton = {
-        user = "nut";
-        system = "localhost@eaton";
-        type = "master";
-        powerValue = 1;
-        passwordFile = nutPasswordPath;
-      };
-    };
-
-    users."nut" = {
-      upsmon = "primary";
-      passwordFile = nutPasswordPath;
-    };
-
-    upsd = {
-      enable = true;
-      listen = [
-        {
-          address = "0.0.0.0";
-        }
-      ];
-    };
-  };
-
-  services.prometheus.exporters.nut = {
-    enable = true;
-    nutUser = "nut";
-    passwordPath = nutPasswordPath;
-  };
 
   services.openiscsi = {
     enable = true;
@@ -164,63 +83,6 @@ in
     wantedBy = [ "multi-user.target" ];
   };
 
-  systemd.mounts = [
-    # {
-    #   name = "data-docker.mount";
-    #   after = [ "iscsi-login.service" ];
-    #   what = "/dev/disk/by-path/ip-192.168.88.60:3260-iscsi-${iscsiIqn}:truenas:rpi4-juglares-lun-0-part1";
-    #   where = "/data/docker";
-    #   type = "ext4";
-    #   options = "_netdev,nofail";
-    # }
-    # {
-    #   name = "data-gfs-brick1.mount";
-    #   after = [ "iscsi-login.service" ];
-    #   what = "/dev/disk/by-path/ip-192.168.88.60:3260-iscsi-${iscsiIqn}:truenas:rpi4-juglares-lun-1-part1";
-    #   where = "/data/gfs/brick1";
-    #   type = "ext4";
-    #   options = "_netdev,nofail";
-    # }
-    # {
-    #   name = "srv-gfs.mount";
-    #   after = [ "glusterd.service" ];
-    #   what = "localhost:/gv0";
-    #   where = "/srv/gfs";
-    #   type = "glusterfs";
-    #   options = "defaults";
-    # }
-    {
-      name = "data-k3s.mount";
-      after = [ "iscsi-login.service" ];
-      what = "/dev/disk/by-path/ip-192.168.88.60:3260-iscsi-${iscsiIqn}:truenas:rpi4-juglares-lun-2-part1";
-      where = "/data/k3s";
-      type = "ext4";
-      options = "_netdev,nofail";
-    }
-  ];
-
-  # services.glusterfs.enable = true;
-
-  # systemd.services.glusterd = {
-  #   after = [ "data-gfs-brick1.mount" ];
-  #   wants = [ "data-gfs-brick1.mount" ];
-  # };
-
-  # systemd.services.docker = {
-  #   wants = [
-  #     "data-docker.mount"
-  #     "srv-gfs.mount"
-  #   ];
-  #   after = [
-  #     "data-docker.mount"
-  #     "srv-gfs.mount"
-  #   ];
-  # };
-  #
-  # virtualisation.docker.daemon.settings = {
-  #   data-root = "/data/docker/daemon";
-  # };
-
   # Argon ONE V2 case
 
   disabledModules = [ "services/hardware/argonone.nix" ];
@@ -229,6 +91,8 @@ in
     enable = true;
     logLevel = 4;
   };
+
+  # k3s
 
   systemd.services.k3s = {
     wants = k3sMountUnits;
