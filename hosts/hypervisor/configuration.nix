@@ -111,7 +111,7 @@
         job_name = "nut";
         static_configs = [
           {
-            targets = [ "rpi4.lan:9199" ];
+            targets = [ "intel.lan:9199" ];
             labels = {
               "__metrics_path__" = "/ups_metrics";
             };
