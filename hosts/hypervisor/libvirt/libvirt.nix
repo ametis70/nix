@@ -7,9 +7,11 @@
 {
   imports = [
     ./domains/truenas-scale.nix
-    ./domains/nixos.nix
     ./domains/archlinux.nix
-    ./domains/server.nix
+    ./domains/nixos-desktop.nix
+    ./domains/nixos-server-1.nix
+    ./domains/nixos-server-2.nix
+    ./domains/nixos-server-builder.nix
   ];
 
   boot.kernelParams = [

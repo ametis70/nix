@@ -3,6 +3,8 @@ let
   system2 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKyy8MljGwjygWJSeuoVDAcL+vyqFT/SHO1YqAk2l64B";
   system3 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBm5o2OnlwYvzjS7rPGlchYoZSEK4We93I5xj2Xxu0sw";
   system4 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBE355tY3B+HGAkEPeNitmkxkEuCjVznBpgWXM5OWU4t";
+  system5 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHH919ZxfzqcQTYMtKqWj01grsKcTTAKpk/ehhQYZ+KT";
+  system6 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKWgFGFVu3xJ8ptHaMHGJ3os1nnmo4rPIdWhEUpH5e0+";
 in
 {
   "k3s.age".publicKeys = [
@@ -10,5 +12,7 @@ in
     system2
     system3
     system4
+    system5
+    system6
   ];
 }

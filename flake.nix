@@ -231,18 +231,36 @@
           channel = "stable";
           nixos = true;
         };
-        nixos-vm-server = {
-          id = "nixos-vm-server";
-          hostname = "ametis70-vm-server";
+        vm-nixos-server-builder = {
+          id = "vm-nixos-server-builder";
+          hostname = "vm-nixos-server-builder";
           username = "ametis70";
           system = "x86_64-linux";
           extraNixosModules = [ disko.nixosModules.disko ];
           channel = "stable";
           nixos = true;
         };
-        intel-juglares = {
-          id = "intel-juglares";
-          hostname = "intel-juglares";
+        vm-nixos-server-1 = {
+          id = "vm-nixos-server-1";
+          hostname = "vm-nixos-server-1";
+          username = "ametis70";
+          system = "x86_64-linux";
+          extraNixosModules = [ disko.nixosModules.disko ];
+          channel = "stable";
+          nixos = true;
+        };
+        vm-nixos-server-2 = {
+          id = "vm-nixos-server-2";
+          hostname = "vm-nixos-server-2";
+          username = "ametis70";
+          system = "x86_64-linux";
+          extraNixosModules = [ disko.nixosModules.disko ];
+          channel = "stable";
+          nixos = true;
+        };
+        intel-nixos-server = {
+          id = "intel-nixos-server";
+          hostname = "intel-nixos-server";
           username = "ametis70";
           system = "x86_64-linux";
           extraNixosModules = [ disko.nixosModules.disko ];
@@ -307,8 +325,11 @@
         "${hypervisor.hostname}" = configureNixOs hypervisor;
         "${nixos-vm.hostname}" = configureNixOs nixos-vm;
         "${nixos-deck.hostname}" = configureNixOs nixos-deck;
-        "${nixos-vm-server.hostname}" = configureNixOs nixos-vm-server;
-        "${intel-juglares.hostname}" = configureNixOs intel-juglares;
+        "${vm-nixos-server-1.hostname}" = configureNixOs vm-nixos-server-1;
+        "${vm-nixos-server-2.hostname}" = configureNixOs vm-nixos-server-2;
+        "${vm-nixos-server-builder.hostname}" = configureNixOs vm-nixos-server-builder;
+
+        "${intel-nixos-server.hostname}" = configureNixOs intel-nixos-server;
         # "${rpi4-juglares.hostname}" = configureNixOs rpi4-juglares;
       };
 

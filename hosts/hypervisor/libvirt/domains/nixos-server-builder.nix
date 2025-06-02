@@ -3,19 +3,15 @@
 let
   template = import ./templates/linux.nix;
   settings = {
-    name = "nixos-server";
-    uuid = "e9719f1f-0d42-4dee-9b12-58f3b271f7e9";
+    name = "nixos-server-builder";
+    uuid = "b84845a4-423d-48f9-b0cc-5ead175b57a9";
     video = true;
-    ram = 32;
-    cpu = 6;
+    ram = 16;
+    cpu = 4;
     disks = [
-      "server.qcow2"
-      {
-        name = "server-gluster.qcow2";
-        target = "vdb";
-      }
+      "server-builder.qcow2"
     ];
-    mac = "98:b1:c7:e9:32:1f";
+    mac = "6e:75:ef:46:ed:26";
   };
 in
 {

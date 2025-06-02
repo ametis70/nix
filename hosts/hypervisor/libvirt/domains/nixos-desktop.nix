@@ -11,7 +11,7 @@ let
   };
   settings = {
     gpu = common // {
-      name = "nixos-gpu";
+      name = "nixos-desktop-gpu";
       uuid = "ca5872f8-67e3-4bd4-8f07-c82354e92826";
       video = false;
       pci = with utils; [
@@ -22,7 +22,7 @@ let
       ];
     };
     basic = common // {
-      name = "nixos";
+      name = "nixos-desktop";
       uuid = "81c77dfc-876c-42f9-abdb-2f8b8c36d27b";
       video = true;
     };

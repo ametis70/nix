@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let
   cfg = config.custom.k3s;
-  localDnsInitName = "server.lan";
+  localDnsInitName = "intel.lan";
   addr = "https://${localDnsInitName}:6443";
 in
 {
@@ -34,13 +34,14 @@ in
       enable = true;
       role = cfg.role;
       tokenFile = config.age.secrets.k3s.path;
-      extraFlags =
+      extraFlags = toString (
         lib.optionals cfg.init [
           "--tls-san ${localDnsInitName}"
         ]
         ++ lib.optionals (cfg.dataDir != "") [
           "--data-dir ${cfg.dataDir}"
-        ];
+        ]
+      );
       clusterInit = cfg.init;
       serverAddr = if cfg.init == true then "" else addr;
     };

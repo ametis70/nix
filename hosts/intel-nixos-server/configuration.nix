@@ -15,7 +15,6 @@ in
     ../../modules/nixos/common.nix
     ../../modules/nixos/openssh.nix
     ../../modules/nixos/user.nix
-    ../../modules/nixos/docker.nix
   ];
 
   networking = {
@@ -24,21 +23,7 @@ in
     firewall.enable = false;
   };
 
-  virtualisation.docker.daemon.settings = {
-    live-restore = false; # Required for docker swarm
-  };
-
-  services.glusterfs.enable = true;
-
   systemd.mounts = [
-    {
-      name = "srv-gfs.mount";
-      after = [ "glusterd.service" ];
-      what = "localhost:/gv0";
-      where = "/srv/gfs";
-      type = "glusterfs";
-      options = "defaults";
-    }
     {
       name = "srv-nfs-movies.mount";
       wantedBy = [ "multi-user.target" ];
@@ -65,21 +50,6 @@ in
     }
   ];
 
-  systemd.services.docker = {
-    wants = [
-      "srv-gfs.mount"
-      "srv-nfs-movies.mount"
-      "srv-nfs-tv.mount"
-      "srv-nfs-downloads.mount"
-    ];
-    after = [
-      "srv-gfs.mount"
-      "srv-nfs-movies.mount"
-      "srv-nfs-tv.mount"
-      "srv-nfs-downloads.mount"
-    ];
-  };
-
   boot.supportedFilesystems = [ "nfs" ];
 
   nixpkgs.config.packageOverrides = pkgs: {
@@ -96,8 +66,6 @@ in
       vpl-gpu-rt
     ];
   };
-
-  services.jellyfin.enable = true;
 
   swapDevices = [
     {
@@ -149,7 +117,10 @@ in
     passwordPath = nutPasswordPath;
   };
 
-  custom.k3s.enable = true;
+  custom.k3s = {
+    enable = true;
+    init = true;
+  };
 
   system.stateVersion = "24.11";
 }
