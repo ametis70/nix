@@ -54,7 +54,7 @@
 
   programs.gnupg.agent = {
     enable = true;
-    enableSSHSupport = true;
+    enableSSHSupport = false;
   };
 
   environment.systemPackages = with pkgs; [
