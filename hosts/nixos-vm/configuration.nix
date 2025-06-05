@@ -80,5 +80,7 @@ in
     package32 = hyprland-nixpkgs.pkgsi686Linux.mesa.drivers;
   };
 
+  custom.k3s-client.enable = true;
+
   system.stateVersion = "24.11";
 }

@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.custom.k3s;
   localDnsInitName = "intel.lan";
@@ -29,6 +34,16 @@ in
 
   config = lib.mkIf cfg.enable {
     age.secrets.k3s.file = ../../secrets/k3s.age;
+
+    environment.systemPackages = with pkgs; [
+      nfs-utils
+      kubernetes-helm
+    ];
+
+    services.openiscsi = {
+      enable = true;
+      name = "${config.networking.hostName}-initiatorhost";
+    };
 
     services.k3s = {
       enable = true;
