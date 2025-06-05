@@ -97,8 +97,7 @@ in
 
     extraLuaConfig =
       let
-        luaRocks = with specialArgs.pkgs-unstable.luajitPackages; [
-        ];
+        luaRocks = [ ];
 
         plugins = with specialArgs.pkgs-unstable.vimPlugins; [
           LazyVim

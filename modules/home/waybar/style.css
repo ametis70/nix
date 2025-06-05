@@ -1,12 +1,12 @@
-@define-color bg #24283b;
-@define-color fg #c0caf5;
-@define-color alt-fg-1 #414868;
-@define-color alt-fg-2 #737aa2;
+@define-color bg #1e1e2e;
+@define-color fg #cdd6f4;
+@define-color alt-fg-1 #45475a;
+@define-color alt-fg-2 #7f849c;
 
 * {
   border: none;
   border-radius: 0px;
-  font-family: 'Symbols Nerd Font', 'Iosevka';
+  font-family: "Symbols Nerd Font", "Iosevka";
   font-size: 18px;
   font-weight: 500;
 }
@@ -53,7 +53,9 @@ window#waybar {
   padding: 0 8px;
 }
 
-#cpu, #memory, #disk {
+#cpu,
+#memory,
+#disk {
   color: @alt-fg-2;
   padding: 0 8px;
 }

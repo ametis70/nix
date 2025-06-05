@@ -13,7 +13,7 @@ in
 {
   programs.kitty = {
     enable = true;
-    themeFile = "tokyo_night_storm";
+    themeFile = "Catppuccin-Mocha";
     package =
       if (host.system == "x86_64-linux" && !host.nixos) then
         (nixgl.wrapMesa pkgs.kitty)

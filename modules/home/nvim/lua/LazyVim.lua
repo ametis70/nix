@@ -30,7 +30,7 @@ require("lazy").setup({
 			{
 				"LazyVim/LazyVim",
 				import = "lazyvim.plugins",
-				opts = { colorscheme = "tokyonight" },
+				opts = { colorscheme = "catppuccin-mocha" },
 			},
 			-- Extras
 			{ import = "lazyvim.plugins.extras.lang.clangd" },
@@ -80,6 +80,11 @@ require("lazy").setup({
 				"folke/tokyonight.nvim",
 				lazy = true,
 				opts = { style = "storm" },
+			},
+			{
+				"catppuccin/nvim",
+				lazy = true,
+				name = "catppuccin",
 			},
 
 			-- Nix
