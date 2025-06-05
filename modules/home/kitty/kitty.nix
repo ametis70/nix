@@ -20,7 +20,7 @@ in
       else if (host.system == "x86_64-linux" && host.nixos) then
         pkgs.kitty
       else
-        null;
+        pkgs.emptyDirectory;
     shellIntegration = {
       enableBashIntegration = true;
       enableZshIntegration = true;

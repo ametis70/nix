@@ -11,8 +11,6 @@
     ../../modules/home/hypervisor-virt-manager/hvm.nix
   ];
 
-  programs.kitty.package = pkgs.emptyDirectory;
-
   programs.zsh = {
     initExtraBeforeCompInit = lib.mkAfter ''
       # asdf completion

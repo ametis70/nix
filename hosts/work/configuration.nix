@@ -1,4 +1,4 @@
-{ pkgs, specialArgs, ... }:
+{ pkgs, host, ... }:
 
 let
   choosePasswordPkg = pkgs.writeShellScriptBin "choose-pass" ''
@@ -19,15 +19,17 @@ in
 {
   nix.enable = false;
   nix.package = pkgs.nix;
-  users.users.${specialArgs.host.username}.home = "/Users/${specialArgs.host.username}";
+  users.users.${host.username}.home = "/Users/${host.username}";
 
   environment.systemPackages = [
     choosePasswordPkg
     chooseAppPkg
   ];
 
+  system.primaryUser = host.username;
+
   system = {
-    activationScripts.postUserActivation.text = ''
+    activationScripts.activateSettings.text = ''
       # activateSettings -u will reload the settings from the database and apply
       # them to the current session, so we do not need to logout and login again
       # to make the changes take effect.
@@ -94,6 +96,8 @@ in
       "redquits"
       "kitty"
       "moonlight"
+      "cursor"
+      "windsurf"
     ];
     masApps = {
       WireGuard = 1441195209;
