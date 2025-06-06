@@ -46,34 +46,6 @@ in
     OOMScoreAdjust = 500;
   };
 
-  systemd.tmpfiles.rules = [
-    "d /export               755 0    0"
-    "d /export/docker/config 755 1000 100"
-    "d /export/docker/data   755 1000 100"
-  ];
-
-  services.nfs = {
-    server = {
-      enable = true;
-      exports = ''
-        /export/docker/config  192.168.88.0/24(rw,sync,nohide,no_subtree_check,insecure,no_root_squash)
-        /export/docker/data    192.168.88.0/24(rw,sync,nohide,no_subtree_check,insecure,no_root_squash)
-      '';
-    };
-    settings = {
-      nfsd = {
-        UDP = false;
-        vers2 = false;
-        vers3 = false;
-        vers4 = true;
-        "vers4.0" = false;
-        "vers4.1" = false;
-        "vers4.2" = true;
-        rdma = true; # Remote Direct Memory Access
-      };
-    };
-  };
-
   hardware.graphics = {
     package = hyprland-nixpkgs.mesa.drivers;
     enable32Bit = true;
