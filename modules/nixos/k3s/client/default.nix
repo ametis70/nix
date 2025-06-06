@@ -21,6 +21,7 @@ in
       ++ (with pkgs; [
         kubectl
         kubernetes-helm
+        helmfile
         k9s
         libsecret
       ]);

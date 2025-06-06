@@ -33,7 +33,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    age.secrets.k3s.file = ../../secrets/k3s.age;
+    age.secrets.k3s.file = ../../../../secrets/k3s.age;
 
     environment.systemPackages = with pkgs; [
       nfs-utils
@@ -44,6 +44,10 @@ in
       enable = true;
       name = "${config.networking.hostName}-initiatorhost";
     };
+
+    systemd.tmpfiles.rules = [
+      "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
+    ];
 
     services.k3s = {
       enable = true;

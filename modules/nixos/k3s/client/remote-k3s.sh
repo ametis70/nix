@@ -10,6 +10,7 @@ function usage() {
   echo "  $0 setup show"
   echo "  $0 kubectl [kubectl_args...]"
   echo "  $0 helm [helm_args...]"
+  echo "  $0 helmfile [helm_args...]"
   echo "  $0 k9s [k9s_args...]"
   echo "  $0 [kubectl_args...]"
   exit 1
@@ -93,7 +94,7 @@ setup)
     ;;
   esac
   ;;
-helm | k9s)
+helm | helmfile | k9s)
   cmd="$1"
   shift
   run_with_kubeconfig "$cmd" "$@"
