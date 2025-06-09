@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs = {
@@ -32,35 +32,39 @@
           file = "p10k.zsh";
         }
       ];
-      initExtraFirst = ''
-        # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-        # Initialization code that may require console input (password prompts, [y/n]
-        # confirmations, etc.) must go above this block; everything else may go below.
-        if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-          source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-        fi
+      initContent = lib.mkMerge [
+        (lib.mkBefore ''
+          # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+          # Initialization code that may require console input (password prompts, [y/n]
+          # confirmations, etc.) must go above this block; everything else may go below.
+          if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+            source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+          fi
 
-        export GPG_TTY=$TTY
-      '';
-      initExtra = ''
-        function after_zvm_init() {
-          source <(fzf --zsh)
-          source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+          export GPG_TTY=$TTY
+        '')
 
-          bindkey "^[[3~"   delete-char
-          bindkey "^[[5~"   beginning-of-buffer-or-history
-          bindkey "^[[6~"   end-of-buffer-or-history
-          bindkey "^[[H"    beginning-of-line
-          bindkey "^[[F"    end-of-line
-          bindkey '^[[1;5C' forward-word
-          bindkey '^[[1;5D' backward-word
-        }
+        # Default priority
+        ''
+          function after_zvm_init() {
+            source <(fzf --zsh)
+            source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
 
-        zvm_after_init_commands+=(after_zvm_init)
+            bindkey "^[[3~"   delete-char
+            bindkey "^[[5~"   beginning-of-buffer-or-history
+            bindkey "^[[6~"   end-of-buffer-or-history
+            bindkey "^[[H"    beginning-of-line
+            bindkey "^[[F"    end-of-line
+            bindkey '^[[1;5C' forward-word
+            bindkey '^[[1;5D' backward-word
+          }
 
-        ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
-        source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-      '';
+          zvm_after_init_commands+=(after_zvm_init)
+
+          ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+          source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+        ''
+      ];
     };
   };
 }
