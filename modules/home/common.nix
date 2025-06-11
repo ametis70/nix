@@ -15,6 +15,7 @@
     curl
     jq
     ranger
+    delta
   ];
 
   programs = {
@@ -62,6 +63,9 @@
     };
     git = {
       enable = true;
+      delta = {
+        enable = true;
+      };
     };
     gpg = {
       enable = true;

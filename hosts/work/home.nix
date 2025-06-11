@@ -52,6 +52,7 @@
     android-tools
     pandoc
     wireguard-tools
+    pre-commit
   ];
 
   programs.texlive = {
