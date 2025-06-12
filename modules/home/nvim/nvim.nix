@@ -141,6 +141,10 @@ in
             path = mini-nvim;
           }
           {
+            name = "mini.surround";
+            path = mini-nvim;
+          }
+          {
             name = "catppuccin";
             path = catppuccin-nvim;
           }

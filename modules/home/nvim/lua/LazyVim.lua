@@ -56,6 +56,7 @@ require("lazy").setup({
 			{ import = "lazyvim.plugins.extras.ai.copilot-chat" },
 
 			{ import = "lazyvim.plugins.extras.coding.yanky" },
+			{ import = "lazyvim.plugins.extras.coding.mini-surround" },
 
 			{ import = "lazyvim.plugins.extras.editor.dial" },
 			{ import = "lazyvim.plugins.extras.editor.inc-rename" },
