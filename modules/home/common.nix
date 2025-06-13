@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./zsh/zsh.nix
+    ./zsh
   ];
 
   programs.home-manager.enable = true;

@@ -11,32 +11,28 @@
     ../../modules/home/hypervisor-virt-manager/hvm.nix
   ];
 
-  programs.zsh = {
-    initContent = lib.mkMerge [
-      # Before comp init
-      (lib.mkOrder 550 ''
-        # asdf completion
-        fpath=(''${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
-      '')
+  custom.zsh = {
+    initContentBeforeCompInit = ''
+      # asdf completion
+      fpath=(''${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+    '';
+    initContentAfter = ''
+      # Homebrew
+      PATH=$PATH:/opt/homebrew/bin
 
-      (lib.mkAfter ''
-        # Homebrew
-        PATH=$PATH:/opt/homebrew/bin
+      # Fury
+      export RANGER_FURY_LOCATION="$HOME/.fury"
+      export RANGER_FURY_VENV_LOCATION="$RANGER_FURY_LOCATION/fury_venv"
+      declare FURY_BIN_LOCATION="$RANGER_FURY_VENV_LOCATION/bin"
+      export PATH="$PATH:$FURY_BIN_LOCATION"
 
-        # Fury
-        export RANGER_FURY_LOCATION="$HOME/.fury"
-        export RANGER_FURY_VENV_LOCATION="$RANGER_FURY_LOCATION/fury_venv"
-        declare FURY_BIN_LOCATION="$RANGER_FURY_VENV_LOCATION/bin"
-        export PATH="$PATH:$FURY_BIN_LOCATION"
+      # Nordic Doctor
+      export NORDIC_DOCTOR_DIR="$HOME/.nordic-doctor"
+      export PATH="$NORDIC_DOCTOR_DIR/bin:$PATH"
 
-        # Nordic Doctor
-        export NORDIC_DOCTOR_DIR="$HOME/.nordic-doctor"
-        export PATH="$NORDIC_DOCTOR_DIR/bin:$PATH"
-
-        # asdf
-        export PATH="''${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-      '')
-    ];
+      # asdf
+      export PATH="''${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+    '';
   };
 
   programs.git.extraConfig = {
