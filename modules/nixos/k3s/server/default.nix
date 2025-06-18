@@ -6,8 +6,33 @@
 }:
 let
   cfg = config.custom.k3s;
-  localDnsInitName = "intel.lan";
-  addr = "https://${localDnsInitName}:6443";
+  vip = "192.168.88.10";
+  addr = "https://${vip}:6443";
+  dev = "enp1s0";
+
+  kubeVip = rec {
+    template = builtins.readFile ./kube-vip.yml;
+    manifest = builtins.replaceStrings [ "ADDRESS" "INTERFACE" ] [ vip dev ] template;
+    filename = "kube-vip.yml";
+  };
+
+  helmCharts = rec {
+    dir = ./helm;
+    files = builtins.filter (f: lib.hasSuffix ".yaml" f || lib.hasSuffix ".yml" f) (
+      builtins.attrNames (builtins.readDir dir)
+    );
+  };
+
+  manifestsDir = pkgs.runCommand "k3s-manifests" { } ''
+        mkdir -p $out
+        # Write the processed kube-vip manifest directly
+        cat > $out/${kubeVip.filename} <<EOF
+    ${kubeVip.manifest}
+    EOF
+        ${lib.concatMapStringsSep "\n" (f: "cp ${helmCharts.dir}/${f} $out/${f}") helmCharts.files}
+  '';
+
+  manifestFilenames = [ kubeVip.filename ] ++ helmCharts.files;
 in
 {
   options.custom.k3s = {
@@ -45,17 +70,25 @@ in
       name = "${config.networking.hostName}-initiatorhost";
     };
 
-    systemd.tmpfiles.rules = [
-      "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
-    ];
+    systemd.tmpfiles.rules =
+      [
+        "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
+      ]
+
+      ++ (lib.optionals (cfg.role == "server") (
+        map (
+          f: "C /var/lib/rancher/k3s/server/manifests/${f} 0644 root root - ${manifestsDir}/${f}"
+        ) manifestFilenames
+      ));
 
     services.k3s = {
       enable = true;
       role = cfg.role;
       tokenFile = config.age.secrets.k3s.path;
       extraFlags = toString (
-        lib.optionals cfg.init [
-          "--tls-san ${localDnsInitName}"
+        [ "--disable servicelb" ]
+        ++ lib.optionals cfg.init [
+          "--tls-san ${vip}"
         ]
         ++ lib.optionals (cfg.dataDir != "") [
           "--data-dir ${cfg.dataDir}"
