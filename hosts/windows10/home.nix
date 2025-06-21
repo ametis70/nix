@@ -9,7 +9,9 @@
   ];
 
   services.gpg-agent = {
-    pinentryPackage = pkgs.pinentry-curses;
+    pinentry = {
+      package = pkgs.pinentry-curses;
+    };
   };
 
   programs.keychain = {

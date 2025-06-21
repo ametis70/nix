@@ -6,6 +6,8 @@
     enableScDaemon = false;
     enableZshIntegration = lib.mkDefault false;
     enableSshSupport = false;
-    pinentryPackage = lib.mkDefault pkgs.pinentry-gnome3;
+    pinentry = {
+      package = lib.mkDefault pkgs.pinentry-gnome3;
+    };
   };
 }

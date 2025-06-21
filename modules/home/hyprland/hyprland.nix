@@ -107,6 +107,7 @@ in
         font_family = "Iosevka Medium";
         force_default_wallpaper = 1;
         disable_hyprland_logo = true;
+        enable_anr_dialog = false;
       };
       exec-once = [
         "waybar"

@@ -47,9 +47,9 @@ in
   };
 
   hardware.graphics = {
-    package = hyprland-nixpkgs.mesa.drivers;
+    package = hyprland-nixpkgs.mesa;
     enable32Bit = true;
-    package32 = hyprland-nixpkgs.pkgsi686Linux.mesa.drivers;
+    package32 = hyprland-nixpkgs.pkgsi686Linux.mesa;
   };
 
   custom.k3s-client.enable = true;
