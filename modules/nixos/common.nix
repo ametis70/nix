@@ -10,6 +10,7 @@
   imports = [
     ./k3s
     ./creality-print
+    ./nfs
   ];
 
   system.copySystemConfiguration = false;

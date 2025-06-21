@@ -63,10 +63,16 @@ in
       extraPkgs =
         pkgs: with pkgs; [
           gst_all_1.gst-plugins-bad
-          webkitgtk
+          webkitgtk_4_0
         ];
     };
   };
+
+  custom.services.nfs.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    transmission_4-qt
+  ];
 
   system.stateVersion = "24.11";
 }
