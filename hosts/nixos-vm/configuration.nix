@@ -54,5 +54,19 @@ in
 
   custom.k3s-client.enable = true;
 
+  custom.programs.creality-print.enable = true;
+
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+    package = pkgs.appimage-run.override {
+      extraPkgs =
+        pkgs: with pkgs; [
+          gst_all_1.gst-plugins-bad
+          webkitgtk
+        ];
+    };
+  };
+
   system.stateVersion = "24.11";
 }

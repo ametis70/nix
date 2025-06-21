@@ -7,7 +7,10 @@
 }:
 
 {
-  imports = [ ./k3s ];
+  imports = [
+    ./k3s
+    ./creality-print
+  ];
 
   system.copySystemConfiguration = false;
 
