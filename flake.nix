@@ -267,6 +267,15 @@
           channel = "stable";
           nixos = true;
         };
+        intel-nixos-tv = {
+          id = "intel-nixos-tv";
+          hostname = "intel-nixos-tv";
+          username = "ametis70";
+          system = "x86_64-linux";
+          extraNixosModules = [ disko.nixosModules.disko ];
+          channel = "stable";
+          nixos = true;
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -330,6 +339,7 @@
         "${vm-nixos-server-builder.hostname}" = configureNixOs vm-nixos-server-builder;
 
         "${intel-nixos-server.hostname}" = configureNixOs intel-nixos-server;
+        "${intel-nixos-tv.hostname}" = configureNixOs intel-nixos-tv;
         # "${rpi4-juglares.hostname}" = configureNixOs rpi4-juglares;
       };
 
