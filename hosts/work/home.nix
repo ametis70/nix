@@ -12,6 +12,24 @@
   ];
 
   custom.zsh = {
+    initContentBefore = ''
+      if [[ -n "$npm_config_yes" ]] || [[ -n "$CI" ]] || [[ "$-" != *i* ]]; then
+        export AGENT_MODE=true
+      else
+        export AGENT_MODE=false
+      fi
+
+      if [[ "$AGENT_MODE" == "true" ]]; then
+        POWERLEVEL9K_INSTANT_PROMPT=off
+        # Disable complex prompt features for AI agents
+        POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
+        POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
+        # Ensure non-interactive mode
+        export DEBIAN_FRONTEND=noninteractive
+        export NONINTERACTIVE=1
+      fi
+    '';
+
     initContentBeforeCompInit = ''
       # asdf completion
       fpath=(''${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
@@ -32,6 +50,22 @@
 
       # asdf
       export PATH="''${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+      if [[ "$AGENT_MODE" == "true" ]]; then
+        PROMPT='%n@%m:%~%# '
+        RPROMPT=""
+        unsetopt CORRECT
+        unsetopt CORRECT_ALL
+        setopt NO_BEEP
+        setopt NO_HIST_BEEP  
+        setopt NO_LIST_BEEP
+        
+        # Agent-friendly aliases to avoid interactive prompts
+        alias npm='npm --no-fund --no-audit'
+        alias yarn='yarn --non-interactive'
+        alias pip='pip --quiet'
+        alias git='git -c advice.detachedHead=false'
+      fi
     '';
   };
 
