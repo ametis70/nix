@@ -52,8 +52,6 @@ in
     package32 = hyprland-nixpkgs.pkgsi686Linux.mesa;
   };
 
-  custom.k3s-client.enable = true;
-
   custom.programs.creality-print.enable = true;
 
   programs.appimage = {

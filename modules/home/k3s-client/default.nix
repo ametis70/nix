@@ -14,16 +14,24 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages =
+    home.packages =
       [
         (pkgs.writeShellScriptBin "kube" (builtins.readFile ./remote-k3s.sh))
       ]
       ++ (with pkgs; [
         kubectl
         kubernetes-helm
-        helmfile
         k9s
+        fluxcd
         libsecret
+        envchain
       ]);
+
+    home.shellAliases = {
+      "kubectl" = "kube kubectl";
+      "helm" = "kube helm";
+      "k9s" = "kube k9s";
+      "flux" = "kube flux";
+    };
   };
 }

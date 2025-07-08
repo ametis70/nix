@@ -118,6 +118,9 @@
     };
   };
 
+  custom.k3s-client.enable = true;
+
   programs.kitty.font.size = 16;
+
   home.stateVersion = "24.11";
 }

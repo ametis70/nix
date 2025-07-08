@@ -1,7 +1,10 @@
 # Script to fetch /etc/rancher/k3s/k3s.yaml from a remote host via SSH,
-# store it in the GNOME keyring, and wrap kubectl, helm, or k9s to use it.
+# store it in envchain, and wrap kubectl, helm, or k9s to use it.
 
-KEY_NAME="k3s_kubeconfig"
+set -euo pipefail
+
+K3S_ENVCHAIN_NS="K3S_KUBECONFIG"
+K3S_ENVCHAIN_KEY="KUBECONFIG_DATA"
 XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 
 function usage() {
@@ -10,7 +13,7 @@ function usage() {
   echo "  $0 setup show"
   echo "  $0 kubectl [kubectl_args...]"
   echo "  $0 helm [helm_args...]"
-  echo "  $0 helmfile [helm_args...]"
+  echo "  $0 flux [flux_args...]"
   echo "  $0 k9s [k9s_args...]"
   echo "  $0 [kubectl_args...]"
   exit 1
@@ -47,16 +50,17 @@ function fetch_kubeconfig() {
   fi
   # Replace 127.0.0.1 with the actual host in the kubeconfig
   kubeconfig="${kubeconfig//127.0.0.1/$host}"
-  secret-tool store --label="K3s kubeconfig" service "$KEY_NAME" dummy dummy <<<"$kubeconfig"
-  echo "Kubeconfig stored in keyring"
+  # Store kubeconfig in envchain
+  echo "$kubeconfig" | base64 -w0 | envchain --set "$K3S_ENVCHAIN_NS" "$K3S_ENVCHAIN_KEY" >/dev/null
+  echo "Kubeconfig stored in envchain"
 }
 
 function show_kubeconfig() {
-  kubeconfig=$(secret-tool lookup service "$KEY_NAME" dummy dummy)
+  kubeconfig=$(envchain "$K3S_ENVCHAIN_NS" env | grep "^$K3S_ENVCHAIN_KEY=" | sed "s/^$K3S_ENVCHAIN_KEY=//" | base64 --decode)
   if [[ -n "$kubeconfig" ]]; then
     echo "$kubeconfig"
   else
-    echo "No kubeconfig found in keyring"
+    echo "No kubeconfig found in envchain"
     exit 4
   fi
 }
@@ -65,16 +69,15 @@ function run_with_kubeconfig() {
   local cmd="$1"
   shift
   local kubeconfig
-  kubeconfig=$(secret-tool lookup service "$KEY_NAME" dummy dummy)
+  kubeconfig=$(envchain "$K3S_ENVCHAIN_NS" env | grep "^$K3S_ENVCHAIN_KEY=" | sed "s/^$K3S_ENVCHAIN_KEY=//" | base64 --decode)
   if [[ -z "$kubeconfig" ]]; then
-    echo "No kubeconfig found in keyring. Please run '$0 setup fetch <host>' first."
+    echo "No kubeconfig found in envchain. Please run '$0 setup fetch <host>' first."
     exit 3
   fi
-  local tmpfile
-  tmpfile=$(mktemp)
+  tmpfile="${TMPDIR:-/tmp}/k3s-kubeconfig-$$-$RANDOM"
+  trap 'rm -f "$tmpfile"' EXIT
   echo "$kubeconfig" >"$tmpfile"
   KUBECONFIG="$tmpfile" "$cmd" "$@"
-  rm -f "$tmpfile"
 }
 
 case "$1" in
@@ -94,7 +97,7 @@ setup)
     ;;
   esac
   ;;
-helm | helmfile | k9s)
+helm | flux | k9s)
   cmd="$1"
   shift
   run_with_kubeconfig "$cmd" "$@"

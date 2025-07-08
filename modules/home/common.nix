@@ -3,6 +3,7 @@
 {
   imports = [
     ./zsh
+    ./k3s-client
   ];
 
   programs.home-manager.enable = true;
