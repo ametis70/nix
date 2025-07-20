@@ -6,7 +6,7 @@
 }:
 
 let
-  cfg = config.custom.k3s-client;
+  cfg = config.custom.programs.creality-print;
   CrealityPrint = import ./package.nix { inherit pkgs; };
 in
 {
