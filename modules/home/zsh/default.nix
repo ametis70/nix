@@ -53,7 +53,7 @@ in
               tags = [
                 "as:theme"
                 "depth:1"
-                "if:\"[[ \"$AGENT_MODE\" != \"true\" ]] \""
+                ''if:'[[ "$AGENT_MODE" != "true" ]]' ''
               ];
             }
             { name = "jeffreytse/zsh-vi-mode"; }
