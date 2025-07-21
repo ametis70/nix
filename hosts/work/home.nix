@@ -83,6 +83,7 @@
     pandoc
     wireguard-tools
     pre-commit
+    qemu
   ];
 
   programs.texlive = {
