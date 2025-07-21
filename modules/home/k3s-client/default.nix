@@ -23,6 +23,7 @@ in
         kubernetes-helm
         k9s
         fluxcd
+        kubeseal
         libsecret
         envchain
       ]);
@@ -32,6 +33,7 @@ in
       "helm" = "kube helm";
       "k9s" = "kube k9s";
       "flux" = "kube flux";
+      "kubeseal" = "kube kubeseal";
     };
   };
 }
