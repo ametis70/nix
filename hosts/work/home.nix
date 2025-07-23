@@ -38,6 +38,9 @@
       # Homebrew
       PATH=$PATH:/opt/homebrew/bin
 
+      # Go
+      export GOPRIVATE=github.com/mercadolibre/*,github.com/melisource/*
+
       # Fury
       export RANGER_FURY_LOCATION="$HOME/.fury"
       export RANGER_FURY_VENV_LOCATION="$RANGER_FURY_LOCATION/fury_venv"
