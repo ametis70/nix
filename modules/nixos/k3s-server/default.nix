@@ -16,23 +16,15 @@ let
     filename = "kube-vip.yml";
   };
 
-  helmCharts = rec {
-    dir = ./helm;
-    files = builtins.filter (f: lib.hasSuffix ".yaml" f || lib.hasSuffix ".yml" f) (
-      builtins.attrNames (builtins.readDir dir)
-    );
-  };
-
   manifestsDir = pkgs.runCommand "k3s-manifests" { } ''
         mkdir -p $out
         # Write the processed kube-vip manifest directly
         cat > $out/${kubeVip.filename} <<EOF
     ${kubeVip.manifest}
     EOF
-        ${lib.concatMapStringsSep "\n" (f: "cp ${helmCharts.dir}/${f} $out/${f}") helmCharts.files}
   '';
 
-  manifestFilenames = [ kubeVip.filename ] ++ helmCharts.files;
+  manifestFilenames = [ kubeVip.filename ];
 in
 {
   options.custom.k3s = {
@@ -58,7 +50,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    age.secrets.k3s.file = ../../../../secrets/k3s.age;
+    age.secrets.k3s.file = ../../../secrets/k3s.age;
 
     environment.systemPackages = with pkgs; [
       nfs-utils
@@ -74,7 +66,6 @@ in
       [
         "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
       ]
-
       ++ (lib.optionals (cfg.role == "server") (
         map (
           f: "C /var/lib/rancher/k3s/server/manifests/${f} 0644 root root - ${manifestsDir}/${f}"
@@ -86,7 +77,10 @@ in
       role = cfg.role;
       tokenFile = config.age.secrets.k3s.path;
       extraFlags = toString (
-        [ "--disable servicelb" ]
+        [
+          "--disable servicelb"
+          "--disable traefik"
+        ]
         ++ lib.optionals cfg.init [
           "--tls-san ${vip}"
         ]
