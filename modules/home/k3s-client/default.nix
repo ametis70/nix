@@ -17,6 +17,7 @@ in
     home.packages =
       [
         (pkgs.writeShellScriptBin "kube" (builtins.readFile ./remote-k3s.sh))
+        (pkgs.writeShellScriptBin "kubesec" (builtins.readFile ./kubesec.sh))
       ]
       ++ (with pkgs; [
         kubectl
