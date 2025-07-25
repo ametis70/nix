@@ -45,6 +45,10 @@ select SCOPE in "app" "system"; do
   break
 done
 
+DEFAULT_SECRET_TYPE=Opaque
+read -p "Enter the type of the secret [${DEFAULT_SECRET_TYPE}]: " SECRET_TYPE
+SECRET_TYPE="${SECRET_TYPE:-$DEFAULT_SECRET_TYPE}"
+
 # Generate default secret name
 if [[ $SCOPE == "system" ]]; then
   DEFAULT_SECRET_NAME="${BASE_NAME}-secrets-system"
@@ -99,6 +103,7 @@ SECRET_FILE="$TMP_DIR/$SECRET_NAME.yaml"
 {
   echo "apiVersion: v1"
   echo "kind: Secret"
+  echo "type: $SECRET_TYPE"
   echo "metadata:"
   echo "  name: $SECRET_NAME"
   echo "  namespace: $NAMESPACE"
