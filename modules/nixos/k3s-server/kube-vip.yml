@@ -100,6 +100,8 @@ spec:
               value: "true"
             - name: svc_leasename
               value: plndr-svcs-lock
+            - name: svc_election
+              value: "true"
             - name: vip_leaderelection
               value: "true"
             - name: vip_leasename

@@ -80,6 +80,7 @@ in
         [
           "--disable servicelb"
           "--disable traefik"
+          "--disable-helm-controller"
         ]
         ++ lib.optionals cfg.init [
           "--tls-san ${vip}"
