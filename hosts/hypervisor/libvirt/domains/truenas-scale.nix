@@ -22,7 +22,7 @@ in
       domains = [
         {
           definition = inputs.NixVirt.lib.domain.writeXML (template settings);
-          active = true;
+          active = false;
         }
       ];
     };
