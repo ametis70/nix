@@ -18,6 +18,7 @@ in
       [
         (pkgs.writeShellScriptBin "kube" (builtins.readFile ./kube.sh))
         (pkgs.writeShellScriptBin "kubesec" (builtins.readFile ./kubesec.sh))
+        (pkgs.writeShellScriptBin "kubemail" (builtins.readFile ./kubemail.sh))
       ]
       ++ (with pkgs; [
         kubectl
