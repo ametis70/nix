@@ -1,4 +1,4 @@
-set -e
+set -eo pipefail
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
   cat <<EOF

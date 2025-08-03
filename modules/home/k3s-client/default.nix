@@ -10,13 +10,13 @@ let
 in
 {
   options = {
-    custom.k3s-client.enable = lib.mkEnableOption "Enable k3s remote management script";
+    custom.k3s-client.enable = lib.mkEnableOption "Enable k3s remote management scripts";
   };
 
   config = lib.mkIf cfg.enable {
     home.packages =
       [
-        (pkgs.writeShellScriptBin "kube" (builtins.readFile ./remote-k3s.sh))
+        (pkgs.writeShellScriptBin "kube" (builtins.readFile ./kube.sh))
         (pkgs.writeShellScriptBin "kubesec" (builtins.readFile ./kubesec.sh))
       ]
       ++ (with pkgs; [

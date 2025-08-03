@@ -1,7 +1,7 @@
 # Script to fetch /etc/rancher/k3s/k3s.yaml from a remote host via SSH,
 # store it in envchain, and wrap kubectl, helm, or k9s to use it.
 
-set -euo pipefail
+set -eo pipefail
 
 K3S_ENVCHAIN_NS="K3S_KUBECONFIG"
 K3S_ENVCHAIN_KEY="KUBECONFIG_DATA"
