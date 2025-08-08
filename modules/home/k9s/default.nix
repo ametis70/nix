@@ -1,10 +1,12 @@
 {
+  lib,
+  config,
   ...
 }:
 
 {
   programs.k9s = {
-    enable = true;
+    enable = lib.mkDefault config.custom.k3s-client.enable;
     skins = {
       catppuccin-mocha = ./catppuccin-mocha.yml;
     };

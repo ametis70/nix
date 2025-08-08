@@ -13,7 +13,6 @@
     ../../modules/home/hypervisor-virt-manager/hvm.nix
     ../../modules/home/gnome-keyring
     ../../modules/home/pdf/pdf.nix
-    ../../modules/home/k9s
   ];
 
   home.packages = with pkgs; [

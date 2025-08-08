@@ -3,6 +3,7 @@
 {
   imports = [
     ./zsh
+    ./k9s
     ./k3s-client
   ];
 
