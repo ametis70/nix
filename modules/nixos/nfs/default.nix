@@ -45,6 +45,30 @@ in
         type = "nfs";
         options = "nfsvers=4.2";
       }
+      {
+        name = "srv-nfs-photos.mount";
+        wantedBy = [ "multi-user.target" ];
+        what = "truenas.lan:/mnt/main/photos";
+        where = "/srv/nfs/photos";
+        type = "nfs";
+        options = "nfsvers=4.2";
+      }
+      {
+        name = "srv-nfs-games.mount";
+        wantedBy = [ "multi-user.target" ];
+        what = "truenas.lan:/mnt/main/games";
+        where = "/srv/nfs/games";
+        type = "nfs";
+        options = "nfsvers=4.2";
+      }
+      {
+        name = "srv-nfs-music.mount";
+        wantedBy = [ "multi-user.target" ];
+        what = "truenas.lan:/mnt/main/media/music";
+        where = "/srv/nfs/music";
+        type = "nfs";
+        options = "nfsvers=4.2";
+      }
     ];
 
     boot.supportedFilesystems = [ "nfs" ];
