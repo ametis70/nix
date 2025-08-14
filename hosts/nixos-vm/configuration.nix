@@ -52,19 +52,19 @@ in
     package32 = hyprland-nixpkgs.pkgsi686Linux.mesa;
   };
 
-  custom.programs.creality-print.enable = true;
+  custom.programs.creality-print.enable = false;
 
-  programs.appimage = {
-    enable = true;
-    binfmt = true;
-    package = pkgs.appimage-run.override {
-      extraPkgs =
-        pkgs: with pkgs; [
-          gst_all_1.gst-plugins-bad
-          webkitgtk_4_0
-        ];
-    };
-  };
+  # programs.appimage = {
+  #   enable = true;
+  #   binfmt = true;
+  #   package = pkgs.appimage-run.override {
+  #     extraPkgs =
+  #       pkgs: with pkgs; [
+  #         gst_all_1.gst-plugins-bad
+  #         webkitgtk_4_0
+  #       ];
+  #   };
+  # };
 
   custom.services.nfs.enable = true;
 
