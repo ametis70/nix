@@ -118,34 +118,7 @@ extract_from_metadata() {
   ' "$file" || true
 }
 
-write_secret_yaml() {
-  # Args: outfile name namespace type (and reads decoded key=value pairs from stdin)
-  local out="$1" name="$2" ns="$3" type="$4"
-  {
-    echo "apiVersion: v1"
-    echo "kind: Secret"
-    echo "type: $type"
-    echo "metadata:"
-    echo "  name: $name"
-    echo "  namespace: $ns"
-    echo "stringData:"
-    while IFS='=' read -r k v; do
-      # v is decoded value; choose quoting based on content
-      if [[ "$v" == *$'\n'* ]]; then
-        echo "  $k: |"
-        # indent block content by two spaces
-        while IFS= read -r line; do
-          printf '    %s\n' "$line"
-        done <<<"$v"
-      else
-        # escape double quotes and backslashes
-        local esc=${v//\\/\\\\}
-        esc=${esc//\"/\\\"}
-        echo "  $k: \"$esc\""
-      fi
-    done
-  } >"$out"
-}
+
 
 editor=${EDITOR:-vi}
 
@@ -250,8 +223,16 @@ if [[ "$1" == "edit" ]]; then
   ORIG_FILE="$TMP_DIR/${NAME}.original.yaml"
   EDIT_FILE="$TMP_DIR/${NAME}.edit.yaml"
 
-  # Decode and write original YAML
+  # Decode and write original YAML directly
   {
+    echo "apiVersion: v1"
+    echo "kind: Secret"
+    echo "type: $TYPE"
+    echo "metadata:"
+    echo "  name: $NAME"
+    echo "  namespace: $NS"
+    echo "stringData:"
+    
     for line in "${kv_b64[@]}"; do
       k="${line%%=*}"
       b64="${line#*=}"
@@ -261,9 +242,33 @@ if [[ "$1" == "edit" ]]; then
       else
         v=""
       fi
-      printf '%s=%s\n' "$k" "$v"
+      
+      # Apply YAML formatting logic directly
+      if [[ "$v" == *$'\n'* ]]; then
+        # For multiline values, use literal block scalar (|)
+        echo "  $k: |"
+        # indent block content by two spaces
+        while IFS= read -r line; do
+          printf '    %s\n' "$line"
+        done <<<"$v"
+      elif [[ "$v" =~ ^[0-9]+$ ]]; then
+        # For numeric values, don't quote
+        echo "  $k: $v"
+      elif [[ "$v" =~ ^(true|false)$ ]]; then
+        # For boolean values, don't quote
+        echo "  $k: $v"
+      elif [[ "$v" =~ ^[[:space:]] ]] || [[ "$v" =~ [[:space:]]$ ]] || [[ "$v" =~ [\"\'\|\>\?\#] ]]; then
+        # For values that start/end with whitespace or contain special YAML characters, use double quotes
+        # Escape backslashes and double quotes
+        local esc=${v//\\/\\\\}
+        esc=${esc//\"/\\\"}
+        echo "  $k: \"$esc\""
+      else
+        # For simple string values, use plain scalar (no quotes)
+        echo "  $k: $v"
+      fi
     done
-  } | write_secret_yaml "$ORIG_FILE" "$NAME" "$NS" "$TYPE"
+  } > "$ORIG_FILE"
 
   cp "$ORIG_FILE" "$EDIT_FILE"
   ${editor} "$EDIT_FILE"
@@ -362,7 +367,9 @@ while true; do
   if [[ -z "$KEY" ]]; then
     break
   fi
-  read -p "Enter value for '$KEY': " VALUE
+  echo "Enter value for '$KEY' (use Ctrl+D when done for multiline values):"
+  # Read multiline input until Ctrl+D
+  VALUE=$(cat)
   SECRETS["$KEY"]="$VALUE"
 done
 
@@ -382,7 +389,31 @@ SECRET_FILE="$TMP_DIR/$SECRET_NAME.yaml"
   echo "  namespace: $NAMESPACE"
   echo "stringData:"
   for K in "${!SECRETS[@]}"; do
-    echo "  $K: \"${SECRETS[$K]}\""
+    V="${SECRETS[$K]}"
+    # Apply the same YAML formatting logic as in write_secret_yaml
+    if [[ "$V" == *$'\n'* ]]; then
+      # For multiline values, use literal block scalar (|)
+      echo "  $K: |"
+      # indent block content by two spaces
+      while IFS= read -r line; do
+        printf '    %s\n' "$line"
+      done <<<"$V"
+    elif [[ "$V" =~ ^[0-9]+$ ]]; then
+      # For numeric values, don't quote
+      echo "  $K: $V"
+    elif [[ "$V" =~ ^(true|false)$ ]]; then
+      # For boolean values, don't quote
+      echo "  $K: $V"
+    elif [[ "$V" =~ ^[[:space:]] ]] || [[ "$V" =~ [[:space:]]$ ]] || [[ "$V" =~ [\"\'\|\>\?\#] ]]; then
+      # For values that start/end with whitespace or contain special YAML characters, use double quotes
+      # Escape backslashes and double quotes
+      local esc=${V//\\/\\\\}
+      esc=${esc//\"/\\\"}
+      echo "  $K: \"$esc\""
+    else
+      # For simple string values, use plain scalar (no quotes)
+      echo "  $K: $V"
+    fi
   done
 } >"$SECRET_FILE"
 
