@@ -62,15 +62,20 @@ in
       name = "${config.networking.hostName}-initiatorhost";
     };
 
-    systemd.tmpfiles.rules =
-      [
-        "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
-      ]
-      ++ (lib.optionals (cfg.role == "server") (
-        map (
-          f: "C /var/lib/rancher/k3s/server/manifests/${f} 0644 root root - ${manifestsDir}/${f}"
-        ) manifestFilenames
-      ));
+    systemd.tmpfiles.rules = [
+      "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
+    ]
+    ++ (lib.optionals (cfg.role == "server") (
+      map (
+        f: "C /var/lib/rancher/k3s/server/manifests/${f} 0644 root root - ${manifestsDir}/${f}"
+      ) manifestFilenames
+    ));
+
+    boot.kernel.sysctl = {
+      "fs.inotify.max_user_instances" = 4096;
+      "fs.inotify.max_user_watches" = 1048576;
+      "fs.inotify.max_queued_events" = 65536;
+    };
 
     services.k3s = {
       enable = true;
