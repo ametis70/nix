@@ -38,9 +38,30 @@ fi
 
 fetch_pub_cert() {
   echo "Fetching sealed secrets public cert..." >&2
-  kube kubeseal --fetch-cert \
-    --controller-name=sealed-secrets-controller \
-    --controller-namespace=flux-system
+  local controller_name="${SEALED_SECRETS_CONTROLLER_NAME:-sealed-secrets-controller}"
+  local controller_ns="${SEALED_SECRETS_NAMESPACE:-flux-system}"
+
+  # First try via kubeseal service endpoint
+  if kube kubeseal --fetch-cert \
+    --controller-name="$controller_name" \
+    --controller-namespace="$controller_ns" 2>/dev/null; then
+    return 0
+  fi
+
+  # Fallback: read cert from the active key Secret directly (avoids service proxy)
+  local crt_b64
+  crt_b64=$(kube kubectl -n "$controller_ns" \
+    get secret -l sealedsecrets.bitnami.com/sealed-secrets-key=active \
+    -o jsonpath='{.items[0].data.tls\.crt}' 2>/dev/null || true)
+  if [[ -n "$crt_b64" ]]; then
+    # Try both BSD and GNU base64 flags
+    printf '%s' "$crt_b64" | base64 -D 2>/dev/null || printf '%s' "$crt_b64" | base64 -d 2>/dev/null
+    return 0
+  fi
+
+  echo "Error: unable to fetch Sealed Secrets public certificate. Tried service via kubeseal and reading tls.crt from Secret in namespace '$controller_ns'." >&2
+  echo "Hints: verify the controller namespace/name, service endpoints, and that the active key Secret exists." >&2
+  return 1
 }
 
 trim_quotes() {
@@ -191,7 +212,8 @@ if [[ "$1" == "edit" ]]; then
 
   # Attempt decryption by retrieving the controller's private key from the cluster (admin only)
   if [[ $USED_DECRYPTION -eq 0 ]]; then
-    PEM_B64=$(kube kubectl -n flux-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key=active -o jsonpath='{.items[0].data.tls\.key}' 2>/dev/null || true)
+    controller_ns="${SEALED_SECRETS_NAMESPACE:-flux-system}"
+    PEM_B64=$(kube kubectl -n "$controller_ns" get secret -l sealedsecrets.bitnami.com/sealed-secrets-key=active -o jsonpath='{.items[0].data.tls\.key}' 2>/dev/null || true)
     if [[ -n "$PEM_B64" ]]; then
       if kube kubeseal --recovery-unseal --recovery-private-key <(printf '%s' "$PEM_B64" | base64 -D 2>/dev/null || printf '%s' "$PEM_B64" | base64 -d 2>/dev/null) <"$SEALED_FILE" >"$DECRYPTED_FILE" 2>/dev/null; then
         USED_DECRYPTION=1
