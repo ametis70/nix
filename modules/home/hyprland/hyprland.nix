@@ -43,7 +43,8 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    package = hyprland.${host.channel}.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    package = null;
+    portalPackage = null;
     settings = {
       general = {
         gaps_in = 5;

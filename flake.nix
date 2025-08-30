@@ -72,6 +72,10 @@
       url = "github:ryantm/agenix";
       inputs.darwin.follows = "";
     };
+
+    catppuccin.url = "github:catppuccin/nix/release-25.05";
+
+    catppuccin-unstable.url = "github:catppuccin/nix";
   };
 
   nixConfig = {
@@ -155,6 +159,11 @@
       hy3 = {
         stable = inputs.hy3;
         unstable = inputs.hy3-unstable;
+      };
+
+      catppuccin = {
+        stable = inputs.catppuccin;
+        unstable = inputs.catppuccin-unstable;
       };
 
       getHostSpecialArgs = host: {
@@ -284,7 +293,10 @@
         host:
         homeManager.${host.channel}.lib.homeManagerConfiguration {
           pkgs = packages.${host.system}.${host.channel};
-          modules = [ ./hosts/${host.id}/home.nix ];
+          modules = [
+            ./hosts/${host.id}/home.nix
+            catppuccin.${host.channel}.homeModules.catppuccin
+          ];
           extraSpecialArgs = getHostSpecialArgs host;
         };
 
@@ -294,12 +306,16 @@
           system = host.system;
           modules = host.extraNixosModules ++ [
             ./hosts/${host.id}/configuration.nix
+            catppuccin.${host.channel}.nixosModules.catppuccin
             homeManager.${host.channel}.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
-              home-manager.users.${host.username} = import ./hosts/${host.id}/home.nix;
+              home-manager.users.${host.username}.imports = [
+                ./hosts/${host.id}/home.nix
+                catppuccin.${host.channel}.homeModules.catppuccin
+              ];
               home-manager.extraSpecialArgs = getHostSpecialArgs host;
             }
             agenix.nixosModules.default
@@ -318,7 +334,10 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";
-              home-manager.users.${host.username} = import ./hosts/${host.id}/home.nix;
+              home-manager.users.${host.username}.imports = [
+                ./hosts/${host.id}/home.nix
+                catppuccin.${host.channel}.homeModules.catppuccin
+              ];
               home-manager.extraSpecialArgs = getHostSpecialArgs host;
             }
           ];

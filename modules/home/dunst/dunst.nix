@@ -17,24 +17,6 @@
         origin = "top-right";
         font = "Iosevka Medium 14";
       };
-
-      urgency_low = {
-        background = "#24283b";
-        foreground = "#c0caf5";
-        frame_color = "#9ece6a";
-      };
-
-      urgency_normal = {
-        background = "#24283b";
-        foreground = "#c0caf5";
-        frame_color = "#7aa2f7";
-      };
-
-      urgency_critical = {
-        background = "#24283b";
-        foreground = "#f7768e";
-        frame_color = "#f7768e";
-      };
     };
   };
 }
