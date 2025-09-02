@@ -13,6 +13,8 @@
     ../../modules/nixos/common.nix
     ../../modules/nixos/openssh.nix
     ../../modules/nixos/user.nix
+
+    ./edid
   ];
 
   networking = {
