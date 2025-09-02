@@ -124,7 +124,7 @@
 
   custom.k3s-client.enable = true;
 
-  programs.kitty.font.size = 16;
+  programs.kitty.font.size = 17;
 
   home.stateVersion = "24.11";
 }
