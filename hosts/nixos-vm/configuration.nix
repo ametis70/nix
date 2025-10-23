@@ -68,9 +68,7 @@ in
 
   custom.services.nfs.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    transmission_4-qt
-  ];
+  hardware.bluetooth.enable = true;
 
   system.stateVersion = "24.11";
 }
