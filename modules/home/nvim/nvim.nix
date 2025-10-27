@@ -53,7 +53,7 @@ in
       nodePackages.typescript-language-server
       nodePackages.bash-language-server
       docker-compose-language-service
-      dockerfile-language-server-nodejs
+      dockerfile-language-server
       marksman
       neocmakelsp
       nil

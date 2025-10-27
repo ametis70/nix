@@ -48,9 +48,10 @@
     };
     git = {
       enable = true;
-      delta = {
-        enable = true;
-      };
+    };
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
     };
     gpg = {
       enable = true;
