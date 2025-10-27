@@ -190,7 +190,7 @@
           username = "deck";
           system = "x86_64-linux";
           extraNixosModules = [ ];
-          channel = "stable";
+          channel = "unstable";
           nixos = false;
         };
         nixos-deck = {

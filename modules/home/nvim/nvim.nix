@@ -103,6 +103,7 @@ in
           LazyVim
 
           blink-cmp
+          blink-copilot
           bufferline-nvim
           catppuccin-nvim
           conform-nvim
@@ -148,20 +149,9 @@ in
             name = "catppuccin";
             path = catppuccin-nvim;
           }
-          {
-            name = "blink-cmp-copilot";
-            path = (
-              fromGithub "439cff78780c033aa23cf061d7315314b347e3c1" "main" "giuxtaposition/blink-cmp-copilot"
-            );
-          }
           cmake-tools-nvim
           copilot-lua
-          {
-            name = "CopilotChat.nvim";
-            path = (
-              fromGithub "4dce4d2fc185a935024511811139b68e91b2d2a8" "main" "CopilotC-Nvim/CopilotChat.nvim"
-            );
-          }
+          CopilotChat-nvim
           crates-nvim
           dial-nvim
           inc-rename-nvim
@@ -196,6 +186,12 @@ in
           yanky-nvim
           clangd_extensions-nvim
           kulala-nvim
+          {
+            name = "venv-selector.nvim";
+            path = (
+              fromGithub "5047cc065a13a55f3bd4f26b185271199690b2be" "main" "linux-cultist/venv-selector.nvim"
+            );
+          }
         ];
 
         mkEntryFromDrv =
