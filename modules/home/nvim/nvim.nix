@@ -89,6 +89,7 @@ in
       markdownlint-cli2
       gotools
       sqlfluff
+      statix
     ];
 
     extraLuaPackages = ps: [ ps.magick ];
