@@ -11,6 +11,7 @@
     ./k3s-server
     ./creality-print
     ./nfs
+    ./nut
     ./catppuccin
   ];
 

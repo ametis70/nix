@@ -1,5 +1,21 @@
-{ pkgs, specialArgs, ... }:
+{
+  lib,
+  pkgs,
+  specialArgs,
+  options,
+  ...
+}:
 
+let
+  deltaUnstableConfig = {
+    programs.delta = {
+      enable = true;
+      enableGitIntegration = true;
+    };
+  };
+
+  hmHas = path: lib.hasAttrByPath path options;
+in
 {
   imports = [
     ./zsh
@@ -8,53 +24,57 @@
     ./catppuccin
   ];
 
-  programs.home-manager.enable = true;
+  config = lib.mkMerge [
+    {
 
-  home.username = specialArgs.host.username;
+      home.username = specialArgs.host.username;
 
-  home.packages = with pkgs; [
-    pass
-    fd
-    curl
-    jq
-    ranger
-    delta
-  ];
-
-  programs = {
-    fzf = {
-      enable = true;
-      enableZshIntegration = true;
-      defaultOptions = [
-        "--highlight-line"
-        "--info=inline-right"
-        "--ansi"
-        "--layout=reverse"
-        "--border=none"
+      home.packages = with pkgs; [
+        pass
+        fd
+        curl
+        jq
+        ranger
+        delta
       ];
-    };
-    bat = {
-      enable = true;
-    };
-    lazygit = {
-      enable = true;
-    };
-    direnv = {
-      enable = true;
-      enableZshIntegration = true;
-      nix-direnv = {
-        enable = true;
+
+      programs = {
+        home-manager.enable = true;
+        fzf = {
+          enable = true;
+          enableZshIntegration = true;
+          defaultOptions = [
+            "--highlight-line"
+            "--info=inline-right"
+            "--ansi"
+            "--layout=reverse"
+            "--border=none"
+          ];
+        };
+        bat = {
+          enable = true;
+        };
+        lazygit = {
+          enable = true;
+        };
+        direnv = {
+          enable = true;
+          enableZshIntegration = true;
+          nix-direnv = {
+            enable = true;
+          };
+        };
+        git = {
+          enable = true;
+        };
+        gpg = {
+          enable = true;
+        };
       };
-    };
-    git = {
-      enable = true;
-    };
-    delta = {
-      enable = true;
-      enableGitIntegration = true;
-    };
-    gpg = {
-      enable = true;
-    };
-  };
+    }
+    (lib.optionalAttrs (hmHas [
+      "programs"
+      "delta"
+    ]) deltaUnstableConfig)
+  ];
 }

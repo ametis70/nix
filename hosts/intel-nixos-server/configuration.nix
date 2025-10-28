@@ -4,9 +4,6 @@
   ...
 }:
 
-let
-  nutPasswordPath = "/etc/nut/password";
-in
 {
   imports = [
     ./hardware-configuration.nix
@@ -45,55 +42,19 @@ in
     }
   ];
 
-  power.ups = {
-    enable = true;
-    mode = "netserver";
-
-    ups."eaton" = {
-      driver = "usbhid-ups";
-      port = "auto";
-      # vendorId = "0463";
-      # productId = "FFFF";
-    };
-
-    upsmon = {
+  custom = {
+    k3s = {
       enable = true;
-      monitor.eaton = {
-        user = "nut";
-        system = "localhost@eaton";
-        type = "master";
-        powerValue = 1;
-        passwordFile = nutPasswordPath;
-      };
+      init = true;
     };
 
-    users."nut" = {
-      upsmon = "primary";
-      passwordFile = nutPasswordPath;
-    };
-
-    upsd = {
+    nut = {
       enable = true;
-      listen = [
-        {
-          address = "0.0.0.0";
-        }
-      ];
+      role = "server";
     };
-  };
 
-  services.prometheus.exporters.nut = {
-    enable = true;
-    nutUser = "nut";
-    passwordPath = nutPasswordPath;
+    services.nfs.enable = true;
   };
-
-  custom.k3s = {
-    enable = true;
-    init = true;
-  };
-
-  custom.services.nfs.enable = true;
 
   system.stateVersion = "24.11";
 }

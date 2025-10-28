@@ -19,8 +19,16 @@
     firewall.enable = false;
   };
 
-  custom.k3s.enable = true;
-  custom.services.nfs.enable = true;
+  custom = {
+    k3s.enable = true;
+    services.nfs.enable = true;
+
+    nut = {
+      enable = true;
+      delay = 5;
+      role = "client";
+    };
+  };
 
   system.stateVersion = "25.05";
 }

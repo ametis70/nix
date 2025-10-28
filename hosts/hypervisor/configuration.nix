@@ -121,5 +121,13 @@
     ];
   };
 
+  custom = {
+    nut = {
+      enable = true;
+      delay = 125;
+      role = "client";
+    };
+  };
+
   system.stateVersion = "24.11";
 }
