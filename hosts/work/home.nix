@@ -72,14 +72,6 @@
     '';
   };
 
-  programs.git.extraConfig = {
-    url = {
-      "ssh://git@github.com/" = {
-        insteadOf = "https://github.com/";
-      };
-    };
-  };
-
   home.packages = with pkgs; [
     scrcpy
     android-tools
@@ -110,15 +102,26 @@
     '';
   };
 
-  programs.git.extraConfig = {
-    commit = {
-      gpgsign = true;
-    };
-    user = {
-      signingkey = "~/.ssh/id_ed25519_melisource.pub";
-    };
-    gpg = {
-      format = "ssh";
+  programs.lazygit.settings = {
+    overrideGpg = true;
+  };
+
+  programs.git = {
+    settings = {
+      commit = {
+        gpgsign = true;
+      };
+      url = {
+        "ssh://git@github.com/" = {
+          insteadOf = "https://github.com/";
+        };
+      };
+      user = {
+        signingkey = "~/.ssh/id_ed25519_melisource.pub";
+      };
+      gpg = {
+        format = "ssh";
+      };
     };
   };
 
