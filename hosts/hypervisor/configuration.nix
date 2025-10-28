@@ -57,6 +57,8 @@
     };
   };
 
+  networking.interfaces.enp39s0.wakeOnLan.enable = true;
+
   environment.systemPackages = with pkgs; [
     dmidecode
     likwid

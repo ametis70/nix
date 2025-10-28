@@ -20,6 +20,8 @@
     firewall.enable = false;
   };
 
+  networking.interfaces.enp1s0.wakeOnLan.enable = true;
+
   nixpkgs.config.packageOverrides = pkgs: {
     vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
   };

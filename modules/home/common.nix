@@ -36,6 +36,7 @@ in
         jq
         ranger
         delta
+        wol
       ];
 
       programs = {
