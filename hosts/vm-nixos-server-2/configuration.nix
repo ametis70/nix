@@ -25,7 +25,7 @@
 
     nut = {
       enable = true;
-      delay = 5;
+      delay = 1;
       role = "client";
     };
   };

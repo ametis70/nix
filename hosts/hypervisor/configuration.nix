@@ -126,7 +126,7 @@
   custom = {
     nut = {
       enable = true;
-      delay = 125;
+      delay = 120;
       role = "client";
     };
   };

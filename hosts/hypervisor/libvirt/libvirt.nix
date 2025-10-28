@@ -74,4 +74,17 @@
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
     };
   };
+
+  systemd.services.nixvirt = {
+    serviceConfig = {
+      Type = "oneshot";
+      Restart = "on-failure";
+      RestartSec = "20s";
+    };
+
+    unitConfig = {
+      StartLimitIntervalSec = "15min";
+      StartLimitBurst = 45;
+    };
+  };
 }

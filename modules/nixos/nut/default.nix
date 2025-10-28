@@ -1,9 +1,14 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.custom.nut;
   nutPasswordPath = config.age.secrets.nut.path;
-  lowBatteryMinutes = 9;
+  lowBatteryMinutes = 10;
 
   modeMap = {
     server = "netserver";
@@ -18,7 +23,6 @@ let
     client = "intel.lan";
   };
 in
-
 {
   options.custom.nut = {
     enable = lib.mkEnableOption "Enable NUT on this node";
@@ -34,82 +38,109 @@ in
 
     delay = lib.mkOption {
       type = lib.types.int;
-      default = 5 * 60;
-      description = "Seconds to wait before shuting down node";
+      default = 240;
+      description = "Seconds to wait before halting the node";
+    };
+
+    powerCutDelay = lib.mkOption {
+      type = lib.types.int;
+      default = 120;
+      description = "Seconds to wait between halting the server and requesting the UPS to cut power";
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    age.secrets.nut.file = ../../../secrets/nut.age;
+  config = lib.mkIf cfg.enable (
+    let
+      systemctlCmd = "${pkgs.systemd}/bin/systemctl";
+      upscmd = lib.getExe' pkgs.nut "upscmd";
+      serverShutdownCmd = pkgs.writeShellScript "nut-server-shutdown" ''
+        set -euo pipefail
 
-    power.ups = {
-      enable = true;
-      mode = modeMap.${cfg.role};
+        IFS= read -r password < ${nutPasswordPath}
+        ${upscmd} -u server -p "$password" eaton load.off.delay ${toString cfg.powerCutDelay}
 
-      upsmon = {
+        exec ${systemctlCmd} halt --no-block
+      '';
+      clientShutdownCmd = pkgs.writeShellScript "nut-client-shutdown" ''
+        set -euo pipefail
+
+        exec ${systemctlCmd} halt --no-block
+      '';
+      shutdownCmd = if cfg.role == "server" then serverShutdownCmd else clientShutdownCmd;
+    in
+
+    {
+      age.secrets.nut.file = ../../../secrets/nut.age;
+
+      power.ups = {
         enable = true;
-        monitor.eaton = {
-          user = cfg.role;
-          system = "eaton@${clientMap.${cfg.role}}";
-          type = monitorMap.${cfg.role};
-          powerValue = 1;
-          passwordFile = nutPasswordPath;
-        };
-        settings = {
-          SHUTDOWNCMD = "/run/current-system/sw/sbin/shutdown -h +0";
-          FINALDELAY = toString cfg.delay;
-        };
-      };
+        mode = modeMap.${cfg.role};
 
-      ups."eaton" = lib.mkIf (cfg.role == "server") {
-        driver = "usbhid-ups";
-        port = "auto";
-        directives = [
-          "override.battery.runtime.low = ${toString (lowBatteryMinutes * 60)}"
-        ];
-        # vendorId = "0463";
-        # productId = "FFFF";
-      };
+        upsmon = {
+          enable = true;
+          monitor.eaton = {
+            user = cfg.role;
+            system = "eaton@${clientMap.${cfg.role}}";
+            type = monitorMap.${cfg.role};
+            powerValue = 1;
+            passwordFile = nutPasswordPath;
+          };
+          settings = {
+            SHUTDOWNCMD = "${shutdownCmd}";
+            FINALDELAY = toString cfg.delay;
+          };
+        };
 
-      users = lib.mkIf (cfg.role == "server") {
-        "server" = {
-          upsmon = "primary";
-          passwordFile = nutPasswordPath;
-          actions = [
-            "SET"
-            "FSD"
-            "INSTCMD"
+        ups."eaton" = lib.mkIf (cfg.role == "server") {
+          driver = "usbhid-ups";
+          port = "auto";
+          directives = [
+            "override.battery.runtime.low = ${toString (lowBatteryMinutes * 60)}"
           ];
-          instcmds = [
-            "load.off"
-            "load.off.delay"
-            "shutdown.stop"
-            "beeper.enable"
-            "beeper.disable"
-          ];
+          # vendorId = "0463";
+          # productId = "FFFF";
         };
-        "client" = {
-          upsmon = "secondary";
-          passwordFile = nutPasswordPath;
+
+        users = lib.mkIf (cfg.role == "server") {
+          "server" = {
+            upsmon = "primary";
+            passwordFile = nutPasswordPath;
+            actions = [
+              "SET"
+              "FSD"
+              "INSTCMD"
+            ];
+            instcmds = [
+              "load.off"
+              "load.off.delay"
+              "shutdown.stop"
+              "beeper.enable"
+              "beeper.disable"
+            ];
+          };
+          "client" = {
+            upsmon = "secondary";
+            passwordFile = nutPasswordPath;
+          };
+        };
+
+        upsd = lib.mkIf (cfg.role == "server") {
+          enable = true;
+          listen = [
+            {
+              address = "0.0.0.0";
+            }
+          ];
         };
       };
 
-      upsd = lib.mkIf (cfg.role == "server") {
+      services.prometheus.exporters.nut = lib.mkIf (cfg.role == "server") {
         enable = true;
-        listen = [
-          {
-            address = "0.0.0.0";
-          }
-        ];
+        nutUser = "prometheus";
+        passwordPath = nutPasswordPath;
+        user = "root";
+        group = "root";
       };
-    };
-
-    services.prometheus.exporters.nut = lib.mkIf (cfg.role == "server") {
-      enable = true;
-      nutUser = "prometheus";
-      passwordPath = nutPasswordPath;
-      user = "root";
-      group = "root";
-    };
-  };
+    }
+  );
 }
