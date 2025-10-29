@@ -37,6 +37,7 @@ in
         ranger
         delta
         wol
+        rbw
       ];
 
       programs = {
