@@ -9,7 +9,6 @@
     ../../modules/home/hyprland/hyprland.nix
     ../../modules/home/design/design.nix
     ../../modules/home/zathura/zathura.nix
-    ../../modules/home/gpg-agent/gpg-agent.nix
     ../../modules/home/hypervisor-virt-manager/hvm.nix
     ../../modules/home/gnome-keyring
     ../../modules/home/pdf/pdf.nix

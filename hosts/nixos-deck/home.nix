@@ -10,7 +10,6 @@
     ../../modules/home/hyprland/hyprland-deck.nix
     ../../modules/home/design/design.nix
     ../../modules/home/zathura/zathura.nix
-    ../../modules/home/gpg-agent/gpg-agent.nix
   ];
 
   home.packages = with pkgs; [

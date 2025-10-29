@@ -30,7 +30,6 @@ in
       home.username = specialArgs.host.username;
 
       home.packages = with pkgs; [
-        pass
         fd
         curl
         jq
@@ -38,6 +37,7 @@ in
         delta
         wol
         rbw
+        git
       ];
 
       programs = {
@@ -65,12 +65,6 @@ in
           nix-direnv = {
             enable = true;
           };
-        };
-        git = {
-          enable = true;
-        };
-        gpg = {
-          enable = true;
         };
       };
     }

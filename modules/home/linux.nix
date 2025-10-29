@@ -6,7 +6,7 @@
   home.homeDirectory = "/home/${specialArgs.host.username}";
 
   home.packages = with pkgs; [
-    pinentry_curses
+    pinentry-curses
     xclip
     wl-clipboard
   ];
