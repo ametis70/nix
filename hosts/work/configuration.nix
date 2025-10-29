@@ -1,13 +1,6 @@
 { pkgs, host, ... }:
 
 let
-  choosePasswordPkg = pkgs.writeShellScriptBin "choose-pass" ''
-    find "$HOME/.password-store" -type f -name '*.gpg' | \
-      sed "s|.*/\.password-store/||; s|\.gpg$||" | \
-      /opt/homebrew/bin/choose | \
-      xargs -r -I{} pass show -c {}
-  '';
-
   chooseAppPkg = pkgs.writeShellScriptBin "choose-app" ''
     ls /Applications/ /Applications/Utilities/ /System/Applications/ /System/Applications/Utilities/ | \
         grep '\.app$' | \
@@ -22,7 +15,6 @@ in
   users.users.${host.username}.home = "/Users/${host.username}";
 
   environment.systemPackages = [
-    choosePasswordPkg
     chooseAppPkg
   ];
 
@@ -111,7 +103,6 @@ in
   services.skhd = {
     enable = true;
     skhdConfig = ''
-      cmd + shift - p : ${choosePasswordPkg}/bin/choose-pass
       cmd - d : ${chooseAppPkg}/bin/choose-app
     '';
   };
