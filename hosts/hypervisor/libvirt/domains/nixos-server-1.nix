@@ -9,7 +9,7 @@ let
     ram = 16;
     cpu = 4;
     disks = [
-      "server-1.qcow2"
+      "/media/ssd1/server-1.qcow2"
     ];
     mac = "98:b1:c7:e9:32:1f";
   };

@@ -1,4 +1,8 @@
+let
+  isAbsolute = path: path != "" && builtins.substring 0 1 path == "/";
+in
 {
+
   mkPCIHostDevs = builtins.map (dev: {
     mode = "subsystem";
     type = "pci";
@@ -48,7 +52,7 @@
         device = "disk";
         driver = driver;
         source = {
-          file = "/var/lib/libvirt/images/${name}";
+          file = if (isAbsolute name) then name else "/var/lib/libvirt/images/${name}";
         };
         target = {
           dev = target;

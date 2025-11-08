@@ -8,31 +8,47 @@
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  boot.initrd.availableKernelModules = [
-    "nvme"
-    "ahci"
-    "xhci_pci"
-    "usbhid"
-    "sd_mod"
-  ];
-  boot.initrd.kernelModules = [
-    "vfio_pci"
-    "vfio"
-    "vfio_iommu_type1"
-  ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
-  boot.blacklistedKernelModules = [ "amdgpu" ];
-
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/05991aa7-d632-4f35-8a77-a32309570523";
-    fsType = "ext4";
+  boot = {
+    initrd = {
+      availableKernelModules = [
+        "nvme"
+        "ahci"
+        "xhci_pci"
+        "usbhid"
+        "sd_mod"
+      ];
+      kernelModules = [
+        "vfio_pci"
+        "vfio"
+        "vfio_iommu_type1"
+      ];
+    };
+    kernelModules = [ "kvm-amd" ];
+    extraModulePackages = [ ];
+    blacklistedKernelModules = [ "amdgpu" ];
   };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/5187-7E28";
-    fsType = "vfat";
-    options = [ "umask=0077" ];
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/05991aa7-d632-4f35-8a77-a32309570523";
+      fsType = "ext4";
+    };
+
+    "/media/ssd1" = {
+      device = "/dev/disk/by-uuid/64cc202e-95c2-460e-abe0-13ebdcf7beb7";
+      fsType = "ext4";
+    };
+
+    "/media/ssd2" = {
+      device = "/dev/disk/by-uuid/2d831b6b-885c-4056-a9a7-ce1812ced54e";
+      fsType = "ext4";
+    };
+
+    "/boot" = {
+      device = "/dev/disk/by-uuid/5187-7E28";
+      fsType = "vfat";
+      options = [ "umask=0077" ];
+    };
   };
 
   swapDevices = [ ];
