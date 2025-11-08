@@ -36,6 +36,8 @@ in
       description = "Role for this node";
     };
 
+    isVm = lib.mkEnableOption "Treat this node as a VM (use 'systemctl shutdown' instead of 'halt')";
+
     delay = lib.mkOption {
       type = lib.types.int;
       default = 240;
@@ -52,20 +54,25 @@ in
   config = lib.mkIf cfg.enable (
     let
       systemctlCmd = "${pkgs.systemd}/bin/systemctl";
+      systemctlAction = if cfg.isVm then "shutdown" else "halt";
+
       upscmd = lib.getExe' pkgs.nut "upscmd";
+
       serverShutdownCmd = pkgs.writeShellScript "nut-server-shutdown" ''
         set -euo pipefail
 
         IFS= read -r password < ${nutPasswordPath}
         ${upscmd} -u server -p "$password" eaton load.off.delay ${toString cfg.powerCutDelay}
 
-        exec ${systemctlCmd} halt --no-block
+        exec ${systemctlCmd} ${systemctlAction} --no-block
       '';
+
       clientShutdownCmd = pkgs.writeShellScript "nut-client-shutdown" ''
         set -euo pipefail
 
-        exec ${systemctlCmd} halt --no-block
+        exec ${systemctlCmd} ${systemctlAction} --no-block
       '';
+
       shutdownCmd = if cfg.role == "server" then serverShutdownCmd else clientShutdownCmd;
     in
 

@@ -24,6 +24,7 @@
     nut = {
       enable = true;
       delay = 1;
+      isVm = true;
       role = "client";
     };
   };
