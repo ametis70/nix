@@ -61,9 +61,14 @@ in
       enable = true;
       name = "${config.networking.hostName}-initiatorhost";
     };
+    systemd.services.iscsid.serviceConfig = {
+      PrivateMounts = "yes";
+      BindPaths = "/run/current-system/sw/bin:/bin";
+    };
 
     systemd.tmpfiles.rules = [
       "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
+      "L /usr/bin/mount - - - - /run/current-system/sw/bin/mount"
     ]
     ++ (lib.optionals (cfg.role == "server") (
       map (
