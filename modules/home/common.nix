@@ -38,6 +38,8 @@ in
         wol
         rbw
         git
+        openssl
+        pwgen
       ];
 
       programs = {
