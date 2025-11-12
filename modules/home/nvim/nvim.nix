@@ -221,8 +221,13 @@ in
         vim.g.NIX_HOST = "${specialArgs.host.hostname}"
         vim.g.NIXOS = ${if specialArgs.host.nixos then "true" else "false"}
         vim.g.PLUGINS_PATH = "${pluginsPath}"
+
         vim.g.mapleader = " "
         vim.g.maplocalleader = ","
+
+        if vim.env.SSH_TTY then
+          vim.g.clipboard = "osc52"
+        end
 
         package.cpath = "${luarocks.cpath}" .. package.cpath
         package.path = "${luarocks.path}" .. package.path
