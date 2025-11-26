@@ -407,7 +407,7 @@ SECRET_FILE="$TMP_DIR/$SECRET_NAME.yaml"
     elif [[ "$V" =~ ^[[:space:]] ]] || [[ "$V" =~ [[:space:]]$ ]] || [[ "$V" =~ [\"\'\|\>\?\#] ]]; then
       # For values that start/end with whitespace or contain special YAML characters, use double quotes
       # Escape backslashes and double quotes
-      local esc=${V//\\/\\\\}
+      esc=${V//\\/\\\\}
       esc=${esc//\"/\\\"}
       echo "  $K: \"$esc\""
     else

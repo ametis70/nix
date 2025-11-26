@@ -9,7 +9,7 @@
 let
   deltaUnstableConfig = {
     programs.delta = {
-      enable = true;
+      enable = false;
       enableGitIntegration = true;
     };
   };
@@ -38,6 +38,7 @@ in
         wol
         rbw
         git
+        rsync
         openssl
         pwgen
       ];
@@ -67,6 +68,17 @@ in
           nix-direnv = {
             enable = true;
           };
+        };
+        tmux = {
+          enable = true;
+          mouse = true;
+          prefix = "C-a";
+          keyMode = "vi";
+          historyLimit = 5000;
+          baseIndex = 1;
+          extraConfig = ''
+            set-option -g set-clipboard on
+          '';
         };
       };
     }
