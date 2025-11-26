@@ -11,12 +11,7 @@ let
     disks = [
       {
         type = "block";
-        driver = {
-          name = "qemu";
-          type = "raw";
-          cache = "none";
-          discard = "unmap";
-        };
+        driver = "raw";
         name = "/dev/mapper/vg_ssd1-server1_disk";
       }
     ];
