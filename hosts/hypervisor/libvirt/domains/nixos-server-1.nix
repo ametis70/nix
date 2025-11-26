@@ -9,7 +9,16 @@ let
     ram = 16;
     cpu = 4;
     disks = [
-      "/media/ssd1/server-1.qcow2"
+      {
+        type = "block";
+        driver = {
+          name = "qemu";
+          type = "raw";
+          cache = "none";
+          discard = "unmap";
+        };
+        name = "/dev/mapper/vg_ssd1-server1_disk";
+      }
     ];
     mac = "98:b1:c7:e9:32:1f";
   };

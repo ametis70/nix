@@ -48,7 +48,7 @@ in
       throw "Disk is not string or set"
     else
       {
-        type = "file";
+        type = if isSet && (builtins.hasAttr "type" disk) then disk.type else "file";
         device = "disk";
         driver = driver;
         source = {

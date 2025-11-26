@@ -34,11 +34,6 @@
       fsType = "ext4";
     };
 
-    "/media/ssd1" = {
-      device = "/dev/disk/by-uuid/64cc202e-95c2-460e-abe0-13ebdcf7beb7";
-      fsType = "ext4";
-    };
-
     "/media/ssd2" = {
       device = "/dev/disk/by-uuid/2d831b6b-885c-4056-a9a7-ce1812ced54e";
       fsType = "ext4";
