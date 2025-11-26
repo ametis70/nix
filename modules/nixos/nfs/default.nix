@@ -69,6 +69,14 @@ in
         type = "nfs";
         options = "nfsvers=4.2";
       }
+      {
+        name = "srv-nfs-roms.mount";
+        wantedBy = [ "multi-user.target" ];
+        what = "truenas.lan:/mnt/main/roms";
+        where = "/srv/nfs/roms";
+        type = "nfs";
+        options = "nfsvers=4.2";
+      }
     ];
 
     boot.supportedFilesystems = [ "nfs" ];
