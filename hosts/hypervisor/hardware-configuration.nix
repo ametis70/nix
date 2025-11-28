@@ -34,11 +34,6 @@
       fsType = "ext4";
     };
 
-    "/media/ssd2" = {
-      device = "/dev/disk/by-uuid/2d831b6b-885c-4056-a9a7-ce1812ced54e";
-      fsType = "ext4";
-    };
-
     "/boot" = {
       device = "/dev/disk/by-uuid/5187-7E28";
       fsType = "vfat";

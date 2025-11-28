@@ -9,7 +9,11 @@ let
     ram = 16;
     cpu = 4;
     disks = [
-      "/media/ssd2/server-2.qcow2"
+      {
+        type = "block";
+        driver = "raw";
+        name = "/dev/mapper/vg_ssd2-server2_disk";
+      }
     ];
     mac = "62:d9:31:bd:67:6f";
   };
