@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  edid = "benq-x300g.bin";
+  edid = "fantasmagoria.bin";
 in
 {
   hardware.display = {
@@ -14,13 +14,13 @@ in
       packages = [
         (pkgs.runCommand "edid-custom" { } ''
           mkdir -p "$out/lib/firmware/edid"
-          # base64 benq-x300g.bin
+          # base64 fantasmagoria.bin
           base64 -d > "$out/lib/firmware/edid/${edid}" <<'EOF'
-          AP///////wAJ0QRuAQAAAAEhAQOAAAB4D3IYp1RLnyUNSGW974CBwIEAqUDRwNEAgTyB/NH8COgA
-          MPJwWoCwWIoAAAAAAAAeCOiAGHE4LUBYLEUAAAAAAAAeAAAA/QAX8A+HPAAKICAgICAgAAAA/ABC
-          ZW5RIFBKCiAgICAgAQYCA0lwVWFgX15dEB8gISIEEwUGFREUAj8DEiMJBweDAQAAbQMMABAAOEQv
-          gGABAgNn2F3EAXiAA+MF4ADiAP/mBgcBi2AS4g8DVl4AoKCgKVAwIDUAUB10AAAab8IAoKCgVVAw
-          IDUAUB10AAAeAAAAAAAAAAAAAAAAAAAAAAAAQg==
+          AP///////wAo7ARuAQAAAAEhAQOAAAB4D3IYp1RLnyUNSGW974CBwIEAqUDRwNEAgTyB/NH8COgA
+          MPJwWoCwWIoAAAAAAAAeCOiAGHE4LUBYLEUAAAAAAAAeAAAA/QAX8A+HPAAKICAgICAgAAAA/ABG
+          YW50YXNtYWdvcmlhAVkCA0lwUWFgX15dEB8gISIEExECPwMSNQ9/Bz0ewBUHUF9+A1cGA2d+A19+
+          AYNfAABtAwwAEAA4RC+AYAECA2fYXcQBeIAD4gD/Vl4AoKCgKVAwIDUAUB10AAAab8IAoKCgVVAw
+          IDUAUB10AAAeAAAAAAAAAAAAAAAAAAAAAAAArA==
           EOF
         '')
       ];

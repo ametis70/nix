@@ -58,6 +58,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+    ncpamixer
+    edid-decode
     retroarch-joypad-autoconfig
     retroarch-assets
     retroarch-free
