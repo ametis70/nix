@@ -1,0 +1,22 @@
+{
+  imports = [
+    ./c.nix
+    ./docker.nix
+    ./git.nix
+    ./go.nix
+    ./helm.nix
+    ./json.nix
+    ./markdown.nix
+    ./nix.nix
+    ./python.nix
+    ./rust.nix
+    ./shell.nix
+    ./sql.nix
+    ./svelte.nix
+    ./tailwindcss.nix
+    ./toml.nix
+    ./typescript.nix
+    ./vue.nix
+    ./yaml.nix
+  ];
+}

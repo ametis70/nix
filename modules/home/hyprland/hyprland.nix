@@ -34,7 +34,8 @@ in
     slurp
     grim
     wl-clipboard
-    pasystray
+    # FIXME: failing to build
+    # pasystray
     pavucontrol
     hyprexit
     hyprws
@@ -112,7 +113,6 @@ in
       };
       exec-once = [
         "waybar"
-        "pasystray"
         "nm-applet"
         "mkdir -p ~/Pictures/screenshots"
       ];

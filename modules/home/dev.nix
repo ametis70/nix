@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./nvim/nvim.nix
+    ./nvim
     ./zk/zk.nix
   ];
 

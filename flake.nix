@@ -76,6 +76,16 @@
     catppuccin.url = "github:catppuccin/nix/release-25.05";
 
     catppuccin-unstable.url = "github:catppuccin/nix";
+
+    nixvim = {
+      url = "github:nix-community/nixvim/nixos-25.05";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixvim-unstable = {
+      url = "github:nix-community/nixvim";
+      # inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
   };
 
   nixConfig = {
@@ -164,6 +174,11 @@
       catppuccin = {
         stable = inputs.catppuccin;
         unstable = inputs.catppuccin-unstable;
+      };
+
+      nixvim = {
+        stable = inputs.nixvim;
+        unstable = inputs.nixvim-unstable;
       };
 
       getHostSpecialArgs = host: {
@@ -295,6 +310,7 @@
           pkgs = packages.${host.system}.${host.channel};
           modules = [
             ./hosts/${host.id}/home.nix
+            nixvim.${host.channel}.homeModules.nixvim
             catppuccin.${host.channel}.homeModules.catppuccin
           ];
           extraSpecialArgs = getHostSpecialArgs host;
@@ -314,6 +330,7 @@
               home-manager.backupFileExtension = "backup";
               home-manager.users.${host.username}.imports = [
                 ./hosts/${host.id}/home.nix
+                nixvim.${host.channel}.homeModules.nixvim
                 catppuccin.${host.channel}.homeModules.catppuccin
               ];
               home-manager.extraSpecialArgs = getHostSpecialArgs host;
@@ -336,6 +353,7 @@
               home-manager.backupFileExtension = "backup";
               home-manager.users.${host.username}.imports = [
                 ./hosts/${host.id}/home.nix
+                nixvim.${host.channel}.homeModules.nixvim
                 catppuccin.${host.channel}.homeModules.catppuccin
               ];
               home-manager.extraSpecialArgs = getHostSpecialArgs host;
@@ -356,7 +374,6 @@
         "${vm-nixos-server-1.hostname}" = configureNixOs vm-nixos-server-1;
         "${vm-nixos-server-2.hostname}" = configureNixOs vm-nixos-server-2;
         "${vm-nixos-server-builder.hostname}" = configureNixOs vm-nixos-server-builder;
-
         "${intel-nixos-server.hostname}" = configureNixOs intel-nixos-server;
         "${intel-nixos-tv.hostname}" = configureNixOs intel-nixos-tv;
         # "${rpi4-juglares.hostname}" = configureNixOs rpi4-juglares;
