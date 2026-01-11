@@ -25,6 +25,7 @@ in
     portal = {
       enable = true;
       config.common.default = [
+        "hyprland"
         "gtk"
       ];
       extraPortals = lib.mkDefault [
