@@ -1,6 +1,18 @@
 {
   plugins.sidekick = {
     enable = true;
+    settings = {
+      cli = {
+        tools = {
+          codex = {
+            cmd = [ "codex" "--enable" "web_search_request" ];
+          };
+          copilot = {
+            cmd = [ "copilot" "--banner" ];
+          };
+        };
+      };
+    };
   };
 
   plugins.lsp.servers.copilot.enable = true;
@@ -18,8 +30,8 @@
   keymaps = [
     { key = "<tab>"; mode = [ "n" ]; action.__raw = "Nix.cmp.map({ 'ai_nes' }, '<tab>')"; options = { expr = true; desc = "Next edit"; }; }
     { key = "<leader>a"; mode = [ "n" "v" ]; action = ""; options.desc = "+ai"; }
-    { key = "<c-.>"; mode = [ "n" "t" "i" "x" ]; action = "<cmd>lua require('sidekick.cli').toggle()<cr>"; options.desc = "Sidekick Toggle"; }
-    { key = "<leader>aa"; mode = [ "n" ]; action = "<cmd>lua require('sidekick.cli').toggle()<cr>"; options.desc = "Sidekick Toggle CLI"; }
+    { key = "<c-.>"; mode = [ "n" "t" "i" "x" ]; action = "<cmd>lua Nix.sidekick.toggle_default()<cr>"; options.desc = "Sidekick Toggle"; }
+    { key = "<leader>aa"; mode = [ "n" ]; action = "<cmd>lua Nix.sidekick.toggle_default()<cr>"; options.desc = "Sidekick Toggle CLI"; }
     { key = "<leader>as"; mode = [ "n" ]; action = "<cmd>lua require('sidekick.cli').select()<cr>"; options.desc = "Select CLI"; }
     { key = "<leader>ad"; mode = [ "n" ]; action = "<cmd>lua require('sidekick.cli').close()<cr>"; options.desc = "Detach a CLI Session"; }
     { key = "<leader>at"; mode = [ "n" "x" ]; action = "<cmd>lua require('sidekick.cli').send({ msg = '{this}' })<cr>"; options.desc = "Send This"; }
@@ -29,6 +41,16 @@
   ];
 
   extraConfigLua = ''
+    Nix.sidekick = Nix.sidekick or {}
+    Nix.sidekick.toggle_default = function()
+      local State = require("sidekick.cli.state")
+      if #State.get({ attached = true }) == 0 then
+        require("sidekick.cli").toggle({ name = "codex" })
+        return
+      end
+      require("sidekick.cli").toggle()
+    end
+
     Nix.cmp.actions.ai_nes = function()
       local Nes = require("sidekick.nes")
       if Nes.have() and (Nes.jump() or Nes.apply()) then

@@ -2,6 +2,7 @@
 {
   imports = [
     ./snacks.nix
+    ./direnv.nix
     ./persistence.nix
     ./plenary.nix
     ./octo.nix

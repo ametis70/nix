@@ -7,6 +7,7 @@
       spec = [
         { __unkeyed-1 = "<leader><tab>"; group = "tabs"; mode = [ "n" "x" ]; }
         { __unkeyed-1 = "<leader>c"; group = "code"; mode = [ "n" "x" ]; }
+        { __unkeyed-1 = "<leader>ct"; group = "treesj"; mode = [ "n" ]; }
         { __unkeyed-1 = "<leader>d"; group = "debug"; mode = [ "n" "x" ]; }
         { __unkeyed-1 = "<leader>dp"; group = "profiler"; mode = [ "n" "x" ]; }
         { __unkeyed-1 = "<leader>f"; group = "file/find"; mode = [ "n" "x" ]; }

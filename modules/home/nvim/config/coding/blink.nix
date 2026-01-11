@@ -37,7 +37,12 @@
 
       sources = {
         compat = [ ];
-        default = [ "lsp" "path" "snippets" "buffer" ];
+        default = [
+          "lsp"
+          "path"
+          "snippets"
+          "buffer"
+        ];
         per_filetype = {
           lua = [ "lazydev" ];
         };

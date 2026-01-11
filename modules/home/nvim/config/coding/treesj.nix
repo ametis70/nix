@@ -6,19 +6,19 @@
 
   keymaps = [
     {
-      key = "<leader>m";
+      key = "<leader>ctt";
       mode = [ "n" ];
       action = "<cmd>TSJToggle<CR>";
       options.desc = "Toggle split/join";
     }
     {
-      key = "<leader>s";
+      key = "<leader>cts";
       mode = [ "n" ];
       action = "<cmd>TSJSplit<CR>";
       options.desc = "Split node";
     }
     {
-      key = "<leader>j";
+      key = "<leader>ctj";
       mode = [ "n" ];
       action = "<cmd>TSJJoin<CR>";
       options.desc = "Join node";
