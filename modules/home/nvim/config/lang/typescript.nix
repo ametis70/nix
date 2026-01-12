@@ -55,6 +55,13 @@
     };
   };
 
+  plugins.neotest.adapters = {
+    jest.enable = true;
+    vitest.enable = true;
+    playwright.enable = true;
+    deno.enable = true;
+  };
+
   plugins.mini-icons.settings.file = {
     ".eslintrc.js" = {
       glyph = "󰱺";

@@ -71,7 +71,5 @@
     rust-analyzer
   ];
 
-  plugins.neotest.settings.adapters = lib.mkAfter [
-    { __raw = "require('rustaceanvim.neotest')" ; }
-  ];
+  plugins.neotest.adapters.rust.enable = true;
 }

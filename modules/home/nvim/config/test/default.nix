@@ -1,8 +1,19 @@
+{ pkgs, ... }:
 {
   plugins.neotest = {
     enable = true;
+    package = pkgs.vimUtils.buildVimPlugin {
+      pname = "neotest";
+      version = "2026-01-12-mj-push-wssspnkwnzyu";
+      doCheck = false;
+      src = pkgs.fetchFromGitHub {
+        owner = "mrcjkb";
+        repo = "neotest";
+        rev = "5d3ebea6a788280d69cfcf8799e3e2277959ff25";
+        hash = "sha256-WKKwvEknO2sB+mdns8TQETFRGeDBAx6oDRYrcFf7d3E=";
+      };
+    };
     settings = {
-      adapters = [ ];
       status = { virtual_text = true; };
       output = { open_on_run = true; };
       quickfix = {
