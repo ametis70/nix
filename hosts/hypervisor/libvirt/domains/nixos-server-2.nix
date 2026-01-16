@@ -15,6 +15,7 @@ let
         name = "/dev/mapper/vg_ssd2-server2_disk";
       }
     ];
+    bridge = "br30";
     mac = "62:d9:31:bd:67:6f";
   };
 in

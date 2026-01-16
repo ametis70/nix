@@ -5,6 +5,7 @@
   cpu ? 2,
   disks ? [ ],
   mac,
+  bridge ? "br0",
   video ? false,
   pci ? [ ],
 }:
@@ -96,7 +97,7 @@ in
             type = "virtio";
           };
           source = {
-            bridge = "br0";
+            bridge = bridge;
           };
         }
         // (

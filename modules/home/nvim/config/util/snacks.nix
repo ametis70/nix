@@ -4,6 +4,7 @@
     settings = {
       indent = { enabled = true; };
       input = { enabled = true; };
+      image = { enabled = true; };
       notifier = { enabled = true; };
       scope = { enabled = true; };
       scroll = { enabled = true; };

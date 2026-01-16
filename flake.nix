@@ -177,7 +177,8 @@
       };
 
       nixvim = {
-        stable = inputs.nixvim;
+        # TODO: workaround because build fails otherwise
+        stable = inputs.nixvim-unstable;
         unstable = inputs.nixvim-unstable;
       };
 
