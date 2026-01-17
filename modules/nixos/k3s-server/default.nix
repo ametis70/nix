@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.custom.k3s;
-  vip = "192.168.88.10";
+  vip = "10.0.30.10";
   addr = "https://${vip}:6443";
   dev = "enp1s0";
 
@@ -25,6 +25,11 @@ let
   '';
 
   manifestFilenames = [ kubeVip.filename ];
+  manifestTargetDir =
+    if cfg.dataDir != "" then
+      "${cfg.dataDir}/server/manifests"
+    else
+      "/var/lib/rancher/k3s/server/manifests";
 in
 {
   options.custom.k3s = {
@@ -71,9 +76,7 @@ in
       "L /usr/bin/mount - - - - /run/current-system/sw/bin/mount"
     ]
     ++ (lib.optionals (cfg.role == "server") (
-      map (
-        f: "C /var/lib/rancher/k3s/server/manifests/${f} 0644 root root - ${manifestsDir}/${f}"
-      ) manifestFilenames
+      map (f: "C+ ${manifestTargetDir}/${f} 0644 root root - ${manifestsDir}/${f}") manifestFilenames
     ));
 
     boot.kernel.sysctl = {
