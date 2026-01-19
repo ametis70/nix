@@ -37,10 +37,10 @@
 
     Jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
 
-    hyprland.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.45.2";
+    hyprland.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.45.1";
 
     hy3 = {
-      url = "github:outfoxxed/hy3?ref=hl0.45.0";
+      url = "github:outfoxxed/hy3?ref=hl0.52.0";
       inputs.hyprland.follows = "hyprland";
     };
 
