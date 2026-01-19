@@ -44,10 +44,10 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    hyprland-unstable.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.49.0";
+    hyprland-unstable.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.53.1";
 
     hy3-unstable = {
-      url = "github:outfoxxed/hy3?ref=hl0.49.0";
+      url = "github:outfoxxed/hy3?ref=hl0.53.0";
       inputs.hyprland.follows = "hyprland-unstable";
     };
 
@@ -74,18 +74,10 @@
     };
 
     catppuccin.url = "github:catppuccin/nix/release-25.05";
-
     catppuccin-unstable.url = "github:catppuccin/nix";
 
-    nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.05";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nixvim-unstable = {
-      url = "github:nix-community/nixvim";
-      # inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    nixvim.url = "github:nix-community/nixvim/nixos-25.05";
+    nixvim-unstable.url = "github:nix-community/nixvim";
   };
 
   nixConfig = {
@@ -177,8 +169,7 @@
       };
 
       nixvim = {
-        # TODO: workaround because build fails otherwise
-        stable = inputs.nixvim-unstable;
+        stable = inputs.nixvim;
         unstable = inputs.nixvim-unstable;
       };
 

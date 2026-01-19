@@ -34,8 +34,7 @@ in
     slurp
     grim
     wl-clipboard
-    # FIXME: failing to build
-    # pasystray
+    pasystray
     pavucontrol
     hyprexit
     hyprws
