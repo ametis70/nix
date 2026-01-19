@@ -87,7 +87,7 @@
     usbutils
     pciutils
 
-    inputs.agenix.packages.${system}.default
+    inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
 }

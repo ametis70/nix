@@ -2,11 +2,11 @@
   description = "ametis70's nix config";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/release-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/release-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -35,9 +35,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    Jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
-
-    hyprland.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.45.1";
+    hyprland.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.52.1";
 
     hy3 = {
       url = "github:outfoxxed/hy3?ref=hl0.52.0";
@@ -49,13 +47,6 @@
     hy3-unstable = {
       url = "github:outfoxxed/hy3?ref=hl0.53.0";
       inputs.hyprland.follows = "hyprland-unstable";
-    };
-
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
-    argononed = {
-      url = "github:nvmd/argononed";
-      flake = false;
     };
 
     nix-darwin = {
@@ -73,10 +64,10 @@
       inputs.darwin.follows = "";
     };
 
-    catppuccin.url = "github:catppuccin/nix/release-25.05";
+    catppuccin.url = "github:catppuccin/nix/release-25.11";
     catppuccin-unstable.url = "github:catppuccin/nix";
 
-    nixvim.url = "github:nix-community/nixvim/nixos-25.05";
+    nixvim.url = "github:nix-community/nixvim/nixos-25.11";
     nixvim-unstable.url = "github:nix-community/nixvim";
   };
 
@@ -98,14 +89,12 @@
       home-manager,
       home-manager-unstable,
       NixVirt,
-      Jovian,
       nix-darwin,
       nix-darwin-unstable,
       disko,
       nixgl,
       nixgl-unstable,
       agenix,
-      nixos-hardware,
       ...
     }@inputs:
     let
@@ -200,15 +189,6 @@
           channel = "unstable";
           nixos = false;
         };
-        nixos-deck = {
-          id = "nixos-deck";
-          hostname = "ametis70-deck-nixos";
-          username = "ametis70";
-          system = "x86_64-linux";
-          extraNixosModules = [ Jovian.nixosModules.default ];
-          channel = "unstable";
-          nixos = true;
-        };
         windows10 = {
           id = "windows10";
           hostname = "ametis70-vm-windows10";
@@ -227,24 +207,13 @@
           channel = "stable";
           nixos = true;
         };
-        nixos-vm = {
-          id = "nixos-vm";
+        vm-nixos-desktop = {
+          id = "vm-nixos-desktop";
           hostname = "ametis70-vm-nixos";
           username = "ametis70";
           system = "x86_64-linux";
           extraNixosModules = [ ];
           channel = "unstable";
-          nixos = true;
-        };
-        rpi4-juglares = {
-          id = "rpi4-juglares";
-          hostname = "rpi4-juglares";
-          username = "ametis70";
-          system = "aarch64-linux";
-          extraNixosModules = [
-            nixos-hardware.nixosModules.raspberry-pi-4
-          ];
-          channel = "stable";
           nixos = true;
         };
         vm-nixos-server-builder = {
@@ -311,21 +280,23 @@
       configureNixOs =
         host:
         nixosSystem.${host.channel} {
-          system = host.system;
+          inherit (host) system;
           modules = host.extraNixosModules ++ [
             ./hosts/${host.id}/configuration.nix
             catppuccin.${host.channel}.nixosModules.catppuccin
             homeManager.${host.channel}.nixosModules.home-manager
             {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "backup";
-              home-manager.users.${host.username}.imports = [
-                ./hosts/${host.id}/home.nix
-                nixvim.${host.channel}.homeModules.nixvim
-                catppuccin.${host.channel}.homeModules.catppuccin
-              ];
-              home-manager.extraSpecialArgs = getHostSpecialArgs host;
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "backup";
+                users.${host.username}.imports = [
+                  ./hosts/${host.id}/home.nix
+                  nixvim.${host.channel}.homeModules.nixvim
+                  catppuccin.${host.channel}.homeModules.catppuccin
+                ];
+                extraSpecialArgs = getHostSpecialArgs host;
+              };
             }
             agenix.nixosModules.default
           ];
@@ -335,20 +306,22 @@
       configureDarwin =
         host:
         darwinSystem.${host.channel} {
-          system = host.system;
+          inherit (host) system;
           modules = host.extraNixosModules ++ [
             ./hosts/${host.id}/configuration.nix
             homeManager.${host.channel}.darwinModules.home-manager
             {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "backup";
-              home-manager.users.${host.username}.imports = [
-                ./hosts/${host.id}/home.nix
-                nixvim.${host.channel}.homeModules.nixvim
-                catppuccin.${host.channel}.homeModules.catppuccin
-              ];
-              home-manager.extraSpecialArgs = getHostSpecialArgs host;
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "backup";
+                users.${host.username}.imports = [
+                  ./hosts/${host.id}/home.nix
+                  nixvim.${host.channel}.homeModules.nixvim
+                  catppuccin.${host.channel}.homeModules.catppuccin
+                ];
+                extraSpecialArgs = getHostSpecialArgs host;
+              };
             }
           ];
           specialArgs = getHostSpecialArgs host;
@@ -361,14 +334,12 @@
 
       nixosConfigurations = with hosts; {
         "${hypervisor.hostname}" = configureNixOs hypervisor;
-        "${nixos-vm.hostname}" = configureNixOs nixos-vm;
-        "${nixos-deck.hostname}" = configureNixOs nixos-deck;
+        "${vm-nixos-desktop.hostname}" = configureNixOs vm-nixos-desktop;
         "${vm-nixos-server-1.hostname}" = configureNixOs vm-nixos-server-1;
         "${vm-nixos-server-2.hostname}" = configureNixOs vm-nixos-server-2;
         "${vm-nixos-server-builder.hostname}" = configureNixOs vm-nixos-server-builder;
         "${intel-nixos-server.hostname}" = configureNixOs intel-nixos-server;
         "${intel-nixos-tv.hostname}" = configureNixOs intel-nixos-tv;
-        # "${rpi4-juglares.hostname}" = configureNixOs rpi4-juglares;
       };
 
       homeConfigurations = with hosts; {
