@@ -107,6 +107,7 @@
   };
 
   programs.git = {
+    enable = true;
     settings = {
       commit = {
         gpgsign = true;
