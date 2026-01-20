@@ -1,3 +1,5 @@
+{ pkgs-unstable, ... }:
+
 {
   programs.nixvim = {
     enable = true;
@@ -8,6 +10,16 @@
     nixpkgs = {
       config = {
         allowUnfree = true;
+      };
+    };
+
+    dependencies = {
+      claude-code.enable = false;
+      gemini.enable = false;
+
+      opencode = {
+        enable = true;
+        package = pkgs-unstable.opencode;
       };
     };
   };

@@ -5,10 +5,23 @@
       cli = {
         tools = {
           codex = {
-            cmd = [ "codex" "--enable" "web_search_request" ];
+            cmd = [
+              "codex"
+              "--enable"
+              "web_search_request"
+            ];
           };
           copilot = {
-            cmd = [ "copilot" "--banner" ];
+            cmd = [
+              "copilot"
+              "--banner"
+            ];
+          };
+          opencode = {
+            cmd = [ "opencode" ];
+            env = {
+              OPENCODE_THEME = "system";
+            };
           };
         };
       };
@@ -28,16 +41,83 @@
   };
 
   keymaps = [
-    { key = "<tab>"; mode = [ "n" ]; action.__raw = "Nix.cmp.map({ 'ai_nes' }, '<tab>')"; options = { expr = true; desc = "Next edit"; }; }
-    { key = "<leader>a"; mode = [ "n" "v" ]; action = ""; options.desc = "+ai"; }
-    { key = "<c-.>"; mode = [ "n" "t" "i" "x" ]; action = "<cmd>lua Nix.sidekick.toggle_default()<cr>"; options.desc = "Sidekick Toggle"; }
-    { key = "<leader>aa"; mode = [ "n" ]; action = "<cmd>lua Nix.sidekick.toggle_default()<cr>"; options.desc = "Sidekick Toggle CLI"; }
-    { key = "<leader>as"; mode = [ "n" ]; action = "<cmd>lua require('sidekick.cli').select()<cr>"; options.desc = "Select CLI"; }
-    { key = "<leader>ad"; mode = [ "n" ]; action = "<cmd>lua require('sidekick.cli').close()<cr>"; options.desc = "Detach a CLI Session"; }
-    { key = "<leader>at"; mode = [ "n" "x" ]; action = "<cmd>lua require('sidekick.cli').send({ msg = '{this}' })<cr>"; options.desc = "Send This"; }
-    { key = "<leader>af"; mode = [ "n" ]; action = "<cmd>lua require('sidekick.cli').send({ msg = '{file}' })<cr>"; options.desc = "Send File"; }
-    { key = "<leader>av"; mode = [ "x" ]; action = "<cmd>lua require('sidekick.cli').send({ msg = '{selection}' })<cr>"; options.desc = "Send Visual Selection"; }
-    { key = "<leader>ap"; mode = [ "n" "x" ]; action = "<cmd>lua require('sidekick.cli').prompt()<cr>"; options.desc = "Sidekick Select Prompt"; }
+    {
+      key = "<tab>";
+      mode = [ "n" ];
+      action.__raw = "Nix.cmp.map({ 'ai_nes' }, '<tab>')";
+      options = {
+        expr = true;
+        desc = "Next edit";
+      };
+    }
+    {
+      key = "<leader>a";
+      mode = [
+        "n"
+        "v"
+      ];
+      action = "";
+      options.desc = "+ai";
+    }
+    {
+      key = "<c-.>";
+      mode = [
+        "n"
+        "t"
+        "i"
+        "x"
+      ];
+      action = "<cmd>lua Nix.sidekick.toggle_default()<cr>";
+      options.desc = "Sidekick Toggle";
+    }
+    {
+      key = "<leader>aa";
+      mode = [ "n" ];
+      action = "<cmd>lua Nix.sidekick.toggle_default()<cr>";
+      options.desc = "Sidekick Toggle CLI";
+    }
+    {
+      key = "<leader>as";
+      mode = [ "n" ];
+      action = "<cmd>lua require('sidekick.cli').select()<cr>";
+      options.desc = "Select CLI";
+    }
+    {
+      key = "<leader>ad";
+      mode = [ "n" ];
+      action = "<cmd>lua require('sidekick.cli').close()<cr>";
+      options.desc = "Detach a CLI Session";
+    }
+    {
+      key = "<leader>at";
+      mode = [
+        "n"
+        "x"
+      ];
+      action = "<cmd>lua require('sidekick.cli').send({ msg = '{this}' })<cr>";
+      options.desc = "Send This";
+    }
+    {
+      key = "<leader>af";
+      mode = [ "n" ];
+      action = "<cmd>lua require('sidekick.cli').send({ msg = '{file}' })<cr>";
+      options.desc = "Send File";
+    }
+    {
+      key = "<leader>av";
+      mode = [ "x" ];
+      action = "<cmd>lua require('sidekick.cli').send({ msg = '{selection}' })<cr>";
+      options.desc = "Send Visual Selection";
+    }
+    {
+      key = "<leader>ap";
+      mode = [
+        "n"
+        "x"
+      ];
+      action = "<cmd>lua require('sidekick.cli').prompt()<cr>";
+      options.desc = "Sidekick Select Prompt";
+    }
   ];
 
   extraConfigLua = ''
@@ -45,7 +125,7 @@
     Nix.sidekick.toggle_default = function()
       local State = require("sidekick.cli.state")
       if #State.get({ attached = true }) == 0 then
-        require("sidekick.cli").toggle({ name = "codex" })
+        require("sidekick.cli").toggle({ name = "opencode" })
         return
       end
       require("sidekick.cli").toggle()
