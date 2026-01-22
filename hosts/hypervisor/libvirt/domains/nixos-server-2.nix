@@ -15,8 +15,32 @@ let
         name = "/dev/mapper/vg_ssd2-server2_disk";
       }
     ];
-    bridge = "br30";
-    mac = "62:d9:31:bd:67:6f";
+    interfaces = [
+      {
+        type = "bridge";
+        model = {
+          type = "virtio";
+        };
+        source = {
+          bridge = "br30";
+        };
+        mac = {
+          address = "62:d9:31:bd:67:6f";
+        };
+      }
+      {
+        type = "bridge";
+        model = {
+          type = "virtio";
+        };
+        source = {
+          bridge = "br20";
+        };
+        mac = {
+          address = "62:d9:31:bd:67:20"; # Different MAC for second interface
+        };
+      }
+    ];
   };
 in
 {

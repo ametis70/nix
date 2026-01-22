@@ -41,11 +41,27 @@
           MACAddress = "none";
         };
       };
+      "30-br20" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br20";
+          MACAddress = "none";
+        };
+      };
       "30-br30" = {
         netdevConfig = {
           Kind = "bridge";
           Name = "br30";
           MACAddress = "none";
+        };
+      };
+      "30-vlan20" = {
+        netdevConfig = {
+          Kind = "vlan";
+          Name = "vlan20";
+        };
+        vlanConfig = {
+          Id = 20;
         };
       };
       "30-vlan30" = {
@@ -62,11 +78,18 @@
       "30-enp39s0" = {
         name = "enp39s0";
         bridge = [ "br0" ];
-        vlan = [ "vlan30" ];
+        vlan = [
+          "vlan20"
+          "vlan30"
+        ];
       };
       "30-br0" = {
         name = "br0";
         DHCP = "yes";
+      };
+      "30-vlan20" = {
+        name = "vlan20";
+        bridge = [ "br20" ];
       };
       "30-vlan30" = {
         name = "vlan30";
@@ -74,6 +97,10 @@
       };
       "30-br10" = {
         name = "br10";
+        DHCP = "no";
+      };
+      "30-br20" = {
+        name = "br20";
         DHCP = "no";
       };
       "30-br30" = {
@@ -93,6 +120,14 @@
       "30-br10" = {
         matchConfig = {
           OriginalName = "br10";
+        };
+        linkConfig = {
+          MACAddressPolicy = "none";
+        };
+      };
+      "30-br20" = {
+        matchConfig = {
+          OriginalName = "br20";
         };
         linkConfig = {
           MACAddressPolicy = "none";

@@ -8,7 +8,8 @@ let
   cfg = config.custom.k3s;
   vip = "10.0.30.10";
   addr = "https://${vip}:6443";
-  dev = "enp1s0";
+  # Default interface for VMs, can be overridden per host
+  dev = cfg.interface;
 
   kubeVip = rec {
     template = builtins.readFile ./kube-vip.yml;
@@ -45,6 +46,12 @@ in
       type = lib.types.str;
       default = "server";
       description = "Role for this node";
+    };
+
+    interface = lib.mkOption {
+      type = lib.types.str;
+      default = "enp1s0";
+      description = "Network interface for K3s cluster communication";
     };
 
     dataDir = lib.mkOption {
@@ -94,6 +101,7 @@ in
           "--disable servicelb"
           "--disable traefik"
           "--disable-helm-controller"
+          "--flannel-iface=${dev}"
         ]
         ++ lib.optionals cfg.init [
           "--tls-san ${vip}"

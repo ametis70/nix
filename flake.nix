@@ -21,7 +21,7 @@
     };
 
     NixVirt = {
-      url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.5.0.tar.gz";
+      url = "https://flakehub.com/f/AshleyYakeley/NixVirt/0.6.0.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -158,7 +158,7 @@
       };
 
       nixvim = {
-        stable = inputs.nixvim;
+        stable = inputs.nixvim-unstable;
         unstable = inputs.nixvim-unstable;
       };
 
