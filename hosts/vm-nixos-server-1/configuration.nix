@@ -16,7 +16,7 @@
 
   networking = {
     hostName = specialArgs.host.hostname;
-    useDHCP = false; # Disable global DHCP, configure per interface
+    useDHCP = false;
     useNetworkd = true;
     firewall.enable = false;
   };
@@ -24,30 +24,36 @@
   systemd.network = {
     enable = true;
     networks = {
-      # VLAN 30 interface (existing - for K3s cluster)
       "30-enp1s0" = {
         name = "enp1s0";
         DHCP = "yes";
         dhcpV4Config = {
-          RouteMetric = 100; # Lower metric = higher priority
+          RouteMetric = 100;
         };
       };
-      # VLAN 20 interface (new)
-      "30-enp2s0" = {
-        name = "enp2s0";
+      "30-vlan20" = {
+        name = "vlan20";
         DHCP = "yes";
         dhcpV4Config = {
-          RouteMetric = 200; # Higher metric = lower priority
+          RouteMetric = 200;
         };
       };
     };
   };
 
-  # Configure systemd-networkd-wait-online to only wait for the primary interface
+  systemd.network.links."30-vlan20" = {
+    matchConfig = {
+      MACAddress = "98:b1:c7:e9:32:20";
+    };
+    linkConfig = {
+      Name = "vlan20";
+    };
+  };
+
   systemd.services.systemd-networkd-wait-online = {
     serviceConfig = {
       ExecStart = [
-        "" # Clear the existing ExecStart
+        ""
         "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online --interface=enp1s0 --timeout=60"
       ];
     };
