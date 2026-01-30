@@ -2,6 +2,7 @@
 
 {
   home.packages = with pkgs; [
+    godot
     gimp
     inkscape
     blender

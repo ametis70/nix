@@ -3,6 +3,9 @@
     enable = true;
     settings = {
       cli = {
+        mux = {
+          enabled = false;
+        };
         tools = {
           codex = {
             cmd = [
