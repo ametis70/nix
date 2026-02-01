@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   home.packages = with pkgs; [
-    godot
+    inputs.nixpkgs.legacyPackages.x86_64-linux.godotPackages_4_6.godot
     gimp
     inkscape
     blender
