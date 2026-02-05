@@ -41,6 +41,9 @@ in
     foot
   ];
 
+  services.pasystray.enable = true;
+  services.blueman-applet.enable = true;
+
   wayland.windowManager.hyprland = {
     enable = true;
     package = null;
@@ -142,7 +145,6 @@ in
       exec-once = [
         "waybar"
         "nm-applet"
-        "pasystray"
         "mkdir -p ~/Pictures/screenshots"
         "[workspace 4 silent] Telegram"
         "[workspace 4 silent] Discord"

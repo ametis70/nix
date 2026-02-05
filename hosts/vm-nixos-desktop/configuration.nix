@@ -52,6 +52,8 @@ in
     package32 = hyprland-nixpkgs.pkgsi686Linux.mesa;
   };
 
+  services.blueman.enable = true;
+
   custom.programs.creality-print.enable = false;
 
   # programs.appimage = {
