@@ -96,11 +96,22 @@
 
     formatexpr = "v:lua.Nix.format.formatexpr()";
     statuscolumn = "%!v:lua.statuscolumn()";
+
+    clipboard = "unnamedplus";
   };
 
   extraConfigLua = ''
-    -- Clipboard only if not in SSH.
-    vim.opt.clipboard = vim.env.SSH_CONNECTION and "" or "unnamedplus"
+    vim.g.clipboard = {
+      name = "osc52",
+      copy = {
+        ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+        ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+      },
+      paste = {
+        ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+        ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+      },
+    }
 
     -- Extra shortmess flags.
     vim.opt.shortmess:append({ W = true, I = true, c = true, C = true })
