@@ -14,21 +14,22 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages =
-      [
-        (pkgs.writeShellScriptBin "kube" (builtins.readFile ./kube.sh))
-        (pkgs.writeShellScriptBin "kubesec" (builtins.readFile ./kubesec.sh))
-        (pkgs.writeShellScriptBin "kubemail" (builtins.readFile ./kubemail.sh))
-      ]
-      ++ (with pkgs; [
-        kubectl
-        kubernetes-helm
-        k9s
-        fluxcd
-        kubeseal
-        libsecret
-        envchain
-      ]);
+    home.packages = [
+      (pkgs.writeShellScriptBin "kube" (builtins.readFile ./kube.sh))
+      (pkgs.writeShellScriptBin "kubesec" (builtins.readFile ./kubesec.sh))
+      (pkgs.writeShellScriptBin "kubemail" (builtins.readFile ./kubemail.sh))
+    ]
+    ++ (with pkgs; [
+      kubectl
+      kustomize
+      kubernetes-helm
+      k9s
+      fluxcd
+      kustomize
+      kubeseal
+      libsecret
+      envchain
+    ]);
 
     home.shellAliases = {
       "kubectl" = "kube kubectl";
