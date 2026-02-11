@@ -9,7 +9,7 @@
 let
   deltaUnstableConfig = {
     programs.delta = {
-      enable = false;
+      enable = true;
       enableGitIntegration = true;
     };
   };

@@ -21,15 +21,12 @@ in
     ]
     ++ (with pkgs; [
       kubectl
-      kubeconform
-      kustomize
       kubernetes-helm
       k9s
       fluxcd
-      kustomize
-      kubeseal
       libsecret
       envchain
+      google-cloud-sdk
     ]);
 
     home.shellAliases = {
@@ -37,7 +34,6 @@ in
       "helm" = "kube helm";
       "k9s" = "kube k9s";
       "flux" = "kube flux";
-      "kubeseal" = "kube kubeseal";
     };
   };
 }

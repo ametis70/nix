@@ -1,436 +1,282 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-set -eo pipefail
+SCRIPT_NAME="$(basename "$0")"
+DEFAULT_EDITOR="${EDITOR:-vi}"
 
-# Ensure we are running under bash (for process substitution and mapfile)
-if [[ -z "${BASH_VERSION:-}" ]]; then
-  exec /usr/bin/env bash "$0" "$@"
-fi
-
-show_help() {
-  cat <<EOF
-Usage: $0 [edit <sealed-secret-file> [--apply]]
-
-Interactive wizard for creating or editing Kubernetes SealedSecrets using a kube wrapper.
-
-Modes:
-  - No args: create a new SealedSecret via interactive prompts
-  - edit <file>: edit an existing SealedSecret by decrypting the SEALED FILE via the controller,
-                 opening it in \$EDITOR, showing a diff, and resealing on confirmation.
-                 Use --apply to apply the updated SealedSecret to the cluster immediately.
-
-Environment:
-  - SEALED_SECRETS_PRIVATE_KEY (or KUBESEAL_PRIVATE_KEY): path to a private key (or directory of keys)
-    If provided, the script will decrypt the sealed file locally using 'kubeseal --recovery-unseal'.
-    Without it, the script fetches the current live Secret from the cluster for editing.
-
-Requirements:
-  - kube wrapper that provides 'kubectl' and 'kubeseal'
-  - kubeseal and kubectl installed and configured
-  - Access to the cluster that has the Secret generated from the SealedSecret being edited
+function usage() {
+	cat <<'EOF'
+Usage:
+  kubesec2 list [-n|--namespace <namespace>]
+  kubesec2 get [secret-name]
+  kubesec2 edit [secret-name]
+  kubesec2 add [secret-name] [-n|--namespace <namespace>]
+  kubesec2 browse
+  kubesec2 metrics
 EOF
 }
 
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-  show_help
-  exit 0
-fi
-
-fetch_pub_cert() {
-  echo "Fetching sealed secrets public cert..." >&2
-  local controller_name="${SEALED_SECRETS_CONTROLLER_NAME:-sealed-secrets-controller}"
-  local controller_ns="${SEALED_SECRETS_NAMESPACE:-flux-system}"
-
-  # First try via kubeseal service endpoint
-  if kube kubeseal --fetch-cert \
-    --controller-name="$controller_name" \
-    --controller-namespace="$controller_ns" 2>/dev/null; then
-    return 0
-  fi
-
-  # Fallback: read cert from the active key Secret directly (avoids service proxy)
-  local crt_b64
-  crt_b64=$(kube kubectl -n "$controller_ns" \
-    get secret -l sealedsecrets.bitnami.com/sealed-secrets-key=active \
-    -o jsonpath='{.items[0].data.tls\.crt}' 2>/dev/null || true)
-  if [[ -n "$crt_b64" ]]; then
-    # Try both BSD and GNU base64 flags
-    printf '%s' "$crt_b64" | base64 -D 2>/dev/null || printf '%s' "$crt_b64" | base64 -d 2>/dev/null
-    return 0
-  fi
-
-  echo "Error: unable to fetch Sealed Secrets public certificate. Tried service via kubeseal and reading tls.crt from Secret in namespace '$controller_ns'." >&2
-  echo "Hints: verify the controller namespace/name, service endpoints, and that the active key Secret exists." >&2
-  return 1
+function require_cmd() {
+	local cmd="$1"
+	if ! command -v "$cmd" >/dev/null 2>&1; then
+		echo "Missing required command: $cmd" >&2
+		exit 127
+	fi
 }
 
-trim_quotes() {
-  local s="$1"
-  s="${s#\' }"
-  s="${s% \'}" # remove loose quotes if any
-  s="${s#\"}"
-  s="${s%\"}"
-  printf '%s' "$s"
+function confirm() {
+	local prompt="$1"
+	local response
+	read -r -p "$prompt" response
+	[[ "$response" == "y" || "$response" == "Y" ]]
 }
 
-extract_from_sealed() {
-  # Args: <sealed_file> <field> where field is one of: name, namespace, type
-  # Heuristics: prefer spec.template.metadata.*, fallback to top-level metadata.* for name/namespace; type from spec.template.type
-  local file="$1"
-  local field="$2"
-  case "$field" in
-  name)
-    awk '
-        $1=="spec:" {spec=1}
-        spec && $1=="template:" {tmpl=1}
-        spec && tmpl && $1=="metadata:" {meta=1}
-        spec && tmpl && meta && $1=="name:" {print $2; found=1; exit}
-        END { if (!found) exit 0 }
-      ' "$file" || true
-    ;;
-  namespace)
-    awk '
-        $1=="spec:" {spec=1}
-        spec && $1=="template:" {tmpl=1}
-        spec && tmpl && $1=="metadata:" {meta=1}
-        spec && tmpl && meta && $1=="namespace:" {print $2; found=1; exit}
-        END { if (!found) exit 0 }
-      ' "$file" || true
-    ;;
-  type)
-    awk '
-        $1=="spec:" {spec=1}
-        spec && $1=="template:" {tmpl=1}
-        spec && tmpl && $1=="type:" {print $2; found=1; exit}
-        END { if (!found) exit 0 }
-      ' "$file" || true
-    ;;
-  esac
+function list_secrets() {
+	local namespace="$1"
+	local filter=()
+	if [[ -n "$namespace" ]]; then
+		filter=("--filter=labels.namespace=$namespace")
+	fi
+	gcloud secrets list --format='value(name)' "${filter[@]}"
 }
 
-extract_from_metadata() {
-  # Fallback to top-level metadata for name/namespace
-  local file="$1"
-  local field="$2"
-  awk -v want="$field:" '
-    $1=="metadata:" {meta=1}
-    meta && $1==want {print $2; exit}
-  ' "$file" || true
+function select_secret() {
+	local namespace="$1"
+	local selection
+	require_cmd fzf
+	selection=$(list_secrets "$namespace" | fzf --prompt="secret> ")
+	printf "%s" "$selection"
 }
 
+function secret_exists() {
+	local secret_name="$1"
+	gcloud secrets describe "$secret_name" >/dev/null 2>&1
+}
 
+function access_secret() {
+	local secret_name="$1"
+	gcloud secrets versions access latest --secret="$secret_name" 2>/dev/null || true
+}
 
-editor=${EDITOR:-vi}
+function edit_secret() {
+	local secret_name="$1"
 
-if [[ "$1" == "edit" ]]; then
-  # Args: edit <sealed_file> [--apply]
-  SEALED_FILE="$2"
-  APPLY_AFTER=0
-  if [[ "$3" == "--apply" ]]; then
-    APPLY_AFTER=1
-  fi
-  if [[ -z "$SEALED_FILE" ]]; then
-    echo "Usage: $0 edit <sealed-secret-file> [--apply]" >&2
-    exit 1
-  fi
-  if [[ ! -f "$SEALED_FILE" ]]; then
-    echo "File not found: $SEALED_FILE" >&2
-    exit 1
-  fi
+	if ! secret_exists "$secret_name"; then
+		echo "Secret not found: $secret_name" >&2
+		return 1
+	fi
 
-  # Try to derive name/namespace/type from the sealed file
-  NAME=$(extract_from_sealed "$SEALED_FILE" name)
-  NS=$(extract_from_sealed "$SEALED_FILE" namespace)
-  TYPE=$(extract_from_sealed "$SEALED_FILE" type)
-  # Fallbacks
-  [[ -z "$NAME" ]] && NAME=$(extract_from_metadata "$SEALED_FILE" name)
-  [[ -z "$NS" ]] && NS=$(extract_from_metadata "$SEALED_FILE" namespace)
-  NAME=$(trim_quotes "$NAME")
-  NS=$(trim_quotes "$NS")
-  TYPE=$(trim_quotes "$TYPE")
+	local original_file=""
+	local edit_file=""
+	original_file=$(mktemp)
+	edit_file=$(mktemp)
+	trap 'rm -f "${original_file:-}" "${edit_file:-}"' RETURN
 
-  if [[ -z "$NAME" || -z "$NS" ]]; then
-    echo "Could not determine name/namespace from sealed file. Please enter them:" >&2
-    read -r -p "Secret name: " NAME
-    read -r -p "Namespace: " NS
-  fi
+	access_secret "$secret_name" >"$original_file"
+	cp "$original_file" "$edit_file"
 
-  echo "Editing Secret '$NAME' in namespace '$NS' based on $SEALED_FILE" >&2
+	"$DEFAULT_EDITOR" "$edit_file"
 
-  # Try to decrypt the sealed file locally (preferred), otherwise fall back to reading from the live Secret
-  TMP_DIR="tmp-secrets"
-  mkdir -p "$TMP_DIR"
-  if ! grep -q "^tmp-secrets$" .gitignore 2>/dev/null; then
-    echo "tmp-secrets" >>.gitignore
-  fi
+	if cmp -s "$original_file" "$edit_file"; then
+		echo "No changes saved."
+		return 0
+	fi
 
-  DECRYPTED_FILE="$TMP_DIR/${NAME}.decrypted.yaml"
-  USED_DECRYPTION=0
+	if [[ ! -s "$edit_file" ]]; then
+		echo "Secret is empty. Ignoring changes."
+		return 0
+	fi
 
-  # Attempt local decryption using provided private key(s)
-  if [[ -n "${SEALED_SECRETS_PRIVATE_KEY:-}" || -n "${KUBESEAL_PRIVATE_KEY:-}" ]]; then
-    keypath="${SEALED_SECRETS_PRIVATE_KEY:-$KUBESEAL_PRIVATE_KEY}"
-    ks_args=(--recovery-unseal)
-    if [[ -d "$keypath" ]]; then
-      for f in "$keypath"/*; do
-        [[ -f "$f" ]] && ks_args+=(--recovery-private-key "$f")
-      done
-    else
-      ks_args+=(--recovery-private-key "$keypath")
-    fi
-    if kube kubeseal "${ks_args[@]}" <"$SEALED_FILE" >"$DECRYPTED_FILE" 2>/dev/null; then
-      USED_DECRYPTION=1
-    fi
-  fi
+	if command -v delta >/dev/null 2>&1; then
+		diff -u "$original_file" "$edit_file" | delta || true
+	else
+		diff -u "$original_file" "$edit_file" || true
+	fi
 
-  # Attempt decryption by retrieving the controller's private key from the cluster (admin only)
-  if [[ $USED_DECRYPTION -eq 0 ]]; then
-    controller_ns="${SEALED_SECRETS_NAMESPACE:-flux-system}"
-    PEM_B64=$(kube kubectl -n "$controller_ns" get secret -l sealedsecrets.bitnami.com/sealed-secrets-key=active -o jsonpath='{.items[0].data.tls\.key}' 2>/dev/null || true)
-    if [[ -n "$PEM_B64" ]]; then
-      if kube kubeseal --recovery-unseal --recovery-private-key <(printf '%s' "$PEM_B64" | base64 -D 2>/dev/null || printf '%s' "$PEM_B64" | base64 -d 2>/dev/null) <"$SEALED_FILE" >"$DECRYPTED_FILE" 2>/dev/null; then
-        USED_DECRYPTION=1
-      fi
-    fi
-  fi
+	if ! confirm "Update secret '$secret_name'? [y/N] "; then
+		echo "Update cancelled."
+		return 0
+	fi
 
-  if [[ $USED_DECRYPTION -eq 1 ]]; then
-    # Extract key=value b64 pairs from the decrypted Secret file
-    mapfile -t kv_b64 < <(kube kubectl create -f "$DECRYPTED_FILE" --dry-run=client -o go-template='{{range $k, $v := .data}}{{printf "%s=%s\n" $k $v}}{{end}}')
-    # Determine type from decrypted file if not set
-    if [[ -z "$TYPE" ]]; then
-      TYPE=$(kube kubectl create -f "$DECRYPTED_FILE" --dry-run=client -o jsonpath='{.type}' 2>/dev/null || true)
-      TYPE=${TYPE:-Opaque}
-    fi
-  else
-    # Fallback: fetch the live Secret and decode key/value pairs
-    if ! kube kubectl -n "$NS" get secret "$NAME" >/dev/null 2>&1; then
-      echo "Secret '$NAME' not found in namespace '$NS'. Unable to decrypt and no live Secret to edit." >&2
-      exit 1
-    fi
-    # Determine type if not set from file
-    if [[ -z "$TYPE" ]]; then
-      TYPE=$(kube kubectl -n "$NS" get secret "$NAME" -o jsonpath='{.type}' 2>/dev/null || true)
-      TYPE=${TYPE:-Opaque}
-    fi
-    mapfile -t kv_b64 < <(kube kubectl -n "$NS" get secret "$NAME" -o go-template='{{range $k, $v := .data}}{{printf "%s=%s\n" $k $v}}{{end}}')
-  fi
-  if [[ ${#kv_b64[@]} -eq 0 ]]; then
-    echo "Secret has no data. Nothing to edit." >&2
-    exit 1
-  fi
+	gcloud secrets versions add "$secret_name" --data-file="$edit_file"
+	echo "Secret updated: $secret_name"
+}
 
-  ORIG_FILE="$TMP_DIR/${NAME}.original.yaml"
-  EDIT_FILE="$TMP_DIR/${NAME}.edit.yaml"
+function list_command() {
+	local namespace=""
 
-  # Decode and write original YAML directly
-  {
-    echo "apiVersion: v1"
-    echo "kind: Secret"
-    echo "type: $TYPE"
-    echo "metadata:"
-    echo "  name: $NAME"
-    echo "  namespace: $NS"
-    echo "stringData:"
-    
-    for line in "${kv_b64[@]}"; do
-      k="${line%%=*}"
-      b64="${line#*=}"
-      # Allow empty values
-      if [[ -n "$b64" ]]; then
-        v=$(printf '%s' "$b64" | base64 -D 2>/dev/null || printf '%s' "$b64" | base64 -d 2>/dev/null || true)
-      else
-        v=""
-      fi
-      
-      # Apply YAML formatting logic directly
-      if [[ "$v" == *$'\n'* ]]; then
-        # For multiline values, use literal block scalar (|)
-        echo "  $k: |"
-        # indent block content by two spaces
-        while IFS= read -r line; do
-          printf '    %s\n' "$line"
-        done <<<"$v"
-      elif [[ "$v" =~ ^[0-9]+$ ]]; then
-        # For numeric values, don't quote
-        echo "  $k: $v"
-      elif [[ "$v" =~ ^(true|false)$ ]]; then
-        # For boolean values, don't quote
-        echo "  $k: $v"
-      elif [[ "$v" =~ ^[[:space:]] ]] || [[ "$v" =~ [[:space:]]$ ]] || [[ "$v" =~ [\"\'\|\>\?\#] ]]; then
-        # For values that start/end with whitespace or contain special YAML characters, use double quotes
-        # Escape backslashes and double quotes
-        local esc=${v//\\/\\\\}
-        esc=${esc//\"/\\\"}
-        echo "  $k: \"$esc\""
-      else
-        # For simple string values, use plain scalar (no quotes)
-        echo "  $k: $v"
-      fi
-    done
-  } > "$ORIG_FILE"
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		-n | --namespace)
+			namespace="${2:-}"
+			shift 2
+			;;
+		-h | --help)
+			usage
+			return 0
+			;;
+		*)
+			echo "Unknown option: $1" >&2
+			usage
+			return 1
+			;;
+		esac
+	done
 
-  cp "$ORIG_FILE" "$EDIT_FILE"
-  ${editor} "$EDIT_FILE"
+	list_secrets "$namespace"
+}
 
-  if diff -u "$ORIG_FILE" "$EDIT_FILE" >/dev/null; then
-    echo "No changes made. Exiting."
-    exit 0
-  fi
+function get_command() {
+	local secret_name="${1:-}"
 
-  echo "Proposed changes:"
-  diff -u "$ORIG_FILE" "$EDIT_FILE" || true
+	if [[ -z "$secret_name" ]]; then
+		secret_name=$(select_secret "")
+	fi
 
-  read -r -p "Save changes and update sealed file $SEALED_FILE? (y/N): " CONFIRM
-  if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
-    echo "Aborting."
-    exit 1
-  fi
+	if [[ -z "$secret_name" ]]; then
+		echo "No secret selected."
+		return 1
+	fi
 
-  PUB_CERT=$(fetch_pub_cert)
-  cp "$SEALED_FILE" "${SEALED_FILE}.bak"
-  kube kubeseal --format yaml --cert <(echo "$PUB_CERT") <"$EDIT_FILE" >"$SEALED_FILE"
-  echo "Updated sealed secret written to $SEALED_FILE (backup at ${SEALED_FILE}.bak)"
+	gcloud secrets versions access latest --secret="$secret_name"
+}
 
-  if [[ $APPLY_AFTER -eq 1 ]]; then
-    echo "Applying updated SealedSecret to cluster..."
-    kube kubectl -n "$NS" apply -f "$SEALED_FILE"
-    echo "Applied. Note: controller may take a few seconds to reconcile the Secret."
-  else
-    echo "Note: only the sealed file was updated. Commit/push and let Flux (or run with --apply) to update the live Secret."
-  fi
-  exit 0
-fi
+function edit_command() {
+	local secret_name="${1:-}"
 
-# ---------- Create mode (default) ----------
+	if [[ -z "$secret_name" ]]; then
+		secret_name=$(select_secret "")
+	fi
 
-# Fetch pub-sealed-secrets.pem and store in a variable
-PUB_CERT=$(fetch_pub_cert)
+	if [[ -z "$secret_name" ]]; then
+		echo "No secret selected."
+		return 1
+	fi
 
-# Wizard: Scope selection
-echo "Is this secret scoped at the app level or system level?"
-select SCOPE in "app" "system"; do
-  case $SCOPE in
-  app)
-    read -p "Enter the namespace for the secret: " NAMESPACE
-    BASE_NAME="$NAMESPACE"
-    ;;
-  system)
-    NAMESPACE="flux-system"
-    read -p "Enter the base name for the secret (e.g. app name): " BASE_NAME
-    ;;
-  esac
-  break
-done
+	edit_secret "$secret_name"
+}
 
-DEFAULT_SECRET_TYPE=Opaque
-read -p "Enter the type of the secret [${DEFAULT_SECRET_TYPE}]: " SECRET_TYPE
-SECRET_TYPE="${SECRET_TYPE:-$DEFAULT_SECRET_TYPE}"
+function open_url() {
+	local url="$1"
+	if command -v xdg-open >/dev/null 2>&1; then
+		xdg-open "$url" >/dev/null 2>&1
+		return 0
+	fi
+	if command -v open >/dev/null 2>&1; then
+		open "$url" >/dev/null 2>&1
+		return 0
+	fi
+	echo "No opener found (xdg-open or open)." >&2
+	return 1
+}
 
-# Generate default secret name
-if [[ $SCOPE == "system" ]]; then
-  DEFAULT_SECRET_NAME="${BASE_NAME}-secrets-system"
-else
-  DEFAULT_SECRET_NAME="${BASE_NAME}-secrets"
-fi
+function browse_command() {
+	open_url "https://console.cloud.google.com/security/secret-manager"
+}
 
-# Prompt for secret name, allowing change
-read -p "Enter the name of the secret [${DEFAULT_SECRET_NAME}]: " SECRET_NAME
-SECRET_NAME="${SECRET_NAME:-$DEFAULT_SECRET_NAME}"
+function metrics_command() {
+	open_url "https://console.cloud.google.com/apis/api/secretmanager.googleapis.com/metrics"
+}
 
-# Validate secret name
-if [[ $SCOPE == "system" ]]; then
-  if [[ $SECRET_NAME != *-secrets-system ]]; then
-    echo "System scoped secrets must end with '-secrets-system'."
-    exit 1
-  fi
-  SECRET_PATH="clusters/production/secrets"
-else
-  if [[ $SECRET_NAME != *-secrets ]]; then
-    echo "App scoped secrets must end with '-secrets'."
-    exit 1
-  fi
-  read -p "Enter the path to store the sealed secret file: " SECRET_PATH
-fi
+function add_command() {
+	local secret_name=""
+	local namespace=""
 
-# Create tmp-secrets dir
-TMP_DIR="tmp-secrets"
-mkdir -p "$TMP_DIR"
-if ! grep -q "^tmp-secrets$" .gitignore 2>/dev/null; then
-  echo "tmp-secrets" >>.gitignore
-fi
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		-n | --namespace)
+			namespace="${2:-}"
+			shift 2
+			;;
+		-h | --help)
+			usage
+			return 0
+			;;
+		*)
+			if [[ -z "$secret_name" ]]; then
+				secret_name="$1"
+				shift
+			else
+				echo "Unexpected argument: $1" >&2
+				usage
+				return 1
+			fi
+			;;
+		esac
+	done
 
-# Collect secrets
-declare -A SECRETS
-while true; do
-  read -p "Enter secret key (leave empty to finish): " KEY
-  if [[ -z "$KEY" ]]; then
-    break
-  fi
-  echo "Enter value for '$KEY' (use Ctrl+D when done for multiline values):"
-  # Read multiline input until Ctrl+D
-  VALUE=$(cat)
-  SECRETS["$KEY"]="$VALUE"
-done
+	if [[ -z "$secret_name" ]]; then
+		read -r -p "Secret name: " secret_name
+	fi
 
-if [[ ${#SECRETS[@]} -eq 0 ]]; then
-  echo "No secrets provided. Exiting."
-  exit 1
-fi
+	if [[ -z "$namespace" ]]; then
+		read -r -p "Namespace: " namespace
+	fi
 
-# Write unencrypted secret manifest directly
-SECRET_FILE="$TMP_DIR/$SECRET_NAME.yaml"
-{
-  echo "apiVersion: v1"
-  echo "kind: Secret"
-  echo "type: $SECRET_TYPE"
-  echo "metadata:"
-  echo "  name: $SECRET_NAME"
-  echo "  namespace: $NAMESPACE"
-  echo "stringData:"
-  for K in "${!SECRETS[@]}"; do
-    V="${SECRETS[$K]}"
-    # Apply the same YAML formatting logic as in write_secret_yaml
-    if [[ "$V" == *$'\n'* ]]; then
-      # For multiline values, use literal block scalar (|)
-      echo "  $K: |"
-      # indent block content by two spaces
-      while IFS= read -r line; do
-        printf '    %s\n' "$line"
-      done <<<"$V"
-    elif [[ "$V" =~ ^[0-9]+$ ]]; then
-      # For numeric values, don't quote
-      echo "  $K: $V"
-    elif [[ "$V" =~ ^(true|false)$ ]]; then
-      # For boolean values, don't quote
-      echo "  $K: $V"
-    elif [[ "$V" =~ ^[[:space:]] ]] || [[ "$V" =~ [[:space:]]$ ]] || [[ "$V" =~ [\"\'\|\>\?\#] ]]; then
-      # For values that start/end with whitespace or contain special YAML characters, use double quotes
-      # Escape backslashes and double quotes
-      esc=${V//\\/\\\\}
-      esc=${esc//\"/\\\"}
-      echo "  $K: \"$esc\""
-    else
-      # For simple string values, use plain scalar (no quotes)
-      echo "  $K: $V"
-    fi
-  done
-} >"$SECRET_FILE"
+	if [[ -z "$secret_name" || -z "$namespace" ]]; then
+		echo "Secret name and namespace are required." >&2
+		return 1
+	fi
 
-echo "Secret created at $SECRET_FILE"
+	local full_name="${namespace}_${secret_name}"
 
-# SealedSecret output path
-SEALED_FILE="$SECRET_PATH/$SECRET_NAME.yaml"
-mkdir -p "$SECRET_PATH"
+	if secret_exists "$full_name"; then
+		echo "Secret already exists: $full_name"
+		if confirm "Edit it instead? [y/N] "; then
+			edit_secret "$full_name"
+		else
+			echo "Add cancelled."
+		fi
+		return 0
+	fi
 
-if [[ -f "$SEALED_FILE" ]]; then
-  read -p "SealedSecret file already exists at $SEALED_FILE. Overwrite? (y/N): " CONFIRM
-  [[ "$CONFIRM" =~ ^[Yy]$ ]] || {
-    echo "Aborting."
-    exit 1
-  }
-fi
+	if ! confirm "Create secret '$full_name' in namespace '$namespace'? [y/N] "; then
+		echo "Add cancelled."
+		return 0
+	fi
 
-kube kubeseal --format yaml --cert <(echo "$PUB_CERT") <"$SECRET_FILE" >"$SEALED_FILE"
+	gcloud secrets create "$full_name" --replication-policy="automatic" --labels="namespace=$namespace"
+	edit_secret "$full_name"
+}
 
-echo "SealedSecret created at $SEALED_FILE"
+function main() {
+	require_cmd gcloud
+
+	local command="${1:-}"
+	shift || true
+
+	case "$command" in
+	list)
+		list_command "$@"
+		;;
+	get)
+		get_command "$@"
+		;;
+	edit)
+		edit_command "$@"
+		;;
+	add)
+		add_command "$@"
+		;;
+	browse)
+		browse_command
+		;;
+	metrics)
+		metrics_command
+		;;
+	-h | --help | help | "")
+		usage
+		;;
+
+	-h | --help | help | "")
+		usage
+		;;
+	*)
+		echo "Unknown command: $command" >&2
+		usage
+		exit 1
+		;;
+	esac
+}
+
+main "$@"
