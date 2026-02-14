@@ -7,12 +7,13 @@ DEFAULT_EDITOR="${EDITOR:-vi}"
 function usage() {
 	cat <<'EOF'
 Usage:
-  kubesec2 list [-n|--namespace <namespace>]
-  kubesec2 get [secret-name]
-  kubesec2 edit [secret-name]
-  kubesec2 add [secret-name] [-n|--namespace <namespace>]
-  kubesec2 browse
-  kubesec2 metrics
+  kubesec list [-n|--namespace <namespace>]
+  kubesec get [secret-name]
+  kubesec edit [secret-name]
+  kubesec add [secret-name] [-n|--namespace <namespace>]
+  kubesec fix [secret-name]
+  kubesec browse
+  kubesec metrics
 EOF
 }
 
@@ -58,6 +59,13 @@ function access_secret() {
 	gcloud secrets versions access latest --secret="$secret_name" 2>/dev/null || true
 }
 
+function strip_trailing_whitespace() {
+	local input_file="$1"
+	local output_file="$2"
+	require_cmd awk
+	awk '{ content = content $0 ORS } END { sub(/[[:space:]]+$/, "", content); printf "%s", content }' "$input_file" >"$output_file"
+}
+
 function edit_secret() {
 	local secret_name="$1"
 
@@ -98,6 +106,7 @@ function edit_secret() {
 		return 0
 	fi
 
+	strip_trailing_whitespace "$edit_file" "$edit_file"
 	gcloud secrets versions add "$secret_name" --data-file="$edit_file"
 	echo "Secret updated: $secret_name"
 }
@@ -154,6 +163,52 @@ function edit_command() {
 	fi
 
 	edit_secret "$secret_name"
+}
+
+function fix_command() {
+	local secret_name="${1:-}"
+
+	if [[ -z "$secret_name" ]]; then
+		secret_name=$(select_secret "")
+	fi
+
+	if [[ -z "$secret_name" ]]; then
+		echo "No secret selected."
+		return 1
+	fi
+
+	if ! secret_exists "$secret_name"; then
+		echo "Secret not found: $secret_name" >&2
+		return 1
+	fi
+
+	local original_file=""
+	local fixed_file=""
+	original_file=$(mktemp)
+	fixed_file=$(mktemp)
+	trap 'rm -f "${original_file:-}" "${fixed_file:-}"' RETURN
+
+	access_secret "$secret_name" >"$original_file"
+	strip_trailing_whitespace "$original_file" "$fixed_file"
+
+	if cmp -s "$original_file" "$fixed_file"; then
+		echo "No trailing whitespace to remove."
+		return 0
+	fi
+
+	if command -v delta >/dev/null 2>&1; then
+		diff -u "$original_file" "$fixed_file" | delta || true
+	else
+		diff -u "$original_file" "$fixed_file" || true
+	fi
+
+	if ! confirm "Update secret '$secret_name'? [y/N] "; then
+		echo "Update cancelled."
+		return 0
+	fi
+
+	gcloud secrets versions add "$secret_name" --data-file="$fixed_file"
+	echo "Secret updated: $secret_name"
 }
 
 function open_url() {
@@ -258,16 +313,15 @@ function main() {
 	add)
 		add_command "$@"
 		;;
+	fix)
+		fix_command "$@"
+		;;
 	browse)
 		browse_command
 		;;
 	metrics)
 		metrics_command
 		;;
-	-h | --help | help | "")
-		usage
-		;;
-
 	-h | --help | help | "")
 		usage
 		;;

@@ -34,7 +34,6 @@ in
         curl
         jq
         ranger
-        delta
         wol
         rbw
         git
