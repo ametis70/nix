@@ -106,8 +106,12 @@ function edit_secret() {
 		return 0
 	fi
 
-	strip_trailing_whitespace "$edit_file" "$edit_file"
-	gcloud secrets versions add "$secret_name" --data-file="$edit_file"
+	local stripped_file=""
+	stripped_file=$(mktemp)
+	trap 'rm -f "${original_file:-}" "${edit_file:-}" "${stripped_file:-}"' RETURN
+
+	strip_trailing_whitespace "$edit_file" "$stripped_file"
+	gcloud secrets versions add "$secret_name" --data-file="$stripped_file"
 	echo "Secret updated: $secret_name"
 }
 
