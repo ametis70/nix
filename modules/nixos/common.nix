@@ -56,6 +56,8 @@
     vimAlias = true;
   };
 
+  programs.mosh.enable = true;
+
   programs.tmux.enable = true;
 
   programs.gnupg.agent = {

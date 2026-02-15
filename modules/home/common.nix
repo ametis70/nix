@@ -40,6 +40,7 @@ in
         rsync
         openssl
         pwgen
+        mosh
       ];
 
       programs = {
