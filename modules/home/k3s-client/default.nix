@@ -21,6 +21,8 @@ in
     ]
     ++ (with pkgs; [
       kubectl
+      kubeconform
+      kustomize
       kubernetes-helm
       k9s
       fluxcd
