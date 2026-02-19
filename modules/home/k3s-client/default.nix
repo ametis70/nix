@@ -21,6 +21,7 @@ in
     ]
     ++ (with pkgs; [
       kubectl
+      kubectl-cnpg
       kubeconform
       kustomize
       kubernetes-helm
