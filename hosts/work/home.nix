@@ -36,7 +36,10 @@
     '';
     initContentAfter = ''
       # Homebrew
-      PATH=$PATH:/opt/homebrew/bin
+      export PATH=$PATH:/opt/homebrew/bin
+
+      # Claude
+      export PATH=$PATH:~/.local/bin
 
       # Go
       export GOPRIVATE=github.com/mercadolibre/*,github.com/melisource/*
