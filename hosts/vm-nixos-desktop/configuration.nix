@@ -32,6 +32,7 @@ in
     builtins.elem (lib.getName pkg) [
       "discord"
       "imagescan-plugin-networkscan"
+      "via"
     ];
 
   networking = {
@@ -67,6 +68,10 @@ in
   #       ];
   #   };
   # };
+
+  hardware.keyboard.qmk.enable = true;
+  environment.systemPackages = with pkgs; [ via ];
+  services.udev.packages = with pkgs; [ via ];
 
   custom.services.nfs.enable = true;
 
