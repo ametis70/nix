@@ -20,6 +20,8 @@
     deprecation_warnings = false;
     trouble_lualine = true;
     markdown_recommended_style = 0;
+    lazyvim_prettier_needs_config = false;
+    lazyvim_eslint_auto_format = true;
   };
 
   opts = {

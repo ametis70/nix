@@ -55,6 +55,16 @@
     };
   };
 
+  plugins.lsp.servers.eslint = {
+    enable = true;
+    settings = {
+      workingDirectories = {
+        mode = "auto";
+      };
+      format.__raw = "vim.g.lazyvim_eslint_auto_format == nil or vim.g.lazyvim_eslint_auto_format";
+    };
+  };
+
   plugins.neotest.adapters = {
     jest.enable = true;
     vitest.enable = true;
@@ -137,6 +147,7 @@
   extraPackages = with pkgs; [
     typescript
     eslint_d
+    eslint
   ];
 
   extraConfigLua = ''

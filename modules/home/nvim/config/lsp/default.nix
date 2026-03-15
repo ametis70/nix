@@ -102,13 +102,19 @@
     }
     {
       key = "<leader>ca";
-      mode = [ "n" "x" ];
+      mode = [
+        "n"
+        "x"
+      ];
       action = "<cmd>lua vim.lsp.buf.code_action()<cr>";
       options.desc = "Code Action";
     }
     {
       key = "<leader>cc";
-      mode = [ "n" "x" ];
+      mode = [
+        "n"
+        "x"
+      ];
       action = "<cmd>lua vim.lsp.codelens.run()<cr>";
       options.desc = "Run Codelens";
     }

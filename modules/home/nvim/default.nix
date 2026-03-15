@@ -1,4 +1,4 @@
-{ pkgs-unstable, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   programs.nixvim = {
@@ -12,6 +12,10 @@
         allowUnfree = true;
       };
     };
+
+    extraPackages = with pkgs; [
+      prettier
+    ];
 
     dependencies = {
       claude-code.enable = false;
