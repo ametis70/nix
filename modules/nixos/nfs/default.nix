@@ -77,6 +77,15 @@ in
         type = "nfs";
         options = "nfsvers=4.2";
       }
+      {
+        name = "srv-nfs-books.mount";
+        wantedBy = [ "multi-user.target" ];
+        what = "truenas.lan:/mnt/main/books";
+        where = "/srv/nfs/books";
+        type = "nfs";
+        options = "nfsvers=4.2";
+      }
+
     ];
 
     boot.supportedFilesystems = [ "nfs" ];

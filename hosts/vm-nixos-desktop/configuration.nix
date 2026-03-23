@@ -70,7 +70,10 @@ in
   # };
 
   hardware.keyboard.qmk.enable = true;
-  environment.systemPackages = with pkgs; [ via ];
+  environment.systemPackages = with pkgs; [
+    via
+    calibre
+  ];
   services.udev.packages = with pkgs; [ via ];
 
   custom.services.nfs.enable = true;
