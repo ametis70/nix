@@ -23,6 +23,9 @@
             enableServerSideFuzzyMatch = true;
           };
         };
+        tsserver = {
+          globalPlugins = [ ];
+        };
       };
       typescript = {
         updateImportsOnFileMove = {
