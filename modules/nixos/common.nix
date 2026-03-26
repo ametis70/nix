@@ -65,9 +65,12 @@
     enableSSHSupport = false;
   };
 
-  environment.systemPackages = with pkgs; [
-    neovim
+  programs.git = {
+    enable = true;
+    lfs.enable = true;
+  };
 
+  environment.systemPackages = with pkgs; [
     curl
     fd
     fzf
@@ -77,6 +80,7 @@
     mtr
     killall
     htop
+    lsof
 
     gzip
     zip
