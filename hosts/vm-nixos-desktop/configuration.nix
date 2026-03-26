@@ -73,6 +73,7 @@ in
   environment.systemPackages = with pkgs; [
     via
     calibre
+    imv
   ];
   services.udev.packages = with pkgs; [ via ];
 
