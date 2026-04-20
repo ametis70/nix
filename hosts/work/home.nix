@@ -63,9 +63,9 @@
         unsetopt CORRECT
         unsetopt CORRECT_ALL
         setopt NO_BEEP
-        setopt NO_HIST_BEEP  
+        setopt NO_HIST_BEEP
         setopt NO_LIST_BEEP
-        
+
         # Agent-friendly aliases to avoid interactive prompts
         alias npm='npm --no-fund --no-audit'
         alias yarn='yarn --non-interactive'
@@ -82,6 +82,7 @@
     wireguard-tools
     pre-commit
     qemu
+    rclone
   ];
 
   programs.texlive = {
