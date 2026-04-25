@@ -21,37 +21,86 @@
     firewall.enable = false;
   };
 
+  boot.kernel.sysctl = {
+    # Enable IP forwarding (required for any routing/relay)
+    "net.ipv4.ip_forward" = 1;
+
+    # Keep strict mode globally for security
+    "net.ipv4.conf.all.rp_filter" = 1;
+    "net.ipv4.conf.default.rp_filter" = 1;
+
+    # Disable only on VLAN interfaces used for multicast relay
+    "net.ipv4.conf.vlan10.rp_filter" = 0;
+    "net.ipv4.conf.vlan20.rp_filter" = 0;
+    "net.ipv4.conf.vlan100.rp_filter" = 0;
+  };
+
   systemd.network = {
     enable = true;
     netdevs = {
-      # Only VLAN 20 interface needed (VLAN 30 is native)
+      "30-vlan10" = {
+        netdevConfig = {
+          Kind = "vlan";
+          Name = "vlan10";
+          MACAddress = "00:e0:4c:74:51:10";
+        };
+        vlanConfig = {
+          Id = 10;
+        };
+      };
       "30-vlan20" = {
         netdevConfig = {
           Kind = "vlan";
           Name = "vlan20";
-          MACAddress = "00:e0:4c:74:51:20"; # Custom MAC for VLAN 20
+          MACAddress = "00:e0:4c:74:51:20";
         };
         vlanConfig = {
           Id = 20;
         };
       };
-    };
-    networks = {
-      # Physical interface configuration (handles native VLAN 30)
-      "30-enp1s0" = {
-        name = "enp1s0";
-        vlan = [ "vlan20" ]; # Only create tagged VLAN 20
-        DHCP = "yes"; # DHCP for native VLAN 30
-        dhcpV4Config = {
-          RouteMetric = 100; # Lower metric = higher priority (VLAN 30 primary)
+      "30-vlan100" = {
+        netdevConfig = {
+          Kind = "vlan";
+          Name = "vlan100";
+          MACAddress = "00:e0:4c:74:51:64";
+        };
+        vlanConfig = {
+          Id = 100;
         };
       };
-      # VLAN 20 interface (tagged for IoT)
+    };
+    networks = {
+      "30-enp1s0" = {
+        name = "enp1s0";
+        vlan = [
+          "vlan10"
+          "vlan20"
+          "vlan100"
+        ];
+        DHCP = "yes";
+        dhcpV4Config = {
+          RouteMetric = 100;
+        };
+      };
+      "30-vlan10" = {
+        name = "vlan10";
+        DHCP = "yes";
+        dhcpV4Config = {
+          RouteMetric = 150;
+        };
+      };
       "30-vlan20" = {
         name = "vlan20";
         DHCP = "yes";
         dhcpV4Config = {
-          RouteMetric = 200; # Higher metric = lower priority (IoT secondary)
+          RouteMetric = 200;
+        };
+      };
+      "30-vlan100" = {
+        name = "vlan100";
+        DHCP = "yes";
+        dhcpV4Config = {
+          RouteMetric = 250;
         };
       };
     };
