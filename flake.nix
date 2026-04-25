@@ -261,6 +261,15 @@
           channel = "stable";
           nixos = true;
         };
+        midtower-nixos-desktop = {
+          id = "midtower-nixos-desktop";
+          hostname = "midtower-nixos-desktop";
+          username = "ametis70";
+          system = "x86_64-linux";
+          extraNixosModules = [ disko.nixosModules.disko ];
+          channel = "stable";
+          nixos = true;
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -340,6 +349,7 @@
         "${vm-nixos-server-builder.hostname}" = configureNixOs vm-nixos-server-builder;
         "${intel-nixos-server.hostname}" = configureNixOs intel-nixos-server;
         "${intel-nixos-tv.hostname}" = configureNixOs intel-nixos-tv;
+        "${midtower-nixos-desktop.hostname}" = configureNixOs midtower-nixos-desktop;
       };
 
       homeConfigurations = with hosts; {
