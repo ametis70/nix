@@ -25,6 +25,8 @@ in
     ../../modules/nixos/keyring.nix
 
     ./hardware-configuration.nix
+
+    ./edid
   ];
 
   nixpkgs.config.allowUnfreePredicate =
