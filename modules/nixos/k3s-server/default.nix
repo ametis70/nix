@@ -54,6 +54,16 @@ in
       description = "Network interface for K3s cluster communication";
     };
 
+    nodeIp = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      example = "10.0.30.20";
+      description = ''
+        Explicit node IP for K3s.
+        If null, K3s auto-detects the node IP.
+      '';
+    };
+
     dataDir = lib.mkOption {
       type = lib.types.str;
       default = "";
@@ -73,6 +83,7 @@ in
       enable = true;
       name = "${config.networking.hostName}-initiatorhost";
     };
+
     systemd.services.iscsid.serviceConfig = {
       PrivateMounts = "yes";
       BindPaths = "/run/current-system/sw/bin:/bin";
@@ -96,6 +107,7 @@ in
       enable = true;
       role = cfg.role;
       tokenFile = config.age.secrets.k3s.path;
+
       extraFlags = toString (
         [
           "--disable servicelb"
@@ -109,7 +121,11 @@ in
         ++ lib.optionals (cfg.dataDir != "") [
           "--data-dir ${cfg.dataDir}"
         ]
+        ++ lib.optionals (cfg.nodeIp != null) [
+          "--node-ip ${cfg.nodeIp}"
+        ]
       );
+
       clusterInit = cfg.init;
       serverAddr = if cfg.init == true then "" else addr;
     };

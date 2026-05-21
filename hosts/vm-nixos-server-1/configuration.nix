@@ -60,7 +60,10 @@
   };
 
   custom = {
-    k3s.enable = true;
+    k3s = {
+      enable = true;
+      nodeIp = "10.0.30.20";
+    };
     services.nfs.enable = true;
 
     nut = {
