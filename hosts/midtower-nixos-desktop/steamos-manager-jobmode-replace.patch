@@ -1,0 +1,11 @@
+--- a/steamos-manager/src/session.rs
++++ b/steamos-manager/src/session.rs
+@@ -216,7 +216,7 @@ impl SessionManager {
+     async fn logout(&self) -> Result<()> {
+         SystemdUnit::new(&self.connection, "graphical-session.target")
+             .await?
+-            .stop(JobMode::Fail)
++            .stop(JobMode::Replace)
+             .await?;
+         Ok(())
+     }
