@@ -21,32 +21,37 @@
     firewall.enable = false;
   };
 
-  swapDevices = [
-    {
-      device = "/swapfile";
-      size = 16 * 1024;
-    }
-  ];
+  # swapDevices = [
+  #   {
+  #     device = "/swapfile";
+  #     size = 16 * 1024;
+  #   }
+  # ];
 
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  nixpkgs.config = {
+    rocmSupport = true;
 
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.getName pkg) [
-      "steam"
-      "steam-original"
-      "steam-unwrapped"
-      "steam-run"
-    ];
+    allowUnfreePredicate =
+      pkg:
+      builtins.elem (lib.getName pkg) [
+        "steam"
+        "steam-original"
+        "steam-unwrapped"
+        "steam-run"
+        "steamdeck-hw-theme"
+        "steam-jupiter-unwrapped"
+      ];
+  };
 
-  nixpkgs.config.rocmSupport = true;
-  hardware.amdgpu.opencl.enable = true;
-  hardware.amdgpu.initrd.enable = true;
-
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
+    amdgpu = {
+      initrd.enable = true;
+      opencl.enable = true;
+    };
   };
 
   environment.systemPackages = with pkgs; [
@@ -59,24 +64,50 @@
     libcec
     moonlight-qt
     ungoogled-chromium
+
+    protonup-ng
+    mangohud
   ];
 
   users.users.ametis70.extraGroups = [ "dialout" ];
 
-  programs.gamescope = {
-    enable = true;
-    capSysNice = true;
+  # hardware.bluetooth = {
+  #   enable = true;
+  #   powerOnBoot = true;
+  # };
+
+  environment.sessionVariables = {
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
   };
 
-  programs.steam = {
+  services.ollama = {
     enable = true;
-    gamescopeSession.enable = true;
+    package = pkgs.ollama-rocm;
   };
 
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
+  services.desktopManager.plasma6.enable = true;
+  services.displayManager = {
+    defaultSession = lib.mkDefault "plasma";
+    sddm = {
+      enable = true;
+      wayland.enable = true;
+    };
   };
 
-  system.stateVersion = "25.15";
+  jovian = {
+    steam = {
+      enable = true;
+      autoStart = true;
+      desktopSession = "plasma";
+      user = "ametis70";
+    };
+
+    steamos = {
+      useSteamOSConfig = true;
+    };
+
+    hardware.has.amd.gpu = true;
+  };
+
+  system.stateVersion = "25.11";
 }

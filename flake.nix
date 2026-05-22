@@ -67,6 +67,11 @@
     catppuccin.url = "github:catppuccin/nix/release-25.11";
     catppuccin-unstable.url = "github:catppuccin/nix";
 
+    jovian = {
+      url = "github:Jovian-Experiments/Jovian-NixOS";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     nixvim.url = "github:nix-community/nixvim/nixos-25.11";
     nixvim-unstable.url = "github:nix-community/nixvim";
   };
@@ -95,6 +100,7 @@
       nixgl,
       nixgl-unstable,
       agenix,
+      jovian,
       ...
     }@inputs:
     let
@@ -266,8 +272,11 @@
           hostname = "midtower-nixos-desktop";
           username = "ametis70";
           system = "x86_64-linux";
-          extraNixosModules = [ disko.nixosModules.disko ];
-          channel = "stable";
+          extraNixosModules = [
+            disko.nixosModules.disko
+            jovian.nixosModules.default
+          ];
+          channel = "unstable";
           nixos = true;
         };
       };
