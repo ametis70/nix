@@ -59,24 +59,13 @@ in
 
   custom.programs.creality-print.enable = false;
 
-  # programs.appimage = {
-  #   enable = true;
-  #   binfmt = true;
-  #   package = pkgs.appimage-run.override {
-  #     extraPkgs =
-  #       pkgs: with pkgs; [
-  #         gst_all_1.gst-plugins-bad
-  #         webkitgtk_4_0
-  #       ];
-  #   };
-  # };
-
   hardware.keyboard.qmk.enable = true;
   environment.systemPackages = with pkgs; [
     via
-    calibre
-    imv
   ];
+
+  services.gvfs.enable = true;
+
   services.udev.packages = with pkgs; [ via ];
 
   custom.services.nfs.enable = true;

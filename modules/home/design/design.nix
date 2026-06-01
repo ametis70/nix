@@ -9,5 +9,6 @@
     openscad
     audacity
     krita
+    darktable
   ];
 }
