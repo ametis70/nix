@@ -13,6 +13,8 @@
 
     ../../modules/nixos/common.nix
     ../../modules/nixos/openssh.nix
+    ../../modules/nixos/pipewire.nix
+
     ../../modules/nixos/user.nix
   ];
 
@@ -20,6 +22,13 @@
     hostName = specialArgs.host.hostname;
     networkmanager.enable = true;
     firewall.enable = false;
+  };
+
+  systemd.targets = {
+    sleep.enable = true;
+    suspend.enable = true;
+    hibernate.enable = true;
+    hybrid-sleep.enable = true;
   };
 
   # swapDevices = [
