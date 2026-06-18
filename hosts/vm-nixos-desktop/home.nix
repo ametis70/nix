@@ -13,6 +13,7 @@
     ../../modules/home/gnome-keyring
     ../../modules/home/pdf/pdf.nix
     ../../modules/home/video
+    ../../modules/home/emulation
   ];
 
   home.packages = with pkgs; [
@@ -171,6 +172,8 @@
   programs.aerc.enable = true;
 
   custom.k3s-client.enable = true;
+
+  custom.emulation.enable = true;
 
   home.stateVersion = "24.11";
 }
