@@ -48,6 +48,7 @@ in
     enable = true;
     package = null;
     portalPackage = null;
+    configType = "hyprlang";
     settings = {
       general = {
         gaps_in = 5;
@@ -313,9 +314,15 @@ in
   services.hyprpaper = {
     enable = true;
     settings = {
-      ipc = "on";
-      preload = [ "~/Pictures/wallpaper.jpg" ];
-      wallpaper = [ ", ~/Pictures/wallpaper.jpg" ];
+      splash = false;
+      ipc = true;
+      wallpaper = [
+        {
+          fit_mode = "cover";
+          monitor = "HDMI-A-1";
+          path = "~/Pictures/wallpapers";
+        }
+      ];
     };
   };
 }

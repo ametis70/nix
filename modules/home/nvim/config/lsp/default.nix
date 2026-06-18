@@ -1,19 +1,19 @@
 {
+  lsp.servers."*".config = {
+    capabilities = {
+      workspace = {
+        fileOperations = {
+          didRename = true;
+          willRename = true;
+        };
+      };
+    };
+  };
+
   plugins.lsp = {
     enable = true;
     inlayHints = true;
     servers = {
-      "*" = {
-        capabilities = {
-          workspace = {
-            fileOperations = {
-              didRename = true;
-              willRename = true;
-            };
-          };
-        };
-      };
-
       lua_ls = {
         settings = {
           Lua = {

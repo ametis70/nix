@@ -45,7 +45,7 @@
       jsdoc
       json
       json5
-      jsonc
+
       kotlin
       latex
       llvm
@@ -68,7 +68,6 @@
       regex
       requirements
       ruby
-      robots
       rust
       scss
       sql

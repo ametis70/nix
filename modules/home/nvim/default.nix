@@ -8,6 +8,8 @@
 
     imports = [ ./config ];
     nixpkgs = {
+      hostPlatform = pkgs.stdenv.hostPlatform.system;
+      buildPlatform = pkgs.stdenv.buildPlatform.system;
       config = {
         allowUnfree = true;
       };

@@ -8,7 +8,7 @@
   plugins.lint.lintersByFt.nix = [ "statix" ];
 
   extraPackages = with pkgs; [
-    nixfmt-rfc-style
+    nixfmt
     statix
   ];
 }

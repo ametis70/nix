@@ -42,10 +42,10 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    hyprland-unstable.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.53.1";
+    hyprland-unstable.url = "github:hyprwm/Hyprland?submodules=1&ref=v0.55.4";
 
     hy3-unstable = {
-      url = "github:outfoxxed/hy3?ref=hl0.53.0";
+      url = "github:outfoxxed/hy3?ref=hl0.55.0";
       inputs.hyprland.follows = "hyprland-unstable";
     };
 
@@ -65,7 +65,10 @@
     };
 
     catppuccin.url = "github:catppuccin/nix/release-25.11";
-    catppuccin-unstable.url = "github:catppuccin/nix";
+    catppuccin-unstable = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
 
     jovian = {
       url = "github:Jovian-Experiments/Jovian-NixOS";
@@ -370,7 +373,7 @@
         "${work.hostname}" = configureDarwin work;
       };
 
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
-      formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-rfc-style;
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
+      formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt;
     };
 }
