@@ -168,6 +168,8 @@
     monitor = "HDMI-A-1, 2560x1440@143.98, 0x0, 1";
   };
 
+  programs.aerc.enable = true;
+
   custom.k3s-client.enable = true;
 
   home.stateVersion = "24.11";
