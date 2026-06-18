@@ -80,6 +80,7 @@
 
     gzip
     zip
+    unzip
     xz
     zstd
     p7zip
