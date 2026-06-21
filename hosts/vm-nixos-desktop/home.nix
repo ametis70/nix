@@ -173,7 +173,10 @@
 
   custom.k3s-client.enable = true;
 
-  custom.emulation.enable = true;
+  custom.emulation = {
+    enable = true;
+    pegasus.disableHidapi = true;
+  };
 
   home.stateVersion = "24.11";
 }

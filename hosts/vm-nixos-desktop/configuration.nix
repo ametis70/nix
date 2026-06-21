@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   hyprland,
   host,
   ...
@@ -24,19 +25,25 @@ in
     ../../modules/nixos/hyprland.nix
     ../../modules/nixos/keyring.nix
     ../../modules/nixos/bluetooth.nix
+    ../../modules/nixos/emulation
 
     ./hardware-configuration.nix
 
     ./edid
   ];
 
+  custom.emulation.enable = true;
+
   nixpkgs.config.allowUnfreePredicate =
     pkg:
-    builtins.elem (lib.getName pkg) [
-      "discord"
-      "imagescan-plugin-networkscan"
-      "via"
-    ];
+    builtins.elem (lib.getName pkg) (
+      [
+        "discord"
+        "imagescan-plugin-networkscan"
+        "via"
+      ]
+      ++ config.custom.emulation.allowedUnfreePackages
+    );
 
   networking = {
     hostName = host.hostname;
@@ -69,7 +76,19 @@ in
 
   services.udev.packages = with pkgs; [ via ];
 
-  custom.services.nfs.enable = true;
+  # The Sofle's System Control USB interface (if02) is tagged ID_INPUT_JOYSTICK=1 by
+  # the kernel because QMK exposes ABS_MISC/HAT axes on it. This makes RetroArch pick
+  # it up as a gamepad. Clear the joystick tag so only its keyboard/media capabilities
+  # are visible to joystick-reading applications.
+  services.udev.extraRules = ''
+    SUBSYSTEM=="input", \
+      ENV{ID_VENDOR_ID}=="fc32", \
+      ENV{ID_MODEL_ID}=="0287", \
+      ENV{ID_USB_INTERFACE_NUM}=="02", \
+      ENV{ID_INPUT_JOYSTICK}="", \
+      ENV{ID_INPUT}="1", \
+      ENV{ID_INPUT_KEY}="1"
+  '';
 
   custom.services.nfs.enable = true;
 
