@@ -21,9 +21,16 @@ in
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true;
 
+  users.groups.media = {
+    gid = 568;
+  };
+
   users.users.ametis70 = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [
+      "wheel"
+      "media"
+    ];
     shell = pkgs.zsh;
     openssh.authorizedKeys.keys = keys;
   };
