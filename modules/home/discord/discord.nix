@@ -49,7 +49,13 @@ let
     patch_asar_file() {
       unpacked="$(mktemp -d)"
       ${pkgs.asar}/bin/asar extract "$1" "$unpacked"
-      cp ${tray-icons}/* "$unpacked/app/images/systemtray/linux/"
+      tray_dir="$unpacked/app/images/systemtray/linux"
+      if [ ! -d "$tray_dir" ]; then
+        echo "(fix-tray-icons) Tray icon directory not found in asar, skipping patch."
+        rm -r "$unpacked"
+        return 1
+      fi
+      cp ${tray-icons}/* "$tray_dir/"
       ${pkgs.asar}/bin/asar pack "$unpacked" "$1"
       rm -r "$unpacked"
     }
@@ -59,8 +65,9 @@ let
       cd "$module_dir"
       ! sha256sum --status --check core.asar.sha256 2> /dev/null || continue
       echo "(fix-tray-icons) Patching tray icons in '$module_dir/core.asar'..."
-      patch_asar_file core.asar
-      sha256sum core.asar > core.asar.sha256
+      if patch_asar_file core.asar; then
+        sha256sum core.asar > core.asar.sha256
+      fi
     done
   '';
 

@@ -44,6 +44,18 @@ in
   services.pasystray.enable = true;
   services.blueman-applet.enable = true;
 
+  # Suppress XDG autostart entries for tray applets that are managed by
+  # systemd user services above. Without this, UWSM would launch them a
+  # second time via app-*@autostart.service units.
+  xdg.configFile."autostart/pasystray.desktop".text = ''
+    [Desktop Entry]
+    Hidden=true
+  '';
+  xdg.configFile."autostart/blueman-applet.desktop".text = ''
+    [Desktop Entry]
+    Hidden=true
+  '';
+
   wayland.windowManager.hyprland = {
     enable = true;
     package = null;
@@ -97,36 +109,38 @@ in
           text_font = "Iosevka Medium";
           text_height = 12;
 
-          # Catppuccin Mocha colors
-          # active tab bar segment colors (focused tab)
-          "col.active" = "rgba(1e1e2eff)"; # base (default background)
-          "col.active.border" = "rgba(89b4faff)"; # blue
-          "col.active.text" = "rgba(cdd6f4ff)"; # text
+          colors = {
+            # Catppuccin Mocha colors
+            # active tab bar segment colors (focused tab)
+            active = "rgba(1e1e2eff)"; # base (default background)
+            active_border = "rgba(89b4faff)"; # blue
+            active_text = "rgba(cdd6f4ff)"; # text
 
-          # active tab bar segment colors for bars on an unfocused monitor
-          "col.active_alt_monitor" = "rgba(313244ff)"; # surface0 (lighter background)
-          "col.active_alt_monitor.border" = "rgba(cba6f7ff)"; # mauve (purple)
-          "col.active_alt_monitor.text" = "rgba(cdd6f4ff)"; # text
+            # active tab bar segment colors for bars on an unfocused monitor
+            active_alt_monitor = "rgba(313244ff)"; # surface0 (lighter background)
+            active_alt_monitor_border = "rgba(cba6f7ff)"; # mauve (purple)
+            active_alt_monitor_text = "rgba(cdd6f4ff)"; # text
 
-          # focused tab bar segment colors (focused node in unfocused container)
-          "col.focused" = "rgba(313244ff)"; # surface0 (lighter background)
-          "col.focused.border" = "rgba(cba6f7ff)"; # mauve (purple)
-          "col.focused.text" = "rgba(cdd6f4ff)"; # text
+            # focused tab bar segment colors (focused node in unfocused container)
+            focused = "rgba(313244ff)"; # surface0 (lighter background)
+            focused_border = "rgba(cba6f7ff)"; # mauve (purple)
+            focused_text = "rgba(cdd6f4ff)"; # text
 
-          # inactive tab bar segment colors
-          "col.inactive" = "rgba(313244ff)"; # surface0 (lighter background)
-          "col.inactive.border" = "rgba(11111bff)"; # crust (dark outline)
-          "col.inactive.text" = "rgba(bac2deff)"; # subtext1
+            # inactive tab bar segment colors
+            inactive = "rgba(313244ff)"; # surface0 (lighter background)
+            inactive_border = "rgba(11111bff)"; # crust (dark outline)
+            inactive_text = "rgba(bac2deff)"; # subtext1
 
-          # urgent tab bar segment colors
-          "col.urgent" = "rgba(1e1e2eff)"; # base
-          "col.urgent.border" = "rgba(f38ba8ff)"; # red
-          "col.urgent.text" = "rgba(cdd6f4ff)"; # text
+            # urgent tab bar segment colors
+            urgent = "rgba(1e1e2eff)"; # base
+            urgent_border = "rgba(f38ba8ff)"; # red
+            urgent_text = "rgba(cdd6f4ff)"; # text
 
-          # locked tab bar segment colors
-          "col.locked" = "rgba(1e1e2eff)"; # base
-          "col.locked.border" = "rgba(fab387ff)"; # peach (orange)
-          "col.locked.text" = "rgba(cdd6f4ff)"; # text
+            # locked tab bar segment colors
+            locked = "rgba(1e1e2eff)"; # base
+            locked_border = "rgba(fab387ff)"; # peach (orange)
+            locked_text = "rgba(cdd6f4ff)"; # text
+          };
 
           blur = false;
           opacity = 1;
