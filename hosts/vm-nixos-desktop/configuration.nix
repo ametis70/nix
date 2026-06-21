@@ -23,6 +23,7 @@ in
     ../../modules/nixos/greetd.nix
     ../../modules/nixos/hyprland.nix
     ../../modules/nixos/keyring.nix
+    ../../modules/nixos/bluetooth.nix
 
     ./hardware-configuration.nix
 
@@ -70,7 +71,7 @@ in
 
   custom.services.nfs.enable = true;
 
-  hardware.bluetooth.enable = true;
+  custom.services.nfs.enable = true;
 
   system.stateVersion = "24.11";
 }

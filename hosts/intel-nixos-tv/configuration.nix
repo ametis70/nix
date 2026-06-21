@@ -13,6 +13,7 @@
     ../../modules/nixos/common.nix
     ../../modules/nixos/openssh.nix
     ../../modules/nixos/user.nix
+    ../../modules/nixos/bluetooth.nix
 
     ./edid
   ];
@@ -82,11 +83,6 @@
   };
 
   custom.services.nfs.enable = true;
-
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-  };
 
   system.stateVersion = "25.05";
 }

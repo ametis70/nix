@@ -16,6 +16,7 @@
     ../../modules/nixos/pipewire.nix
 
     ../../modules/nixos/user.nix
+    ../../modules/nixos/bluetooth.nix
   ];
 
   networking = {
