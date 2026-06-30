@@ -14,9 +14,9 @@
     ../../modules/nixos/common.nix
     ../../modules/nixos/openssh.nix
     ../../modules/nixos/pipewire.nix
-
     ../../modules/nixos/user.nix
     ../../modules/nixos/bluetooth.nix
+    ../../modules/nixos/emulation
   ];
 
   networking = {
@@ -102,14 +102,17 @@
 
     allowUnfreePredicate =
       pkg:
-      builtins.elem (lib.getName pkg) [
-        "steam"
-        "steam-original"
-        "steam-unwrapped"
-        "steam-run"
-        "steamdeck-hw-theme"
-        "steam-jupiter-unwrapped"
-      ];
+      builtins.elem (lib.getName pkg) (
+        [
+          "steam"
+          "steam-original"
+          "steam-unwrapped"
+          "steam-run"
+          "steamdeck-hw-theme"
+          "steam-jupiter-unwrapped"
+        ]
+        ++ config.custom.emulation.allowedUnfreePackages
+      );
   };
 
   hardware = {
@@ -177,6 +180,8 @@
 
     hardware.has.amd.gpu = true;
   };
+
+  custom.services.nfs.enable = true;
 
   system.stateVersion = "25.11";
 }
