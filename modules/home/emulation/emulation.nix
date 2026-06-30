@@ -214,6 +214,10 @@ let
       package = pkgs.libretro.beetle-pce-fast;
       coreName = "mednafen_pce_fast_libretro.so";
     };
+    dolphin = {
+      package = pkgs.libretro.dolphin;
+      coreName = "dolphin_libretro.so";
+    };
   };
 
   # Helper function to get core library path
@@ -251,16 +255,19 @@ let
     gamecube = {
       collection = "Nintendo GameCube";
       shortname = "gc";
-      directories = "${cfg.libraryRoot}/gamecube/roms";
+      directories = "${cfg.libraryRoot}/ngc/roms";
       extensions = "iso, rvz, wbfs, gcm, gcz";
-      launcher = "dolphin";
+      biosDir = "${cfg.libraryRoot}/ngc/bios";
+      core = "dolphin";
+      launcher = "retroarch";
     };
     wii = {
       collection = "Nintendo Wii";
       shortname = "wii";
       directories = "${cfg.libraryRoot}/wii/roms";
       extensions = "iso, rvz, wbfs, wad";
-      launcher = "dolphin";
+      core = "dolphin";
+      launcher = "retroarch";
     };
     gbc = {
       collection = "Game Boy Color";
@@ -311,7 +318,7 @@ let
       launcher = "retroarch";
     };
     genesis = {
-      collection = "Sega Mega Drive/Genesis";
+      collection = "Sega Genesis";
       shortname = "genesis";
       directories = "${cfg.libraryRoot}/genesis/roms";
       extensions = "md, bin, gen, smd";
@@ -319,7 +326,7 @@ let
       launcher = "retroarch";
     };
     segacd = {
-      collection = "Sega CD";
+      collection = "SEGA CD";
       shortname = "segacd";
       directories = "${cfg.libraryRoot}/segacd/roms";
       extensions = "iso, bin, chd, cue";
@@ -335,7 +342,7 @@ let
       launcher = "retroarch";
     };
     dc = {
-      collection = "Dreamcast";
+      collection = "Sega Dreamcast";
       shortname = "dreamcast";
       directories = "${cfg.libraryRoot}/dc/roms";
       extensions = "chd, cdi, iso, gdi";
@@ -389,7 +396,7 @@ let
       launcher = "retroarch";
     };
     tg16 = {
-      collection = "TurboGrafx-16/PC Engine";
+      collection = "TurboGrafx 16";
       shortname = "turbografx16";
       directories = "${cfg.libraryRoot}/tg16/roms";
       extensions = "pce, cue, ccd, chd";
@@ -397,16 +404,16 @@ let
       launcher = "retroarch";
     };
     neogeoaes = {
-      collection = "Neo Geo AES";
-      shortname = "neogeoaes";
+      collection = "Neo Geo";
+      shortname = "neogeo";
       directories = "${cfg.libraryRoot}/neogeoaes/roms";
       extensions = "zip";
       core = "fbneo";
       launcher = "retroarch";
     };
     neogeomvs = {
-      collection = "Neo Geo MVS";
-      shortname = "neogeomvs";
+      collection = "Neo Geo";
+      shortname = "neogeo";
       directories = "${cfg.libraryRoot}/neogeomvs/roms";
       extensions = "zip";
       core = "fbneo";
@@ -419,9 +426,7 @@ let
     systemName: systemConfig:
     let
       launchCmd =
-        if systemConfig.launcher == "dolphin" then
-          "${pkgs.dolphin-emu}/bin/dolphin-emu-nogui -e \"{file.path}\""
-        else if systemConfig.launcher == "ps2wrapper" then
+        if systemConfig.launcher == "ps2wrapper" then
           "${ps2LaunchWrapper} \"{file.path}\""
         else if systemConfig.launcher == "naomiwrapper" || systemConfig.launcher == "arcadewrapper" then
           "${arcadeLaunchWrapper} \"{file.path}\""
@@ -533,14 +538,6 @@ in
       (lib.optionals cfg.retroarch.enable (
         [ pkgs.retroarch-bare ] ++ map getCorePackage cfg.retroarch.cores
       ))
-
-      # Dolphin (installed if any dolphin-based system is in the systems list)
-      (lib.optional (
-        cfg.pegasus.enable
-        && lib.any (
-          s: (systemConfigs.${s} or { launcher = "retroarch"; }).launcher == "dolphin"
-        ) cfg.pegasus.systems
-      ) pkgs.dolphin-emu)
     ];
 
     home.file = lib.mkMerge (
@@ -560,6 +557,7 @@ in
             cores_directory = "${coresDir}"
             input_autodetect_enable = "true"
             config_save_on_exit = "false"
+            video_fullscreen = "true"
             ${preferredLines}
           '';
 
