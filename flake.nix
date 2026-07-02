@@ -77,6 +77,8 @@
 
     nixvim.url = "github:nix-community/nixvim/nixos-25.11";
     nixvim-unstable.url = "github:nix-community/nixvim";
+
+    launchscope.url = "github:ametis70/launchscope";
   };
 
   nixConfig = {
@@ -104,6 +106,7 @@
       nixgl-unstable,
       agenix,
       jovian,
+      launchscope,
       ...
     }@inputs:
     let
@@ -266,8 +269,12 @@
           hostname = "intel-nixos-tv";
           username = "ametis70";
           system = "x86_64-linux";
-          extraNixosModules = [ disko.nixosModules.disko ];
-          channel = "stable";
+          extraNixosModules = [
+            disko.nixosModules.disko
+            launchscope.nixosModules.default
+            jovian.nixosModules.default
+          ];
+          channel = "unstable";
           nixos = true;
         };
         midtower-nixos-desktop = {

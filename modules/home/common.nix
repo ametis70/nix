@@ -76,8 +76,13 @@ in
           keyMode = "vi";
           historyLimit = 5000;
           baseIndex = 1;
+          terminal = "tmux-256color";
           extraConfig = ''
             set-option -g set-clipboard on
+            set-option -g extended-keys on
+            set-option -g extended-keys-format csi-u
+            set-option -as terminal-features ",*:extkeys"
+            set-option -as terminal-overrides ",*:Tc"
           '';
         };
       };
