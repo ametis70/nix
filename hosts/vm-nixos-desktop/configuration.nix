@@ -92,5 +92,7 @@ in
 
   custom.services.nfs.enable = true;
 
+  hardware.opentabletdriver.enable = true;
+
   system.stateVersion = "24.11";
 }
