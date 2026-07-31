@@ -14,7 +14,14 @@ let
   };
 in
 {
-  options.custom.kitty.enable = lib.mkEnableOption "kitty terminal";
+  options.custom.kitty = {
+    enable = lib.mkEnableOption "kitty terminal";
+    fontSize = lib.mkOption {
+      type = lib.types.number;
+      default = 14;
+      description = "kitty font size.";
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     programs.kitty = {
@@ -34,7 +41,7 @@ in
       };
 
       font = {
-        size = lib.mkDefault 14;
+        size = cfg.fontSize;
         name = "family=Iosevka";
       };
 

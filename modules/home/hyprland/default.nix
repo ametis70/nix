@@ -25,7 +25,15 @@ let
   '';
 in
 {
-  options.custom.hyprland.enable = lib.mkEnableOption "Hyprland desktop (wofi, waybar, dunst, desktop-theme)";
+  options.custom.hyprland = {
+    enable = lib.mkEnableOption "Hyprland desktop (wofi, waybar, dunst, desktop-theme)";
+    monitors = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [ "HDMI-A-1, 2560x1440@143.98, 0x0, 1" ];
+      description = "Hyprland monitor configuration lines.";
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     # These used to be pulled in via imports; hyprland turns them on now.
@@ -54,6 +62,7 @@ in
       package = null;
       portalPackage = null;
       settings = {
+        monitor = cfg.monitors;
         general = {
           gaps_in = 5;
           gaps_out = 20;

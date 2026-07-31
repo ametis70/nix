@@ -9,7 +9,10 @@
   custom.pdf.enable = true;
   custom.kitty.enable = true;
   custom.hvm.enable = true;
-  custom.hyprland.enable = true;
+  custom.hyprland = {
+    enable = true;
+    monitors = [ "HDMI-A-1, 2560x1440@143.98, 0x0, 1" ];
+  };
   custom.design.enable = true;
 
   home.packages = with pkgs; [
@@ -18,10 +21,6 @@
     nautilus
     file-roller
   ];
-
-  wayland.windowManager.hyprland.settings = {
-    monitor = "HDMI-A-1, 2560x1440@143.98, 0x0, 1";
-  };
 
   custom.k3s-client.enable = true;
 
