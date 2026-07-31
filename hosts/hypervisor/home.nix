@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ../../modules/home/nixos.nix
     ../../modules/home/dev.nix
   ];
 

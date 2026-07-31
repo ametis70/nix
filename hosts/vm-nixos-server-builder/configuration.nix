@@ -8,9 +8,6 @@
     ./hardware-configuration.nix
     ./disk-config.nix
 
-    ../../modules/nixos/common.nix
-    ../../modules/nixos/openssh.nix
-    ../../modules/nixos/user.nix
     ../../modules/nixos/docker.nix
   ];
 

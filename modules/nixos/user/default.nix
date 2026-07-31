@@ -1,6 +1,13 @@
-{ pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
+  cfg = config.custom.user;
+
   keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKdeXLsyF3y5W8Xy/MI5G0qttr+7M+Opd03w7dzrJLJ7"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINzcytKRVeHivinYCOL2BmSKAXyA0phU55ZF8hzkc43Z"
@@ -14,18 +21,25 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIELs4KLo77Jp1evxeXeIXjnCu0tzZz11a5ge3Dz7vL8J"
   ];
 in
-
 {
-  environment.shells = [ pkgs.zsh ];
-  users.defaultUserShell = pkgs.zsh;
-  programs.zsh.enable = true;
+  options.custom.user.enable =
+    lib.mkEnableOption "primary user (ametis70) + authorized SSH keys"
+    // {
+      default = true;
+    };
 
-  users.users.ametis70 = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-    shell = pkgs.zsh;
-    openssh.authorizedKeys.keys = keys;
+  config = lib.mkIf cfg.enable {
+    environment.shells = [ pkgs.zsh ];
+    users.defaultUserShell = pkgs.zsh;
+    programs.zsh.enable = true;
+
+    users.users.ametis70 = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ];
+      shell = pkgs.zsh;
+      openssh.authorizedKeys.keys = keys;
+    };
+
+    users.users.root.openssh.authorizedKeys.keys = keys;
   };
-
-  users.users.root.openssh.authorizedKeys.keys = keys;
 }

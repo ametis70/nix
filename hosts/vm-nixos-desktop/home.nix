@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ../../modules/home/nixos.nix
     ../../modules/home/dev.nix
     ../../modules/home/discord/discord.nix
     ../../modules/home/kitty/kitty.nix
@@ -10,10 +9,11 @@
     ../../modules/home/design/design.nix
     ../../modules/home/zathura/zathura.nix
     ../../modules/home/hypervisor-virt-manager/hvm.nix
-    ../../modules/home/gnome-keyring
     ../../modules/home/pdf/pdf.nix
-    ../../modules/home/video
   ];
+
+  custom.gnome-keyring.enable = true;
+  custom.video.enable = true;
 
   home.packages = with pkgs; [
     ungoogled-chromium

@@ -1,9 +1,7 @@
 { ... }:
 
 {
-  imports = [
-    ../../modules/home/nixos.nix
-  ];
+  imports = [ ];
 
   home.stateVersion = "24.11";
 }

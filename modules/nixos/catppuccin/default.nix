@@ -1,8 +1,19 @@
-{ ... }:
+{ lib, config, ... }:
 
+let
+  cfg = config.custom.catppuccin;
+in
 {
-  catppuccin = {
-    enable = true;
-    flavor = "mocha";
+  options.custom.catppuccin.enable =
+    lib.mkEnableOption "Catppuccin theming for the system"
+    // {
+      default = true;
+    };
+
+  config = lib.mkIf cfg.enable {
+    catppuccin = {
+      enable = true;
+      flavor = "mocha";
+    };
   };
 }

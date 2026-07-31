@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ../../modules/home/macos.nix
     ../../modules/home/dev.nix
     ../../modules/home/fonts/fonts.nix
     ../../modules/home/kitty/kitty.nix

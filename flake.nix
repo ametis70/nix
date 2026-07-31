@@ -270,6 +270,7 @@
         homeManager.${host.channel}.lib.homeManagerConfiguration {
           pkgs = packages.${host.system}.${host.channel};
           modules = [
+            ./modules/home
             ./hosts/${host.id}/home.nix
             nixvim.${host.channel}.homeModules.nixvim
             catppuccin.${host.channel}.homeModules.catppuccin
@@ -282,6 +283,7 @@
         nixosSystem.${host.channel} {
           inherit (host) system;
           modules = host.extraNixosModules ++ [
+            ./modules/nixos
             ./hosts/${host.id}/configuration.nix
             catppuccin.${host.channel}.nixosModules.catppuccin
             homeManager.${host.channel}.nixosModules.home-manager
@@ -291,6 +293,7 @@
                 useUserPackages = true;
                 backupFileExtension = "backup";
                 users.${host.username}.imports = [
+                  ./modules/home
                   ./hosts/${host.id}/home.nix
                   nixvim.${host.channel}.homeModules.nixvim
                   catppuccin.${host.channel}.homeModules.catppuccin
@@ -316,6 +319,7 @@
                 useUserPackages = true;
                 backupFileExtension = "backup";
                 users.${host.username}.imports = [
+                  ./modules/home
                   ./hosts/${host.id}/home.nix
                   nixvim.${host.channel}.homeModules.nixvim
                   catppuccin.${host.channel}.homeModules.catppuccin

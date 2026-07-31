@@ -12,9 +12,6 @@ let
 in
 {
   imports = [
-    ../../modules/nixos/common.nix
-    ../../modules/nixos/openssh.nix
-    ../../modules/nixos/user.nix
     ../../modules/nixos/guest.nix
     ../../modules/nixos/printing.nix
     ../../modules/nixos/scanning.nix

@@ -7,9 +7,6 @@
 
 {
   imports = [
-    ../../modules/nixos/common.nix
-    ../../modules/nixos/openssh.nix
-    ../../modules/nixos/user.nix
 
     ./hardware-configuration.nix
     ./debug.nix
