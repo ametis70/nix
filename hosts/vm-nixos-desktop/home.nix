@@ -3,17 +3,17 @@
 {
   imports = [
     ../../modules/home/dev.nix
-    ../../modules/home/discord/discord.nix
     ../../modules/home/kitty/kitty.nix
     ../../modules/home/hyprland/hyprland.nix
     ../../modules/home/design/design.nix
-    ../../modules/home/zathura/zathura.nix
     ../../modules/home/hypervisor-virt-manager/hvm.nix
-    ../../modules/home/pdf/pdf.nix
   ];
 
   custom.gnome-keyring.enable = true;
   custom.video.enable = true;
+  custom.discord.enable = true;
+  custom.zathura.enable = true;
+  custom.pdf.enable = true;
 
   home.packages = with pkgs; [
     ungoogled-chromium

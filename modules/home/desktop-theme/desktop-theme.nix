@@ -4,7 +4,9 @@
 }:
 
 {
-  imports = [ ../fonts/fonts.nix ];
+  # desktop-theme is only imported by hyprland, so pulling in fonts here keeps
+  # the previous transitive behaviour (fonts -> desktop-theme -> hyprland).
+  custom.fonts.enable = true;
 
   home.packages = with pkgs; [
     phinger-cursors

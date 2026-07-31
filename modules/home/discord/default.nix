@@ -18,9 +18,11 @@
 #  Author: InternetUnexplorer
 # License: CC0
 
-{ pkgs, ... }:
+{ lib, config, pkgs, ... }:
 
 let
+  cfg = config.custom.discord;
+
   tray-icons = pkgs.runCommand "discord-tray-icons" { } ''
     ICON_THEME="${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark"
     ICON_SVG_SIZE=16
@@ -73,8 +75,11 @@ let
         sed -i '2i ${fix-tray-icons} ${pkg.pname}' $out/opt/Discord/Discord
       '';
     };
-
 in
 {
-  home.packages = [ (inject-tray-icon-fix pkgs.discord) ];
+  options.custom.discord.enable = lib.mkEnableOption "Discord (with tray-icon fix)";
+
+  config = lib.mkIf cfg.enable {
+    home.packages = [ (inject-tray-icon-fix pkgs.discord) ];
+  };
 }
