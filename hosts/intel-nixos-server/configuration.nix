@@ -11,61 +11,19 @@
 
   ];
 
-  networking = {
-    hostName = specialArgs.host.hostname;
-    useDHCP = false; # Disable global DHCP, configure per interface
-    useNetworkd = true; # Enable systemd-networkd for advanced networking
-  };
-
-  systemd.network = {
-    enable = true;
-    netdevs = {
-      # Only VLAN 20 interface needed (VLAN 30 is native)
-      "30-vlan20" = {
-        netdevConfig = {
-          Kind = "vlan";
-          Name = "vlan20";
-          MACAddress = "00:e0:4c:74:51:20"; # Custom MAC for VLAN 20
-        };
-        vlanConfig = {
-          Id = 20;
-        };
-      };
-    };
-    networks = {
-      # Physical interface configuration (handles native VLAN 30)
-      "30-enp1s0" = {
-        name = "enp1s0";
-        vlan = [ "vlan20" ]; # Only create tagged VLAN 20
-        DHCP = "yes"; # DHCP for native VLAN 30
-        dhcpV4Config = {
-          RouteMetric = 100; # Lower metric = higher priority (VLAN 30 primary)
-        };
-      };
-      # VLAN 20 interface (tagged for IoT)
-      "30-vlan20" = {
-        name = "vlan20";
-        DHCP = "yes";
-        dhcpV4Config = {
-          RouteMetric = 200; # Higher metric = lower priority (IoT secondary)
-        };
-      };
-    };
-  };
-
-  # Configure systemd-networkd-wait-online to only wait for the primary interface
-  systemd.services.systemd-networkd-wait-online = {
-    serviceConfig = {
-      ExecStart = [
-        "" # Clear the existing ExecStart
-        "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online --interface=enp1s0 --timeout=60"
-      ];
-    };
-  };
+  networking.hostName = specialArgs.host.hostname;
 
   custom = {
     intelGraphics.enable = true;
     swapfile.enable = true;
+
+    # This host tags VLAN 20 itself (native VLAN 30 on enp1s0).
+    vlanClient = {
+      enable = true;
+      interface = "enp1s0";
+      vlanMac = "00:e0:4c:74:51:20";
+      createVlanNetdev = true;
+    };
 
     wakeOnLan = {
       enable = true;
