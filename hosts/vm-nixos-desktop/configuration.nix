@@ -12,17 +12,19 @@ let
 in
 {
   imports = [
-    ../../modules/nixos/guest.nix
-    ../../modules/nixos/printing.nix
-    ../../modules/nixos/scanning.nix
-    ../../modules/nixos/docker.nix
-    ../../modules/nixos/pipewire.nix
-    ../../modules/nixos/greetd.nix
-    ../../modules/nixos/hyprland.nix
-    ../../modules/nixos/keyring.nix
-
     ./hardware-configuration.nix
   ];
+
+  custom = {
+    guest.enable = true;
+    printing.enable = true;
+    scanning.enable = true;
+    docker.enable = true;
+    pipewire.enable = true;
+    greetd.enable = true;
+    hyprland.enable = true;
+    keyring.enable = true;
+  };
 
   nixpkgs.config.allowUnfreePredicate =
     pkg:
@@ -52,7 +54,7 @@ in
 
   services.blueman.enable = true;
 
-  custom.programs.creality-print.enable = false;
+  custom.crealityPrint.enable = false;
 
   # programs.appimage = {
   #   enable = true;
@@ -74,7 +76,7 @@ in
   ];
   services.udev.packages = with pkgs; [ via ];
 
-  custom.services.nfs.enable = true;
+  custom.nfs.enable = true;
 
   hardware.bluetooth.enable = true;
 

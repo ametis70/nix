@@ -6,14 +6,10 @@
 }:
 
 let
-  cfg = config.custom.services.nfs;
+  cfg = config.custom.nfs;
 in
 {
-  options = {
-    custom.services.nfs = {
-      enable = lib.mkEnableOption "Enable NFS and mount common shares";
-    };
-  };
+  options.custom.nfs.enable = lib.mkEnableOption "NFS and mount common shares";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [

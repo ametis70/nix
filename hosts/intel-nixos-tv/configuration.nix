@@ -78,7 +78,7 @@
     gamescopeSession.enable = true;
   };
 
-  custom.services.nfs.enable = true;
+  custom.nfs.enable = true;
 
   hardware.bluetooth = {
     enable = true;

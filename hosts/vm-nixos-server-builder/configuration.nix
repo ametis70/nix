@@ -7,9 +7,9 @@
   imports = [
     ./hardware-configuration.nix
     ./disk-config.nix
-
-    ../../modules/nixos/docker.nix
   ];
+
+  custom.docker.enable = true;
 
   networking = {
     hostName = specialArgs.host.hostname;
