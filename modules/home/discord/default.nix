@@ -18,7 +18,12 @@
 #  Author: InternetUnexplorer
 # License: CC0
 
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.custom.discord;

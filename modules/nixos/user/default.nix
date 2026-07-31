@@ -22,11 +22,9 @@ let
   ];
 in
 {
-  options.custom.user.enable =
-    lib.mkEnableOption "primary user (ametis70) + authorized SSH keys"
-    // {
-      default = true;
-    };
+  options.custom.user.enable = lib.mkEnableOption "primary user (ametis70) + authorized SSH keys" // {
+    default = true;
+  };
 
   config = lib.mkIf cfg.enable {
     environment.shells = [ pkgs.zsh ];

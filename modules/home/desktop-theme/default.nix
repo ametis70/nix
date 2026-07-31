@@ -1,11 +1,15 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.custom.desktop-theme;
 in
 {
-  options.custom.desktop-theme.enable =
-    lib.mkEnableOption "GTK/Qt dark theme, cursors and icons";
+  options.custom.desktop-theme.enable = lib.mkEnableOption "GTK/Qt dark theme, cursors and icons";
 
   config = lib.mkIf cfg.enable {
     # desktop-theme pulls in fonts, preserving the previous transitive behaviour

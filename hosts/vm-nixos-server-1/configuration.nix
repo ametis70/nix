@@ -58,7 +58,7 @@
 
   custom = {
     k3s.enable = true;
-    services.nfs.enable = true;
+    nfs.enable = true;
 
     nut = {
       enable = true;

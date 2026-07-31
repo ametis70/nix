@@ -20,8 +20,7 @@ let
   '';
 in
 {
-  options.custom.hvm.enable =
-    lib.mkEnableOption "hypervisor virt-manager launcher (hvm) + virt-manager";
+  options.custom.hvm.enable = lib.mkEnableOption "hypervisor virt-manager launcher (hvm) + virt-manager";
 
   config = lib.mkIf cfg.enable {
     home.packages =

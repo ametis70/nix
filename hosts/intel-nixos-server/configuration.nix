@@ -100,7 +100,7 @@
       role = "server";
     };
 
-    services.nfs.enable = true;
+    nfs.enable = true;
   };
 
   system.stateVersion = "24.11";

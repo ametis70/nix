@@ -25,8 +25,7 @@ let
   '';
 in
 {
-  options.custom.hyprland.enable =
-    lib.mkEnableOption "Hyprland desktop (wofi, waybar, dunst, desktop-theme)";
+  options.custom.hyprland.enable = lib.mkEnableOption "Hyprland desktop (wofi, waybar, dunst, desktop-theme)";
 
   config = lib.mkIf cfg.enable {
     # These used to be pulled in via imports; hyprland turns them on now.

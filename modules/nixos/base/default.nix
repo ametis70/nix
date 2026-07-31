@@ -15,11 +15,9 @@ let
   cfg = config.custom.base;
 in
 {
-  options.custom.base.enable =
-    lib.mkEnableOption "base NixOS system configuration"
-    // {
-      default = true;
-    };
+  options.custom.base.enable = lib.mkEnableOption "base NixOS system configuration" // {
+    default = true;
+  };
 
   config = lib.mkIf cfg.enable {
     system.copySystemConfiguration = false;

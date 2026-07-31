@@ -1,11 +1,15 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.custom.dev;
 in
 {
-  options.custom.dev.enable =
-    lib.mkEnableOption "development environment (toolchains, opencode, mcp, neovim, zk)";
+  options.custom.dev.enable = lib.mkEnableOption "development environment (toolchains, opencode, mcp, neovim, zk)";
 
   config = lib.mkIf cfg.enable {
     # nvim (nixvim) and zk used to be pulled in via imports; they are now
