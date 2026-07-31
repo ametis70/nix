@@ -1,11 +1,6 @@
 { pkgs, ... }:
 
 {
-  imports = [
-    ../../modules/home/hyprland/hyprland.nix
-    ../../modules/home/design/design.nix
-  ];
-
   custom.dev.enable = true;
   custom.gnome-keyring.enable = true;
   custom.video.enable = true;
@@ -14,6 +9,8 @@
   custom.pdf.enable = true;
   custom.kitty.enable = true;
   custom.hvm.enable = true;
+  custom.hyprland.enable = true;
+  custom.design.enable = true;
 
   home.packages = with pkgs; [
     ungoogled-chromium
