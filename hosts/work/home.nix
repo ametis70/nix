@@ -3,13 +3,13 @@
 {
   imports = [
     ../../modules/home/dev.nix
-    ../../modules/home/kitty/kitty.nix
-    ../../modules/home/hypervisor-virt-manager/hvm.nix
   ];
 
   custom.fonts.enable = true;
   custom.emacs.enable = true;
   custom.pdf.enable = true;
+  custom.kitty.enable = true;
+  custom.hvm.enable = true;
 
   custom.zsh = {
     initContentBefore = ''

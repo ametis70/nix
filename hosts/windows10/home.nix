@@ -3,8 +3,9 @@
 {
   imports = [
     ../../modules/home/dev.nix
-    ../../modules/home/hypervisor-virt-manager/hvm.nix
   ];
+
+  custom.hvm.enable = true;
 
   programs.keychain = {
     enable = true;

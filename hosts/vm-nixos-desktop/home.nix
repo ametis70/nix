@@ -3,10 +3,8 @@
 {
   imports = [
     ../../modules/home/dev.nix
-    ../../modules/home/kitty/kitty.nix
     ../../modules/home/hyprland/hyprland.nix
     ../../modules/home/design/design.nix
-    ../../modules/home/hypervisor-virt-manager/hvm.nix
   ];
 
   custom.gnome-keyring.enable = true;
@@ -14,6 +12,8 @@
   custom.discord.enable = true;
   custom.zathura.enable = true;
   custom.pdf.enable = true;
+  custom.kitty.enable = true;
+  custom.hvm.enable = true;
 
   home.packages = with pkgs; [
     ungoogled-chromium
