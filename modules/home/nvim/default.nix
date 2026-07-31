@@ -1,29 +1,42 @@
-{ pkgs, pkgs-unstable, ... }:
-
 {
-  programs.nixvim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
+  pkgs,
+  pkgs-unstable,
+  lib,
+  config,
+  ...
+}:
 
-    imports = [ ./config ];
-    nixpkgs = {
-      config = {
-        allowUnfree = true;
+let
+  cfg = config.custom.nvim;
+in
+{
+  options.custom.nvim.enable = lib.mkEnableOption "Neovim (nixvim) configuration";
+
+  config = lib.mkIf cfg.enable {
+    programs.nixvim = {
+      enable = true;
+      viAlias = true;
+      vimAlias = true;
+
+      imports = [ ./config ];
+      nixpkgs = {
+        config = {
+          allowUnfree = true;
+        };
       };
-    };
 
-    extraPackages = with pkgs; [
-      prettier
-    ];
+      extraPackages = with pkgs; [
+        prettier
+      ];
 
-    dependencies = {
-      claude-code.enable = false;
-      gemini.enable = false;
+      dependencies = {
+        claude-code.enable = false;
+        gemini.enable = false;
 
-      opencode = {
-        enable = true;
-        package = pkgs-unstable.opencode;
+        opencode = {
+          enable = true;
+          package = pkgs-unstable.opencode;
+        };
       };
     };
   };

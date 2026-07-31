@@ -2,11 +2,11 @@
 
 {
   imports = [
-    ../../modules/home/dev.nix
     ../../modules/home/hyprland/hyprland.nix
     ../../modules/home/design/design.nix
   ];
 
+  custom.dev.enable = true;
   custom.gnome-keyring.enable = true;
   custom.video.enable = true;
   custom.discord.enable = true;

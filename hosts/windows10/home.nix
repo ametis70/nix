@@ -1,10 +1,7 @@
 { pkgs, inputs, ... }:
 
 {
-  imports = [
-    ../../modules/home/dev.nix
-  ];
-
+  custom.dev.enable = true;
   custom.hvm.enable = true;
 
   programs.keychain = {

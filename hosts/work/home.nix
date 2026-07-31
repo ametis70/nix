@@ -1,10 +1,7 @@
 { pkgs, lib, ... }:
 
 {
-  imports = [
-    ../../modules/home/dev.nix
-  ];
-
+  custom.dev.enable = true;
   custom.fonts.enable = true;
   custom.emacs.enable = true;
   custom.pdf.enable = true;
