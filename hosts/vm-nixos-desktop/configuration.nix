@@ -24,6 +24,12 @@ in
     greetd.enable = true;
     hyprland.enable = true;
     keyring.enable = true;
+    qmk.enable = true;
+
+    bluetooth = {
+      enable = true;
+      blueman = true;
+    };
   };
 
   nixpkgs.config.allowUnfreePredicate =
@@ -37,7 +43,6 @@ in
   networking = {
     hostName = host.hostname;
     networkmanager.enable = true;
-    firewall.enable = false;
   };
 
   systemd.services.nix-daemon.serviceConfig = {
@@ -51,8 +56,6 @@ in
     enable32Bit = true;
     package32 = hyprland-nixpkgs.pkgsi686Linux.mesa;
   };
-
-  services.blueman.enable = true;
 
   custom.crealityPrint.enable = false;
 
@@ -68,17 +71,12 @@ in
   #   };
   # };
 
-  hardware.keyboard.qmk.enable = true;
   environment.systemPackages = with pkgs; [
-    via
     calibre
     imv
   ];
-  services.udev.packages = with pkgs; [ via ];
 
   custom.nfs.enable = true;
-
-  hardware.bluetooth.enable = true;
 
   system.stateVersion = "24.11";
 }

@@ -22,6 +22,10 @@ in
   config = lib.mkIf cfg.enable {
     system.copySystemConfiguration = false;
 
+    # Every host currently disables the firewall; make it the base default
+    # (overridable per host).
+    networking.firewall.enable = lib.mkDefault false;
+
     nix.settings = {
       trusted-users = [ "${host.username}" ];
       experimental-features = [

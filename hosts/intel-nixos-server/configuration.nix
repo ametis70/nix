@@ -15,7 +15,6 @@
     hostName = specialArgs.host.hostname;
     useDHCP = false; # Disable global DHCP, configure per interface
     useNetworkd = true; # Enable systemd-networkd for advanced networking
-    firewall.enable = false;
   };
 
   systemd.network = {
@@ -64,31 +63,15 @@
     };
   };
 
-  networking.interfaces.enp1s0.wakeOnLan.enable = true;
-
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
-  };
-
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      intel-vaapi-driver
-      libva-vdpau-driver
-      intel-compute-runtime
-      vpl-gpu-rt
-    ];
-  };
-
-  swapDevices = [
-    {
-      device = "/swapfile";
-      size = 16 * 1024;
-    }
-  ];
-
   custom = {
+    intelGraphics.enable = true;
+    swapfile.enable = true;
+
+    wakeOnLan = {
+      enable = true;
+      interface = "enp1s0";
+    };
+
     k3s = {
       enable = true;
       init = true;

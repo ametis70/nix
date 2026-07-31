@@ -14,7 +14,6 @@
   networking = {
     hostName = specialArgs.host.hostname;
     useDHCP = true;
-    firewall.enable = false;
   };
 
   custom = {

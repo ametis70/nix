@@ -16,18 +16,20 @@
   networking = {
     hostName = specialArgs.host.hostname;
     useDHCP = true;
-    firewall.enable = false;
   };
 
-  swapDevices = [
-    {
-      device = "/swapfile";
-      size = 16 * 1024;
-    }
-  ];
+  custom = {
+    swapfile.enable = true;
+    plasma.enable = true;
+    intelGraphics.enable = true;
+    steam.enable = true;
+    nfs.enable = true;
 
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+  };
 
   nixpkgs.config.allowUnfreePredicate =
     pkg:
@@ -37,21 +39,6 @@
       "steam-unwrapped"
       "steam-run"
     ];
-
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
-  };
-
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      intel-vaapi-driver
-      libva-vdpau-driver
-      intel-compute-runtime
-      vpl-gpu-rt
-    ];
-  };
 
   environment.systemPackages = with pkgs; [
     ncpamixer
@@ -66,23 +53,6 @@
   ];
 
   users.users.ametis70.extraGroups = [ "dialout" ];
-
-  programs.gamescope = {
-    enable = true;
-    capSysNice = true;
-  };
-
-  programs.steam = {
-    enable = true;
-    gamescopeSession.enable = true;
-  };
-
-  custom.nfs.enable = true;
-
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-  };
 
   system.stateVersion = "25.05";
 }

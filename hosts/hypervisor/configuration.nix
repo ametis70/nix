@@ -17,8 +17,16 @@
 
   networking = {
     hostName = specialArgs.host.hostname;
-    firewall.enable = false;
     useNetworkd = true;
+  };
+
+  custom = {
+    netdiag.enable = true;
+
+    wakeOnLan = {
+      enable = true;
+      interface = "enp39s0";
+    };
   };
 
   systemd.network = {
@@ -140,16 +148,6 @@
       };
     };
   };
-
-  networking.interfaces.enp39s0.wakeOnLan.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    dmidecode
-    likwid
-    iperf
-    tcpdump
-    nmap
-  ];
 
   services.grafana = {
     enable = true;
