@@ -4,8 +4,7 @@ let
   cfg = config.custom.macosDefaults;
 in
 {
-  options.custom.macosDefaults.enable =
-    lib.mkEnableOption "macOS system defaults (keyboard, dock, finder, key repeat)";
+  options.custom.macosDefaults.enable = lib.mkEnableOption "macOS system defaults (keyboard, dock, finder, key repeat)";
 
   config = lib.mkIf cfg.enable {
     system = {

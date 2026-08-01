@@ -4,8 +4,7 @@ let
   cfg = config.custom.homebrewBundle;
 in
 {
-  options.custom.homebrewBundle.enable =
-    lib.mkEnableOption "Homebrew bundle (taps, brews, casks, Mac App Store apps)";
+  options.custom.homebrewBundle.enable = lib.mkEnableOption "Homebrew bundle (taps, brews, casks, Mac App Store apps)";
 
   config = lib.mkIf cfg.enable {
     homebrew = {

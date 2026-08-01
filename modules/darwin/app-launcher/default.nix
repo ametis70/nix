@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.custom.appLauncher;
@@ -12,8 +17,7 @@ let
   '';
 in
 {
-  options.custom.appLauncher.enable =
-    lib.mkEnableOption "choose-app launcher bound to cmd-d via skhd";
+  options.custom.appLauncher.enable = lib.mkEnableOption "choose-app launcher bound to cmd-d via skhd";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ chooseAppPkg ];
