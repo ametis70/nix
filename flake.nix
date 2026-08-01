@@ -311,6 +311,7 @@
         darwinSystem.${host.channel} {
           inherit (host) system;
           modules = host.extraNixosModules ++ [
+            ./modules/darwin
             ./hosts/${host.id}/configuration.nix
             homeManager.${host.channel}.darwinModules.home-manager
             {
