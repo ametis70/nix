@@ -289,6 +289,17 @@
           channel = "unstable";
           nixos = true;
         };
+        v3-nixos-tablet = {
+          id = "v3-nixos-tablet";
+          hostname = "v3-nixos-tablet";
+          username = "ametis70";
+          system = "x86_64-linux";
+          extraNixosModules = [
+            disko.nixosModules.disko
+          ];
+          channel = "unstable";
+          nixos = true;
+        };
       };
 
       getHost = host: with host; "${username}@${hostname}";
@@ -369,6 +380,7 @@
         "${intel-nixos-server.hostname}" = configureNixOs intel-nixos-server;
         "${intel-nixos-tv.hostname}" = configureNixOs intel-nixos-tv;
         "${midtower-nixos-desktop.hostname}" = configureNixOs midtower-nixos-desktop;
+	"${v3-nixos-tablet.hostname}" = configureNixOs v3-nixos-tablet;
       };
 
       homeConfigurations = with hosts; {
