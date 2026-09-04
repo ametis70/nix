@@ -37,7 +37,7 @@
     hybrid-sleep.enable = lib.mkDefault false;
   };
 
-  time.timeZone = "America/Argentina/Buenos_Aires";
+  time.timeZone = lib.mkDefault "America/Argentina/Buenos_Aires";
 
   i18n.defaultLocale = "en_US.UTF-8";
 

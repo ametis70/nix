@@ -18,6 +18,13 @@
     ../../modules/nixos/bluetooth.nix
   ];
 
+  time.timeZone = null;
+  location.provider = "geoclue2";
+  services.geoclue2 = {
+    enable = true;
+  };
+  services.automatic-timezoned.enable = true;
+
   networking = {
     hostName = specialArgs.host.hostname;
     networkmanager.enable = true;
@@ -52,7 +59,6 @@
     ungoogled-chromium
   ];
 
-
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
@@ -68,6 +74,51 @@
   };
 
   hardware.opentabletdriver.enable = true;
+
+  programs = {
+    steam = {
+      enable = true;
+      extraCompatPackages = with pkgs; [
+        proton-ge-bin
+      ];
+    };
+    gamemode = {
+      enable = true;
+
+    };
+  };
+
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "steam"
+      "steam-unwrapped"
+      "discord"
+    ];
+
+  services.power-profiles-daemon.enable = false;
+
+  services.tlp = {
+    enable = true;
+
+    settings = {
+      CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+      CPU_ENERGY_PERF_POLICY_ON_SAV = "power";
+
+      CPU_BOOST_ON_AC = 1;
+      CPU_BOOST_ON_BAT = 0;
+      CPU_BOOST_ON_SAV = 0;
+
+      RADEON_DPM_PERF_LEVEL_ON_AC = "auto";
+      RADEON_DPM_PERF_LEVEL_ON_BAT = "auto";
+      RADEON_DPM_PERF_LEVEL_ON_SAV = "low";
+
+      AMDGPU_ABM_LEVEL_ON_AC = 0;
+      AMDGPU_ABM_LEVEL_ON_BAT = 3;
+      AMDGPU_ABM_LEVEL_ON_SAV = 3;
+    };
+  };
 
   system.stateVersion = "25.11";
 }
