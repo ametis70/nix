@@ -81,7 +81,6 @@ in
     retroarch-joypad-autoconfig
     retroarch-assets
     retroarch-free
-    kodi-wayland
     libcec
     moonlight-qt
     ungoogled-chromium
@@ -123,15 +122,20 @@ in
     cec = {
       enable = true;
       adapterDevice = "ttyACM0";
-      tvDevice = 0;
-      avrDevice = 5;
-      avrPort = 1;
+      hasAvr = true;
       sourceAddr = "1.6.0.0";
-      activateDelay = 2.0;
     };
   };
 
   custom.services.nfs.enable = true;
+
+  # 8BitDo Pro 3 receiver (PID 0x3109/0x310B) needs HID_QUIRK_ALWAYS_POLL to stay
+  # connected when no app holds the input device open. The upstream kernel patch
+  # targets PID 0x6009 but the 2.4GHz receiver enumerates as 0x3109/0x310B.
+  # 0x400 = HID_QUIRK_ALWAYS_POLL
+  boot.extraModprobeConfig = ''
+    options usbhid quirks=0x2dc8:0x3109:0x00000400,0x2dc8:0x310b:0x00000400
+  '';
 
   system.stateVersion = "25.05";
 }

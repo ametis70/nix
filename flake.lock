@@ -1126,11 +1126,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1783885029,
-        "narHash": "sha256-TiC3lEBmtGF8cmO0cFZsLtKQo/zyMhj7VdSrK8j50C8=",
+        "lastModified": 1784992451,
+        "narHash": "sha256-Np71+puKQ3Xya064pJWeuYC8x2J5vgza+EbO8lRSRNE=",
         "owner": "ametis70",
         "repo": "launchscope",
-        "rev": "8b705249f36c0fda6111d32364d382b2983ab8a3",
+        "rev": "4c0acba5e41300cd5f4c8af5ef3f77bec3299d74",
         "type": "github"
       },
       "original": {

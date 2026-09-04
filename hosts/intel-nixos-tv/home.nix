@@ -63,7 +63,7 @@ in
         {
           id = "kodi";
           name = "Kodi";
-          exec = "${pkgs.kodi-gbm}/bin/kodi-standalone";
+          exec = "${pkgs.kodi-gbm.withPackages (p: with p; [ joystick jellycon ])}/bin/kodi-standalone";
           gamescope = {
             enabled = false;
           };
