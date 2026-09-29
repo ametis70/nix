@@ -25,6 +25,10 @@
   };
   services.automatic-timezoned.enable = true;
 
+  programs.ssh.startAgent = true;
+  security.pam.services.login.kwallet.enable = true;
+  security.pam.services.kde.kwallet.enable = true;
+
   networking = {
     hostName = specialArgs.host.hostname;
     networkmanager.enable = true;
@@ -55,8 +59,25 @@
     };
   };
 
+  hardware.sensor.iio.enable = true;
+
+  hardware.firmware = with pkgs; [
+    alsa-firmware
+  ];
+
+  hardware.alsa.enablePersistence = true;
+
   environment.systemPackages = with pkgs; [
     ungoogled-chromium
+    alsa-utils
+
+    ryzenadj
+
+    kdePackages.kwalletmanager
+    kdePackages.ksshaskpass
+
+    protonup-ng
+    mangohud
   ];
 
   hardware.bluetooth = {
@@ -76,15 +97,8 @@
   hardware.opentabletdriver.enable = true;
 
   programs = {
-    steam = {
-      enable = true;
-      extraCompatPackages = with pkgs; [
-        proton-ge-bin
-      ];
-    };
     gamemode = {
       enable = true;
-
     };
   };
 
@@ -92,31 +106,38 @@
     pkg:
     builtins.elem (lib.getName pkg) [
       "steam"
+      "steam-original"
       "steam-unwrapped"
+      "steam-run"
+      "steamdeck-hw-theme"
+      "steam-jupiter-unwrapped"
       "discord"
     ];
 
-  services.power-profiles-daemon.enable = false;
+  services.power-profiles-daemon.enable = true;
 
-  services.tlp = {
-    enable = true;
+  environment.sessionVariables = {
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
+  };
 
-    settings = {
-      CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-      CPU_ENERGY_PERF_POLICY_ON_SAV = "power";
+  jovian = {
+    steam = {
+      enable = true;
+      autoStart = false;
+      user = "ametis70";
+    };
 
-      CPU_BOOST_ON_AC = 1;
-      CPU_BOOST_ON_BAT = 0;
-      CPU_BOOST_ON_SAV = 0;
+    hardware.has.amd.gpu = true;
+  };
 
-      RADEON_DPM_PERF_LEVEL_ON_AC = "auto";
-      RADEON_DPM_PERF_LEVEL_ON_BAT = "auto";
-      RADEON_DPM_PERF_LEVEL_ON_SAV = "low";
+  programs.ssh = {
+    askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
+    enableAskPassword = true;
+  };
 
-      AMDGPU_ABM_LEVEL_ON_AC = 0;
-      AMDGPU_ABM_LEVEL_ON_BAT = 3;
-      AMDGPU_ABM_LEVEL_ON_SAV = 3;
+  environment = {
+    sessionVariables = {
+      SSH_ASKPASS_REQUIRE = "prefer";
     };
   };
 

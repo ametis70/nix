@@ -26,14 +26,14 @@
   boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [
     "kvm-amd"
-    "ryzen_smu"
   ];
-  boot.extraModulePackages = with config.boot.kernelPackages; [
-    ryzen-smu
-  ];
+
+  hardware.cpu.amd.ryzen-smu.enable = true;
 
   swapDevices = [ ];
 
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = true;
 }

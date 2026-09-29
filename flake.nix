@@ -79,6 +79,16 @@
     nixvim-unstable.url = "github:nix-community/nixvim";
 
     launchscope.url = "github:ametis70/launchscope";
+
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixos-hardware-unstable = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
   };
 
   nixConfig = {
@@ -107,6 +117,7 @@
       agenix,
       jovian,
       launchscope,
+      nixos-hardware-unstable,
       ...
     }@inputs:
     let
@@ -296,6 +307,8 @@
           system = "x86_64-linux";
           extraNixosModules = [
             disko.nixosModules.disko
+            nixos-hardware-unstable.nixosModules.minisforum-v3
+            jovian.nixosModules.default
           ];
           channel = "unstable";
           nixos = true;
@@ -380,7 +393,7 @@
         "${intel-nixos-server.hostname}" = configureNixOs intel-nixos-server;
         "${intel-nixos-tv.hostname}" = configureNixOs intel-nixos-tv;
         "${midtower-nixos-desktop.hostname}" = configureNixOs midtower-nixos-desktop;
-	"${v3-nixos-tablet.hostname}" = configureNixOs v3-nixos-tablet;
+        "${v3-nixos-tablet.hostname}" = configureNixOs v3-nixos-tablet;
       };
 
       homeConfigurations = with hosts; {
