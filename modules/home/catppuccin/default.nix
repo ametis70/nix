@@ -1,14 +1,18 @@
-{ ... }:
+{ lib, options, ... }:
 
 {
   catppuccin = {
     enable = true;
-    autoEnable = true;
     flavor = "mocha";
+
+    nvim.enable = false;
+    gtk.icon.enable = false;
+    kvantum.enable = false;
+    hyprland.enable = false;
+
+  }
+  // lib.optionalAttrs (lib.hasAttrByPath [ "catppuccin" "autoEnable" ] options) {
+    autoEnable = true;
   };
 
-  catppuccin.nvim.enable = false;
-  catppuccin.gtk.icon.enable = false;
-  catppuccin.kvantum.enable = false;
-  catppuccin.hyprland.enable = false;
 }

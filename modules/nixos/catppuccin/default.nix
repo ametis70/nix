@@ -1,9 +1,11 @@
-{ ... }:
+{ lib, options, ... }:
 
 {
   catppuccin = {
     enable = true;
-    autoEnable = true;
     flavor = "mocha";
+  }
+  // lib.optionalAttrs (lib.hasAttrByPath [ "catppuccin" "autoEnable" ] options) {
+    autoEnable = true;
   };
 }
