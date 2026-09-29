@@ -145,6 +145,7 @@
       enable = true;
       init = true;
       interface = "enp1s0"; # Use physical interface for VLAN 30 (native)
+      nodeIp = "10.0.30.30";
     };
 
     nut = {
