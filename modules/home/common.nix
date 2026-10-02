@@ -40,12 +40,12 @@ in
         rsync
         openssl
         pwgen
-        mosh
       ];
 
       programs = {
         home-manager.enable = true;
         fzf = {
+          enableNushellIntegration = false;
           enable = true;
           enableZshIntegration = true;
           defaultOptions = [

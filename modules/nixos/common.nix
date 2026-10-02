@@ -52,8 +52,6 @@
     vimAlias = true;
   };
 
-  programs.mosh.enable = true;
-
   programs.tmux.enable = true;
 
   programs.gnupg.agent = {
@@ -69,7 +67,6 @@
   environment.systemPackages = with pkgs; [
     curl
     fd
-    fzf
     git
     tree
     dig

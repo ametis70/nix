@@ -74,7 +74,6 @@
       svelte
       sway
       terraform
-      tmux
       toml
       tsx
       typescript

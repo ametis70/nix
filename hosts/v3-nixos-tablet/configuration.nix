@@ -112,6 +112,7 @@
       "steamdeck-hw-theme"
       "steam-jupiter-unwrapped"
       "discord"
+      "discord-unwrapped"
     ];
 
   services.power-profiles-daemon.enable = true;
