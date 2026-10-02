@@ -12,7 +12,6 @@
     pnpm
     go
     python3
-    codex
   ];
 
   home.sessionVariables = {

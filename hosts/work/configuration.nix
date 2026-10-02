@@ -69,16 +69,12 @@ in
       autoUpdate = true;
       cleanup = "zap";
     };
-    taps = [
-      "d12frosted/emacs-plus"
-    ];
     brews = [
       "gettext"
       "choose-gui"
       "colima"
       "openssl"
       "asdf"
-      "emacs-plus@30"
     ];
     casks = [
       "gimp"
@@ -88,8 +84,9 @@ in
       "redquits"
       "kitty"
       "moonlight"
-      "cursor"
-      "windsurf"
+      "claude-code"
+      "codex"
+      "betterdisplay"
     ];
     masApps = {
       WireGuard = 1441195209;
