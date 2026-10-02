@@ -28,6 +28,8 @@ in
     ../../modules/nixos/bluetooth.nix
     ../../modules/nixos/emulation
 
+    ../../modules/nixos/steam-puck-bridge
+
     ./edid
   ];
 
@@ -136,6 +138,8 @@ in
   boot.extraModprobeConfig = ''
     options usbhid quirks=0x2dc8:0x3109:0x00000400,0x2dc8:0x310b:0x00000400
   '';
+
+  services.steam-puck-bridge.enable = true;
 
   system.stateVersion = "25.05";
 }
