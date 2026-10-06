@@ -30,7 +30,7 @@
     xournalpp
   ];
 
-  custom.k3s-client.enable = true;
+  custom.homelab.client.enable = true;
 
   home.stateVersion = "25.11";
 }

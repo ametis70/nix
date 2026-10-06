@@ -1,0 +1,8 @@
+{ ... }:
+{
+  imports = [
+    ./nixos
+    ./linux
+    ./macos
+  ];
+}

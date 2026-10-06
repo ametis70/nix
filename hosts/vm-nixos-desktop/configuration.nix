@@ -18,7 +18,6 @@ in
     ../../modules/nixos/user.nix
     ../../modules/nixos/guest.nix
     ../../modules/nixos/printing.nix
-    ../../modules/nixos/scanning.nix
     ../../modules/nixos/docker.nix
     ../../modules/nixos/pipewire.nix
     ../../modules/nixos/greetd.nix
@@ -39,6 +38,7 @@ in
     builtins.elem (lib.getName pkg) (
       [
         "discord"
+        "discord-unwrapped"
         "imagescan-plugin-networkscan"
         "via"
       ]

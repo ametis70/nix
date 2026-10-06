@@ -319,6 +319,7 @@
         homeManager.${host.channel}.lib.homeManagerConfiguration {
           pkgs = packages.${host.system}.${host.channel};
           modules = [
+            ./modules/home
             ./hosts/${host.id}/home.nix
             nixvim.${host.channel}.homeModules.nixvim
             catppuccin.${host.channel}.homeModules.catppuccin
@@ -340,6 +341,7 @@
                 useUserPackages = true;
                 backupFileExtension = "backup";
                 users.${host.username}.imports = [
+                  ./modules/home
                   ./hosts/${host.id}/home.nix
                   nixvim.${host.channel}.homeModules.nixvim
                   catppuccin.${host.channel}.homeModules.catppuccin
@@ -365,6 +367,7 @@
                 useUserPackages = true;
                 backupFileExtension = "backup";
                 users.${host.username}.imports = [
+                  ./modules/home
                   ./hosts/${host.id}/home.nix
                   nixvim.${host.channel}.homeModules.nixvim
                   catppuccin.${host.channel}.homeModules.catppuccin

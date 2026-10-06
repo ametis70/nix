@@ -130,7 +130,7 @@
     };
   };
 
-  custom.k3s-client.enable = true;
+  custom.homelab.client.enable = true;
 
   programs.kitty.font.size = 17;
 
