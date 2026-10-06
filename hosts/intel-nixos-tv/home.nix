@@ -19,19 +19,25 @@ let
 in
 {
   imports = [
-    ../../modules/home/nixos.nix
-    ../../modules/home/dev.nix
-    ../../modules/home/fonts/fonts.nix
-    ../../modules/home/kitty/kitty.nix
-
-    ../../modules/home/emulation
-
     inputs.launchscope.homeManagerModules.default
   ];
 
-  custom.emulation = {
-    enable = true;
-    pegasus.disableHidapi = true;
+  custom = {
+    development = {
+      nvim.enable = true;
+    };
+    programs = {
+      browser.enable = true;
+      media = {
+        enable = true;
+        editing.enable = false;
+      };
+      terminal.enable = true;
+    };
+    gaming.emulation = {
+      enable = true;
+      pegasus.disableHidapi = true;
+    };
   };
 
   programs.launchscope = {
@@ -63,7 +69,14 @@ in
         {
           id = "kodi";
           name = "Kodi";
-          exec = "${pkgs.kodi-gbm.withPackages (p: with p; [ joystick jellycon ])}/bin/kodi-standalone";
+          exec = "${
+            pkgs.kodi-gbm.withPackages (
+              p: with p; [
+                joystick
+                jellycon
+              ]
+            )
+          }/bin/kodi-standalone";
           gamescope = {
             enabled = false;
           };
@@ -130,9 +143,6 @@ in
 
   home.packages = with pkgs; [
     jellyfin-media-player
-    pavucontrol
-    ungoogled-chromium
-    xdg-utils
   ];
 
   home.stateVersion = "25.05";

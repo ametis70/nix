@@ -1,11 +1,16 @@
-{ pkgs, inputs, ... }:
+{ ... }:
 
 {
-  imports = [
-    ../../modules/home/linux.nix
-    ../../modules/home/dev.nix
-    ../../modules/home/hypervisor-virt-manager/hvm.nix
-  ];
+  custom = {
+    development = {
+      nvim.enable = true;
+      opencode.enable = true;
+    };
+    programs = {
+      terminal.enable = true;
+    };
+    hypervisor.client.enable = true;
+  };
 
   programs.keychain = {
     enable = true;

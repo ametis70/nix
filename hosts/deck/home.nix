@@ -1,13 +1,16 @@
 { ... }:
 
 {
-  imports = [
-    ../../modules/home/linux.nix
-    ../../modules/home/dev.nix
-    ../../modules/home/kitty/kitty.nix
-    ../../modules/home/hypervisor-virt-manager/hvm.nix
-    ../../modules/home/fonts/fonts.nix
-  ];
+  custom = {
+    development = {
+      nvim.enable = true;
+      opencode.enable = true;
+    };
+    programs = {
+      terminal.enable = true;
+    };
+    hypervisor.client.enable = true;
+  };
 
   home.stateVersion = "24.11";
 }

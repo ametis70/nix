@@ -18,10 +18,11 @@ in
       custom.programs.media.editing.photos.enable = lib.mkDefault cfg.editing.enable;
     }
     (lib.mkIf cfg.editing.photos.enable {
-    home.packages = with pkgs; [
-      hdrmerge
-      darktable
-    ];
+      home.packages = with pkgs; [
+        hdrmerge
+        darktable
+        exiftool
+      ];
     })
   ];
 }

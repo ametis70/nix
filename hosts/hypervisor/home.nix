@@ -1,10 +1,12 @@
 { ... }:
 
 {
-  imports = [
-    ../../modules/home/nixos.nix
-    ../../modules/home/dev.nix
-  ];
+  custom = {
+    development = {
+      nvim.enable = true;
+      opencode.enable = true;
+    };
+  };
 
   home.stateVersion = "24.11";
 }

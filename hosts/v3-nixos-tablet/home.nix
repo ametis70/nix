@@ -1,36 +1,25 @@
 { pkgs, ... }:
 
 {
-  imports = [
-    ../../modules/home/nixos.nix
-    ../../modules/home/dev.nix
-    ../../modules/home/kitty/kitty.nix
-    ../../modules/home/fonts/fonts.nix
-    ../../modules/home/hypervisor-virt-manager/hvm.nix
-  ];
-
   home.packages = with pkgs; [
-    darktable
-    art
-    exiftool
-    hdrmerge
-
-    discord
-    telegram-desktop
-
     pinentry-qt
-
     pi-coding-agent
-
-    mpv
-
-    blender
-
-    krita
-    xournalpp
   ];
 
-  custom.homelab.client.enable = true;
+  custom = {
+    development = {
+      nvim.enable = true;
+      opencode.enable = true;
+    };
+    programs = {
+      browser.enable = true;
+      chat.enable = true;
+      media.enable = true;
+      terminal.enable = true;
+    };
+    homelab.client.enable = true;
+    hypervisor.client.enable = true;
+  };
 
   home.stateVersion = "25.11";
 }
