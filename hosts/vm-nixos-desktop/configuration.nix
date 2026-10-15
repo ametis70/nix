@@ -17,7 +17,6 @@ in
     ../../modules/nixos/openssh.nix
     ../../modules/nixos/user.nix
     ../../modules/nixos/guest.nix
-    ../../modules/nixos/printing.nix
     ../../modules/nixos/docker.nix
     ../../modules/nixos/pipewire.nix
     ../../modules/nixos/greetd.nix
@@ -64,8 +63,6 @@ in
   };
 
   services.blueman.enable = true;
-
-  custom.programs.creality-print.enable = false;
 
   hardware.keyboard.qmk.enable = true;
   environment.systemPackages = with pkgs; [

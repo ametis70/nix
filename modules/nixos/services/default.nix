@@ -1,0 +1,9 @@
+{ ... }:
+
+{
+  imports = [
+    ./openssh
+    ./pipewire
+    ./vm
+  ];
+}

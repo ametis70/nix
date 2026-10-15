@@ -332,6 +332,7 @@
         nixosSystem.${host.channel} {
           inherit (host) system;
           modules = host.extraNixosModules ++ [
+            ./modules/nixos
             ./hosts/${host.id}/configuration.nix
             catppuccin.${host.channel}.nixosModules.catppuccin
             homeManager.${host.channel}.nixosModules.home-manager
