@@ -11,6 +11,10 @@
 
     desktop.de.plasma.enable = true;
 
+    programs = {
+      chat.discord.enable = true;
+    };
+
     gaming = {
       emulation.enable = true;
       streaming.moonlight.enable = true;
@@ -26,10 +30,8 @@
     hardware = {
       amd.gpu = {
         enable = true;
-        rocm.enable = true;
       };
       bluetooth.enable = true;
-      cec.enable = true;
       logitech.enable = true;
       tablet.enable = true;
     };
@@ -46,11 +48,6 @@
     };
 
     homelab.nfs.client.enable = true;
-  };
-
-  services.ollama = {
-    enable = true;
-    package = pkgs.ollama-rocm;
   };
 
   system.stateVersion = "25.11";

@@ -35,7 +35,8 @@ in
 
   config = lib.mkIf cfg.enable {
     custom = {
-      desktop.fonts.enable = lib.mkDefault true;
+      desktop.fonts.term.enable = lib.mkDefault true;
+      desktop.fonts.ui.enable = lib.mkDefault true;
       desktop.theme.enable = lib.mkDefault true;
       desktop.keyring.gnome-keyring.enable = lib.mkDefault true;
       programs.wm = {
@@ -46,7 +47,8 @@ in
     };
 
     # NixOS owns UWSM, so expose Home Manager's session variables to it.
-    xdg.configFile."uwsm/env".source = "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
+    xdg.configFile."uwsm/env".source =
+      "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
 
     home.packages = with pkgs; [
       networkmanagerapplet

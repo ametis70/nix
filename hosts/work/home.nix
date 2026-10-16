@@ -13,7 +13,7 @@
         python.enable = true;
       };
     };
-    desktop.fonts.enable = true;
+    desktop.fonts.term.enable = true;
     hypervisor.client.enable = true;
     homelab.client.enable = true;
     programs = {

@@ -10,21 +10,11 @@ let
 in
 {
   options.custom.desktop.fonts = {
-    enable = lib.mkEnableOption "Enable fonts";
-    ui.enable = lib.mkOption {
-      description = "Enable UI fonts";
-      type = lib.types.bool;
-      default = true;
-    };
-
-    term.enable = lib.mkOption {
-      description = "Enable terminal fonts";
-      type = lib.types.bool;
-      default = true;
-    };
+    ui.enable = lib.mkEnableOption "Enable UI fonts";
+    term.enable = lib.mkEnableOption "Enable terminal fonts";
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.ui.enable || cfg.term.enable) {
     home.packages =
       with pkgs;
       (

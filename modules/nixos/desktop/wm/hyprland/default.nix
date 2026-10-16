@@ -27,10 +27,6 @@ in
     services.gvfs.enable = true;
     services.dbus.enable = true;
 
-    environment.systemPackages = with pkgs; [
-      pinentry-gnome3
-    ];
-
     hardware.graphics = {
       package = hyprlandNixpkgs.mesa;
       enable32Bit = true;
@@ -58,7 +54,10 @@ in
       };
     };
 
-    environment.systemPackages = with pkgs; [ kdePackages.polkit-kde-agent-1 ];
+    environment.systemPackages = with pkgs; [
+      kdePackages.polkit-kde-agent-1
+      pinentry-gnome3
+    ];
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
