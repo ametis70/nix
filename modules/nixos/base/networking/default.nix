@@ -15,6 +15,12 @@ in
       default = true;
       type = lib.types.bool;
     };
+
+    custom.networking.networkd.enable = lib.mkOption {
+      description = "Enable systemd-networkd";
+      default = false;
+      type = lib.types.bool;
+    };
   };
 
   config = lib.mkMerge [
@@ -28,6 +34,13 @@ in
     (lib.mkIf cfg.networkmanager.enable {
       networking = {
         networkmanager.enable = true;
+        useDHCP = false;
+      };
+    })
+    (lib.mkIf cfg.networkd.enable {
+      networking = {
+        networkmanager.enable = false;
+        useNetworkd = true;
         useDHCP = false;
       };
     })

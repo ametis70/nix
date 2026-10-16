@@ -31,6 +31,12 @@
     jq
     ripgrep
 
+    dmidecode
+    likwid
+    iperf
+    tcpdump
+    nmap
+
     gzip
     zip
     unzip

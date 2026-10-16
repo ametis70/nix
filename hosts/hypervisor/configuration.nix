@@ -1,6 +1,4 @@
 {
-  config,
-  pkgs,
   specialArgs,
   ...
 }:
@@ -21,7 +19,6 @@
   networking = {
     hostName = specialArgs.host.hostname;
     firewall.enable = false;
-    useNetworkd = true;
   };
 
   systemd.network = {
@@ -144,74 +141,11 @@
     };
   };
 
-  networking.interfaces.enp39s0.wakeOnLan.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    dmidecode
-    likwid
-    iperf
-    tcpdump
-    nmap
-  ];
-
-  services.grafana = {
-    enable = true;
-    settings = {
-      server = {
-        http_addr = "0.0.0.0";
-        http_port = 3000;
-      };
-    };
-    provision.datasources.settings.datasources = [
-      {
-        name = "prometheus";
-        type = "prometheus";
-        url = "http://localhost:${toString config.services.prometheus.port}";
-      }
-    ];
-  };
-
-  services.prometheus = {
-    enable = true;
-    globalConfig.scrape_interval = "15s";
-    port = 3001;
-
-    exporters.node = {
-      enable = true;
-      port = 9000;
-    };
-
-    scrapeConfigs = [
-      {
-        job_name = "node";
-        static_configs = [
-          { targets = [ "localhost:${toString config.services.prometheus.exporters.node.port}" ]; }
-        ];
-      }
-      {
-        job_name = "windows";
-        static_configs = [ { targets = [ "windows.lan:9182" ]; } ];
-      }
-      {
-        job_name = "nvidia_gpu";
-        static_configs = [ { targets = [ "windows.lan:9835" ]; } ];
-      }
-      {
-        job_name = "nut";
-        static_configs = [
-          {
-            targets = [ "intel.lan:9199" ];
-            labels = {
-              "__metrics_path__" = "/ups_metrics";
-            };
-          }
-        ];
-      }
-    ];
-  };
-
   custom = {
-    nut = {
+    services.prometheus.exporter.enable = true;
+    networking.networkd.enable = true;
+
+    homelab.nut = {
       enable = true;
       delay = 120;
       role = "client";
