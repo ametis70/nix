@@ -1,95 +1,52 @@
-{
-  pkgs,
-  lib,
-  config,
-  hyprland,
-  host,
-  ...
-}:
+{ lib, config, ... }:
 
-let
-  hyprland-nixpkgs =
-    hyprland.${host.channel}.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-in
 {
   imports = [
-    ../../modules/nixos/common.nix
-    ../../modules/nixos/openssh.nix
-    ../../modules/nixos/user.nix
-    ../../modules/nixos/guest.nix
-    ../../modules/nixos/docker.nix
-    ../../modules/nixos/pipewire.nix
-    ../../modules/nixos/greetd.nix
-    ../../modules/nixos/hyprland.nix
-    ../../modules/nixos/keyring.nix
-    ../../modules/nixos/bluetooth.nix
-    ../../modules/nixos/emulation
-
     ./hardware-configuration.nix
-
     ./edid
   ];
 
-  custom.emulation.enable = true;
+  custom = {
+    networking.networkmanager.enable = true;
+
+    development.docker.enable = true;
+
+    desktop = {
+      dm.greetd.enable = true;
+      wm.hyprland.enable = true;
+    };
+
+    gaming.emulation.enable = true;
+
+    hardware = {
+      bluetooth.enable = true;
+      keyboard.sofle.enable = true;
+      tablet.enable = true;
+    };
+
+    services = {
+      pipewire.enable = true;
+      vm.guest.enable = true;
+    };
+
+    swap = {
+      enable = true;
+      sizeGB = 12;
+    };
+
+    homelab.nfs.client.enable = true;
+  };
 
   nixpkgs.config.allowUnfreePredicate =
     pkg:
-    builtins.elem (lib.getName pkg) (
-      [
-        "discord"
-        "discord-unwrapped"
-        "imagescan-plugin-networkscan"
-        "via"
-      ]
-      ++ config.custom.emulation.allowedUnfreePackages
-    );
-
-  networking = {
-    hostName = host.hostname;
-    networkmanager.enable = true;
-    firewall.enable = false;
-  };
-
-  systemd.services.nix-daemon.serviceConfig = {
-    MemoryAccounting = true;
-    MemoryMax = "85%";
-    OOMScoreAdjust = 500;
-  };
-
-  hardware.graphics = {
-    package = hyprland-nixpkgs.mesa;
-    enable32Bit = true;
-    package32 = hyprland-nixpkgs.pkgsi686Linux.mesa;
-  };
+    builtins.elem (lib.getName pkg) [
+      "discord"
+      "discord-unwrapped"
+      "imagescan-plugin-networkscan"
+      "via"
+    ];
 
   services.blueman.enable = true;
-
-  hardware.keyboard.qmk.enable = true;
-  environment.systemPackages = with pkgs; [
-    via
-  ];
-
-  services.gvfs.enable = true;
-
-  services.udev.packages = with pkgs; [ via ];
-
-  # The Sofle's System Control USB interface (if02) is tagged ID_INPUT_JOYSTICK=1 by
-  # the kernel because QMK exposes ABS_MISC/HAT axes on it. This makes RetroArch pick
-  # it up as a gamepad. Clear the joystick tag so only its keyboard/media capabilities
-  # are visible to joystick-reading applications.
-  services.udev.extraRules = ''
-    SUBSYSTEM=="input", \
-      ENV{ID_VENDOR_ID}=="fc32", \
-      ENV{ID_MODEL_ID}=="0287", \
-      ENV{ID_USB_INTERFACE_NUM}=="02", \
-      ENV{ID_INPUT_JOYSTICK}="", \
-      ENV{ID_INPUT}="1", \
-      ENV{ID_INPUT_KEY}="1"
-  '';
-
-  custom.services.nfs.enable = true;
-
-  hardware.opentabletdriver.enable = true;
 
   system.stateVersion = "24.11";
 }

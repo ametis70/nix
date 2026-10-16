@@ -18,10 +18,7 @@
     };
     homelab.client.enable = true;
     hypervisor.client.enable = true;
-    gaming.emulation = {
-      enable = true;
-      pegasus.disableHidapi = true;
-    };
+    gaming.emulation.enable = true;
   };
 
   programs.aerc.enable = true;
