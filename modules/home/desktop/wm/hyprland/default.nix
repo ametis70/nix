@@ -83,7 +83,6 @@ in
       package = null;
       portalPackage = null;
       systemd.enable = false;
-      configType = "hyprlang";
       settings = {
         inherit (cfg) monitor;
         general = {

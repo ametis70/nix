@@ -9,7 +9,7 @@
 let
   cfg = config.custom.programs.terminal.kitty;
 
-  nixgl = import ../../../utils/nixgl.nix {
+  nixgl = import ../../../../../utils/nixgl.nix {
     inherit pkgs lib;
   };
 in

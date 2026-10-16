@@ -10,7 +10,8 @@ let
 in
 {
   options = {
-    custom.programs.media.editing.documents.enable = lib.mkEnableOption "Enable documents editing software";
+    custom.programs.media.editing.documents.enable =
+      lib.mkEnableOption "Enable documents editing software";
   };
 
   config = lib.mkMerge [
@@ -18,17 +19,11 @@ in
       custom.programs.media.editing.documents.enable = lib.mkDefault cfg.editing.enable;
     }
     (lib.mkIf cfg.editing.documents.enable {
-    programs.calibre = {
-      enable = true;
-    };
-
-    programs.pandoc = {
-      enable = true;
-    };
-
-    home.packages = with pkgs; [
-      libreoffice-qt
-    ];
+      home.packages = with pkgs; [
+        calibre
+        pandoc
+        libreoffice-qt
+      ];
     })
   ];
 }

@@ -37,7 +37,6 @@ in
         bat.enable = true;
         lazygit.enable = true;
         fzf = {
-          enableNushellIntegration = false;
           enable = true;
           enableZshIntegration = true;
           defaultOptions = [

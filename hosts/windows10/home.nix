@@ -14,9 +14,6 @@
 
   programs.keychain = {
     enable = true;
-    agents = [
-      "ssh"
-    ];
     keys = [
       "id_ed25519"
     ];
@@ -29,7 +26,7 @@
 
   programs.ssh = {
     enable = true;
-    addKeysToAgent = "yes";
+    matchBlocks."*".addKeysToAgent = "yes";
   };
 
   home.stateVersion = "24.11";

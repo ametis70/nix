@@ -1,81 +1,98 @@
 { pkgs, lib, ... }:
 
 {
-  imports = [
-    ../../modules/home/macos.nix
-    ../../modules/home/dev.nix
-    ../../modules/home/fonts/fonts.nix
-    ../../modules/home/kitty/kitty.nix
-    ../../modules/home/emacs/emacs.nix
-    ../../modules/home/pdf/pdf.nix
-    ../../modules/home/hypervisor-virt-manager/hvm.nix
-  ];
+  custom = {
+    development = {
+      nvim.enable = true;
+      opencode.enable = true;
+      emacs.enable = true;
+      lang = {
+        go.enable = true;
+        javascript.enable = true;
+        python.enable = true;
+      };
+    };
+    desktop.fonts.enable = true;
+    hypervisor.client.enable = true;
+    homelab.client.enable = true;
+    programs = {
+      terminal.enable = true;
+      media.editing.pdf.enable = true;
+      cli.zk.enable = true;
+    };
 
-  custom.zsh = {
-    initContentBefore = ''
-      if [[ -n "$npm_config_yes" ]] || [[ -n "$CI" ]] || [[ "$-" != *i* ]]; then
-        export AGENT_MODE=true
-      else
-        export AGENT_MODE=false
-      fi
+    shell.zsh = {
+      initContentBefore = ''
+        if [[ -n "$npm_config_yes" ]] || [[ -n "$CI" ]] || [[ "$-" != *i* ]]; then
+          export AGENT_MODE=true
+        else
+          export AGENT_MODE=false
+        fi
 
-      if [[ "$AGENT_MODE" == "true" ]]; then
-        POWERLEVEL9K_INSTANT_PROMPT=off
-        # Disable complex prompt features for AI agents
-        POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
-        POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
-        # Ensure non-interactive mode
-        export DEBIAN_FRONTEND=noninteractive
-        export NONINTERACTIVE=1
-      fi
-    '';
+        if [[ "$AGENT_MODE" == "true" ]]; then
+          POWERLEVEL9K_INSTANT_PROMPT=off
+          # Disable complex prompt features for AI agents
+          POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
+          POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
+          # Ensure non-interactive mode
+          export DEBIAN_FRONTEND=noninteractive
+          export NONINTERACTIVE=1
+        fi
+      '';
 
-    initContentBeforeCompInit = ''
-      # asdf completion
-      fpath=(''${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
-    '';
-    initContentAfter = ''
-      # Homebrew
-      export PATH=$PATH:/opt/homebrew/bin
+      initContentBeforeCompInit = ''
+        # asdf completion
+        fpath=(''${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+      '';
+      initContentAfter = ''
+        # Homebrew
+        export PATH=$PATH:/opt/homebrew/bin
 
-      # Claude
-      export PATH=$PATH:~/.local/bin
+        # Claude
+        export PATH=$PATH:~/.local/bin
 
-      # Go
-      export GOPRIVATE=github.com/mercadolibre/*,github.com/melisource/*
+        # Go
+        export GOPRIVATE=github.com/mercadolibre/*,github.com/melisource/*
 
-      # Fury
-      export RANGER_FURY_LOCATION="$HOME/.fury"
-      export RANGER_FURY_VENV_LOCATION="$RANGER_FURY_LOCATION/fury_venv"
-      declare FURY_BIN_LOCATION="$RANGER_FURY_VENV_LOCATION/bin"
-      export PATH="$PATH:$FURY_BIN_LOCATION"
+        # Fury
+        export RANGER_FURY_LOCATION="$HOME/.fury"
+        export RANGER_FURY_VENV_LOCATION="$RANGER_FURY_LOCATION/fury_venv"
+        declare FURY_BIN_LOCATION="$RANGER_FURY_VENV_LOCATION/bin"
+        export PATH="$PATH:$FURY_BIN_LOCATION"
 
-      # Nordic Doctor
-      export NORDIC_DOCTOR_DIR="$HOME/.nordic-doctor"
-      export PATH="$NORDIC_DOCTOR_DIR/bin:$PATH"
+        # Nordic Doctor
+        export NORDIC_DOCTOR_DIR="$HOME/.nordic-doctor"
+        export PATH="$NORDIC_DOCTOR_DIR/bin:$PATH"
 
-      # asdf
-      export PATH="''${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+        # asdf
+        export PATH="''${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
-      if [[ "$AGENT_MODE" == "true" ]]; then
-        PROMPT='%n@%m:%~%# '
-        RPROMPT=""
-        unsetopt CORRECT
-        unsetopt CORRECT_ALL
-        setopt NO_BEEP
-        setopt NO_HIST_BEEP
-        setopt NO_LIST_BEEP
+        if [[ "$AGENT_MODE" == "true" ]]; then
+          PROMPT='%n@%m:%~%# '
+          RPROMPT=""
+          unsetopt CORRECT
+          unsetopt CORRECT_ALL
+          setopt NO_BEEP
+          setopt NO_HIST_BEEP
+          setopt NO_LIST_BEEP
 
-        # Agent-friendly aliases to avoid interactive prompts
-        alias npm='npm --no-fund --no-audit'
-        alias yarn='yarn --non-interactive'
-        alias pip='pip --quiet'
-        alias git='git -c advice.detachedHead=false'
-      fi
-    '';
+          # Agent-friendly aliases to avoid interactive prompts
+          alias npm='npm --no-fund --no-audit'
+          alias yarn='yarn --non-interactive'
+          alias pip='pip --quiet'
+          alias git='git -c advice.detachedHead=false'
+        fi
+      '';
+    };
+  };
+
+  home.sessionVariables = {
+    OPENCODE_EXPERIMENTAL_LSP_TOOL = "true";
+    OPENCODE_DISABLE_LSP_DOWNLOAD = "true";
   };
 
   home.packages = with pkgs; [
+    pnpm
     scrcpy
     android-tools
     pandoc
@@ -129,8 +146,6 @@
       };
     };
   };
-
-  custom.homelab.client.enable = true;
 
   programs.kitty.font.size = 17;
 
