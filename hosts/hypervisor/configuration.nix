@@ -142,6 +142,10 @@
   };
 
   custom = {
+    swap = {
+      enable = true;
+      sizeGB = 16;
+    };
     services.prometheus.exporter.enable = true;
     networking.networkd.enable = true;
 

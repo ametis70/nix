@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.custom.services.pipewire;
@@ -15,5 +20,7 @@ in
     };
 
     security.rtkit.enable = true;
+
+    environment.systemPackages = [ pkgs.ncpamixer ];
   };
 }

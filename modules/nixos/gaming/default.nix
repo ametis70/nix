@@ -3,6 +3,7 @@
 {
   imports = [
     ./emulation
+    ./streaming
     ./steam
   ];
 }

@@ -6,11 +6,11 @@
 }:
 
 let
-  cfg = config.custom.hardware.steam-puck-bridge;
+  cfg = config.custom.hardware.gamepad.steam-puck-bridge;
   package = pkgs.callPackage ./package.nix { };
 in
 {
-  options.custom.hardware.steam-puck-bridge.enable =
+  options.custom.hardware.gamepad.steam-puck-bridge.enable =
     lib.mkEnableOption "Steam Controller Puck bridge";
 
   config = lib.mkIf cfg.enable {

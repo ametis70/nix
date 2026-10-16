@@ -15,6 +15,7 @@ in
     jovian = {
       enable = lib.mkEnableOption "Use Jovian-Nix-OS";
       autoStart = lib.mkEnableOption "Autostart steam on Jovian-NixOS";
+      sessionWrapper = lib.mkEnableOption "Jovian Steam session switch wrapper";
     };
   };
 
@@ -63,6 +64,16 @@ in
             user = host.username;
           };
         };
+      })
+      (lib.mkIf cfg.jovian.sessionWrapper {
+        environment.systemPackages = [
+          (pkgs.writeShellScriptBin "steamos-session-select" ''
+            # Stop the Jovian gamescope-session target.
+            # This causes start-gamescope-session to exit naturally (its --wait returns),
+            # which launchscoped detects and uses to relaunch the launcher UI.
+            systemctl --user stop gamescope-session.target 2>/dev/null || true
+          '')
+        ];
       })
     ]
   );

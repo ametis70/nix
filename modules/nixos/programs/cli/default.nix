@@ -36,6 +36,7 @@
     iperf
     tcpdump
     nmap
+    edid-decode
 
     gzip
     zip

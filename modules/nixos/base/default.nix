@@ -5,6 +5,7 @@
     ./locale
     ./networking
     ./nix
+    ./swap
     ./timezone
     ./user
   ];
