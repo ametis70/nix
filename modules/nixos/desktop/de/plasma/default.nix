@@ -1,4 +1,5 @@
 {
+  pkgs,
   config,
   lib,
   ...
@@ -19,5 +20,8 @@ in
     };
     custom.desktop.keyring.kwallet.enable = lib.mkDefault true;
     custom.desktop.dm.sddm.enable = lib.mkDefault true;
+    environment.systemPackages = with pkgs; [
+      pinentry-qt
+    ];
   };
 }

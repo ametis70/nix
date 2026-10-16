@@ -27,6 +27,10 @@ in
     services.gvfs.enable = true;
     services.dbus.enable = true;
 
+    environment.systemPackages = with pkgs; [
+      pinentry-gnome3
+    ];
+
     hardware.graphics = {
       package = hyprlandNixpkgs.mesa;
       enable32Bit = true;
