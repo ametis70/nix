@@ -9,16 +9,19 @@ in
     exporter.enable = lib.mkEnableOption "Prometheus node exporter";
   };
 
-  config = {
-    services.prometheus = lib.mkIf cfg.server.enable {
-      enable = true;
-      globalConfig.scrape_interval = "15s";
-      port = 3001;
-    };
-
-    services.prometheus.exporters.node = lib.mkIf cfg.exporter.enable {
-      enable = true;
-      port = 9000;
-    };
-  };
+  config = lib.mkMerge [
+    (lib.mkIf cfg.server.enable {
+      services.prometheus = {
+        enable = true;
+        globalConfig.scrape_interval = "15s";
+        port = 3001;
+      };
+    })
+    (lib.mkIf cfg.exporter.enable {
+      services.prometheus.exporters.node = {
+        enable = true;
+        port = 9000;
+      };
+    })
+  ];
 }
