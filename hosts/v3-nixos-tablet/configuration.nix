@@ -10,6 +10,10 @@
   ];
 
   custom = {
+    swap = {
+      enable = true;
+      sizeGB = 16;
+    };
     timezone.dynamic = true;
     networking.networkmanager.enable = true;
     power = {
@@ -17,6 +21,7 @@
       power-profiles-daemon.enable = true;
     };
     hardware = {
+      amd.gpu.enable = true;
       bluetooth.enable = true;
       tablet.enable = true;
     };

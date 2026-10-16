@@ -1,8 +1,4 @@
-{
-  pkgs,
-  modulesPath,
-  ...
-}:
+{ pkgs, modulesPath, ... }:
 
 {
   imports = [
@@ -10,7 +6,6 @@
   ];
 
   config = {
-
     boot = {
       initrd = {
         availableKernelModules = [
@@ -24,9 +19,7 @@
         ];
         kernelModules = [ "dm-snapshot" ];
       };
-      kernelModules = [
-        "kvm-amd"
-      ];
+      kernelModules = [ "kvm-amd" ];
       kernelPackages = pkgs.linuxPackages_latest;
     };
 
@@ -35,28 +28,10 @@
         amd.ryzen-smu.enable = true;
         amd.updateMicrocode = true;
       };
-
       sensor.iio.enable = true;
-      firmware = with pkgs; [
-        alsa-firmware
-      ];
+      firmware = [ pkgs.alsa-firmware ];
       alsa.enablePersistence = true;
-
-      graphics = {
-        enable = true;
-        enable32Bit = true;
-      };
-      amdgpu = {
-        initrd.enable = true;
-      };
     };
-
-    swapDevices = [
-      {
-        device = "/swapfile";
-        size = 16 * 1024;
-      }
-    ];
 
     nixpkgs.hostPlatform = "x86_64-linux";
   };
