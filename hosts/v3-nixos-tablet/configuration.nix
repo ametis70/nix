@@ -23,6 +23,7 @@
     hardware = {
       amd.gpu.enable = true;
       bluetooth.enable = true;
+      logitech.enable = true;
       tablet.enable = true;
     };
     desktop = {

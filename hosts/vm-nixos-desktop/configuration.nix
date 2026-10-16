@@ -20,6 +20,7 @@
 
     hardware = {
       bluetooth.enable = true;
+      logitech.enable = true;
       keyboard.sofle.enable = true;
       tablet.enable = true;
     };

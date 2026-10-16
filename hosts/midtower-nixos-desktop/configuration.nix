@@ -30,6 +30,7 @@
       };
       bluetooth.enable = true;
       cec.enable = true;
+      logitech.enable = true;
       tablet.enable = true;
     };
 

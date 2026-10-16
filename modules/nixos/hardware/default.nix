@@ -8,6 +8,7 @@
     ./cec
     ./intel-graphics
     ./keyboard
+    ./logitech
     ./steam-puck-bridge
     ./tablet
   ];
