@@ -5,6 +5,7 @@
     development = {
       nvim.enable = true;
       opencode.enable = true;
+      pi.enable = true;
       emacs.enable = true;
       lang = {
         go.enable = true;

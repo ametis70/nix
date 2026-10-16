@@ -26,6 +26,9 @@
               OPENCODE_THEME = "system";
             };
           };
+          pi = {
+            cmd = [ "pi" ];
+          };
         };
       };
     };

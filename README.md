@@ -33,6 +33,7 @@ The flake pins stable and unstable variants where hosts need different release c
 - [Jovian-NixOS](https://github.com/Jovian-Experiments/Jovian-NixOS) — Steam-focused gaming features for desktop and TV hosts.
 - [agenix](https://github.com/ryantm/agenix) — encrypted secret management.
 - [Catppuccin](https://github.com/catppuccin/nix) and `catppuccin-unstable` — shared theming.
+- [Pi Coding Agent](https://github.com/earendil-works/pi) — coding agent, packaged from its official flake.
 - [Launchscope](https://github.com/ametis70/launchscope) — app launcher and CEC integration for the TV host.
 
 ## Hosts

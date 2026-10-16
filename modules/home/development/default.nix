@@ -5,6 +5,7 @@
     ./nvim
     ./emacs
     ./opencode
+    ./pi
     ./lang
   ];
 }

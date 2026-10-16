@@ -75,6 +75,11 @@
     nixvim.url = "github:nix-community/nixvim/nixos-25.11";
     nixvim-unstable.url = "github:nix-community/nixvim";
 
+    pi = {
+      url = "github:earendil-works/pi/stable";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     launchscope.url = "github:ametis70/launchscope";
 
     nixos-hardware = {

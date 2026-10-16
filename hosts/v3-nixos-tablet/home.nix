@@ -3,13 +3,13 @@
 {
   home.packages = with pkgs; [
     pinentry-qt
-    pi-coding-agent
   ];
 
   custom = {
     development = {
       nvim.enable = true;
       opencode.enable = true;
+      pi.enable = true;
     };
     programs = {
       browser.enable = true;
