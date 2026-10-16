@@ -7,6 +7,7 @@
     ./bluetooth
     ./cec
     ./intel-graphics
+    ./keyboard
     ./steam-puck-bridge
     ./tablet
   ];

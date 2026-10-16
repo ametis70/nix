@@ -69,9 +69,51 @@ in
       default = "";
       description = "Data directory for this node";
     };
+
+    useCommonVmNodeNetworking = lib.mkEnableOption "common networkd config for VM-based K3s nodes";
+
+    vlan20MacAddress = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "MAC address used to match the VM's VLAN 20 interface.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = lib.optionals cfg.useCommonVmNodeNetworking [
+      {
+        assertion = cfg.vlan20MacAddress != null;
+        message = "custom.homelab.k3s.node.vlan20MacAddress must be set when useCommonVmNodeNetworking is enabled.";
+      }
+    ];
+
+    systemd.network = lib.mkIf cfg.useCommonVmNodeNetworking {
+      enable = true;
+      networks = {
+        "30-enp1s0" = {
+          name = "enp1s0";
+          DHCP = "yes";
+          dhcpV4Config.RouteMetric = 100;
+        };
+        "30-vlan20" = {
+          name = "vlan20";
+          DHCP = "yes";
+          dhcpV4Config.RouteMetric = 200;
+        };
+      };
+      links."30-vlan20" = {
+        matchConfig.MACAddress = cfg.vlan20MacAddress;
+        linkConfig.Name = "vlan20";
+      };
+    };
+
+    systemd.services.systemd-networkd-wait-online = lib.mkIf cfg.useCommonVmNodeNetworking {
+      serviceConfig.ExecStart = [
+        ""
+        "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online --interface=enp1s0 --timeout=60"
+      ];
+    };
+
     age.secrets.k3s.file = ../../../secrets/k3s.age;
 
     environment.systemPackages = with pkgs; [

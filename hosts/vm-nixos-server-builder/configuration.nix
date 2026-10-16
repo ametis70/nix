@@ -1,27 +1,20 @@
-{
-  specialArgs,
-  ...
-}:
+{ ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
     ./disk-config.nix
 
-    ../../modules/nixos/common.nix
-    ../../modules/nixos/openssh.nix
-    ../../modules/nixos/user.nix
-    ../../modules/nixos/docker.nix
   ];
 
-  networking = {
-    hostName = specialArgs.host.hostname;
-    useDHCP = true;
-    firewall.enable = false;
-  };
-
   custom = {
-    nut = {
+    networking.networkmanager.enable = false;
+    development.docker.enable = true;
+    swap = {
+      enable = true;
+      sizeGB = 16;
+    };
+    homelab.nut = {
       enable = true;
       delay = 1;
       isVm = true;

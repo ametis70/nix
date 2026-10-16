@@ -10,6 +10,8 @@
 let
   cfg = config.custom.desktop.wm.hyprland;
   hyprlandPackages = hyprland.${host.channel}.packages.${pkgs.stdenv.hostPlatform.system};
+  hyprlandNixpkgs =
+    hyprland.${host.channel}.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
 
 {
@@ -18,9 +20,18 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    custom.desktop.keyring.gnome-keyring.enable = lib.mkDefault true;
+
     programs.uwsm.enable = true;
     security.polkit.enable = true;
+    services.gvfs.enable = true;
     services.dbus.enable = true;
+
+    hardware.graphics = {
+      package = hyprlandNixpkgs.mesa;
+      enable32Bit = true;
+      package32 = hyprlandNixpkgs.pkgsi686Linux.mesa;
+    };
 
     programs.hyprland = {
       enable = true;

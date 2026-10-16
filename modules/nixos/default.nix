@@ -9,6 +9,7 @@
     ./development
     ./gaming
     ./hardware
+    ./homelab
     ./power
     ./programs
     ./services
