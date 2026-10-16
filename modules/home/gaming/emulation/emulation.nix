@@ -102,7 +102,8 @@ let
 
   # Builds a per-system multi-disc wrapper script that resolves the path
   # (file or directory) and launches retroarch with the correct core and bios.
-  makeMultiDiscWrapper = systemName: corePath: biosDir:
+  makeMultiDiscWrapper =
+    systemName: corePath: biosDir:
     pkgs.writeShellScript "retroarch-multidisc-${systemName}" ''
       game="$(${resolveMultiDisc} "$1")"
       echo "[${systemName}-wrapper] resolved: $game"
@@ -465,16 +466,6 @@ in
         description = "Enable Pegasus Frontend";
       };
 
-      disableHidapi = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          Set SDL_JOYSTICK_HIDAPI=0 as a session variable. Prevents Pegasus
-          from flooding the Bluetooth channel via SDL's HIDAPI backend, which
-          can cause connected Bluetooth audio devices to disconnect.
-        '';
-      };
-
       systems = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = lib.attrNames systemConfigs;
@@ -526,10 +517,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.sessionVariables = lib.mkIf (cfg.pegasus.enable && cfg.pegasus.disableHidapi) {
-      SDL_JOYSTICK_HIDAPI = "0";
-    };
-
     home.packages = lib.flatten [
       # Pegasus Frontend
       (lib.optional cfg.pegasus.enable pkgs.pegasus-frontend)

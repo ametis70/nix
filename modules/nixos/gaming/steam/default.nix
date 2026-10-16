@@ -56,14 +56,46 @@ in
         };
       })
       (lib.mkIf cfg.jovian.enable {
-        jovian = {
-          steam = {
+        jovian.steam = {
+          enable = true;
+          autoStart = cfg.jovian.autoStart;
+          desktopSession = if cfg.jovian.autoStart then "plasma" else null;
+          user = host.username;
+        };
+      })
+      (lib.mkIf (cfg.jovian.enable && cfg.jovian.autoStart) {
+        nixpkgs.overlays = [
+          (final: prev: {
+            steamos-manager = prev.steamos-manager.overrideAttrs (old: {
+              patches = (old.patches or [ ]) ++ [ ./patches/steamos-manager-jobmode-replace.patch ];
+            });
+          })
+        ];
+
+        services.displayManager = {
+          defaultSession = lib.mkDefault "plasma";
+          autoLogin.enable = lib.mkForce false;
+          sddm = {
             enable = true;
-            autoStart = cfg.jovian.autoStart;
-            desktopSession = if cfg.jovian.autoStart then "plasma" else null;
-            user = host.username;
+            wayland.enable = true;
+            settings.Autologin = {
+              Relogin = true;
+              User = host.username;
+            };
           };
         };
+
+        systemd.tmpfiles.rules =
+          let
+            desktops = config.services.displayManager.sessionData.desktops;
+          in
+          [
+            "L+ /usr/share/wayland-sessions - - - - ${desktops}/share/wayland-sessions"
+            "L+ /usr/share/xsessions - - - - ${desktops}/share/xsessions"
+            "f /etc/sddm.conf.d/zz-steamos-autologin.conf 0644 root root - [Autologin]\\nSession=gamescope-wayland.desktop\\n"
+          ];
+
+        jovian.steamos.useSteamOSConfig = true;
       })
       (lib.mkIf cfg.jovian.sessionWrapper {
         environment.systemPackages = [

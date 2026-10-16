@@ -1,5 +1,8 @@
 { ... }:
 
 {
-  imports = [ ./emulation ];
+  imports = [
+    ./emulation
+    ./steam
+  ];
 }

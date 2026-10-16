@@ -34,10 +34,7 @@ in
       };
       terminal.enable = true;
     };
-    gaming.emulation = {
-      enable = true;
-      pegasus.disableHidapi = true;
-    };
+    gaming.emulation.enable = true;
   };
 
   programs.launchscope = {
