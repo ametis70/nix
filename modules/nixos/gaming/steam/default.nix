@@ -2,12 +2,15 @@
   pkgs,
   lib,
   config,
+  options,
   host,
   ...
 }:
 
 let
   cfg = config.custom.gaming.steam;
+  hasJovianSteam = builtins.hasAttr "jovian" options && builtins.hasAttr "steam" options.jovian;
+  hasJovianSteamos = hasJovianSteam && builtins.hasAttr "steamos" options.jovian;
 in
 {
   options.custom.gaming.steam = {
@@ -22,6 +25,13 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
+        assertions = [
+          {
+            assertion = !cfg.jovian.enable || hasJovianSteam;
+            message = "custom.gaming.steam.jovian.enable requires the Jovian-NixOS module.";
+          }
+        ];
+
         programs = {
           gamemode = {
             enable = true;
@@ -46,7 +56,7 @@ in
           "steam-jupiter-unwrapped"
         ];
       }
-      (lib.mkIf (!cfg.jovian.enable) {
+      (lib.mkIf (!cfg.jovian.enable || !hasJovianSteam) {
         programs = {
           steam = {
             enable = true;
@@ -55,7 +65,7 @@ in
           gamescope.enable = true;
         };
       })
-      (lib.mkIf cfg.jovian.enable {
+      (lib.mkIf (cfg.jovian.enable && hasJovianSteam) {
         jovian.steam = {
           enable = true;
           autoStart = cfg.jovian.autoStart;
@@ -63,7 +73,7 @@ in
           user = host.username;
         };
       })
-      (lib.mkIf (cfg.jovian.enable && cfg.jovian.autoStart) {
+      (lib.mkIf (cfg.jovian.enable && cfg.jovian.autoStart && hasJovianSteamos) {
         nixpkgs.overlays = [
           (final: prev: {
             steamos-manager = prev.steamos-manager.overrideAttrs (old: {
@@ -97,7 +107,7 @@ in
 
         jovian.steamos.useSteamOSConfig = true;
       })
-      (lib.mkIf cfg.jovian.sessionWrapper {
+      (lib.mkIf (cfg.jovian.sessionWrapper && hasJovianSteam) {
         environment.systemPackages = [
           (pkgs.writeShellScriptBin "steamos-session-select" ''
             # Stop the Jovian gamescope-session target.
