@@ -9,6 +9,8 @@
       homelab.k3s.node = {
         enable = true;
         role = "agent";
+        nodeLabels = [ "dedicated=ai" ];
+        nodeTaints = [ "dedicated=ai:NoSchedule" ];
 
         # Set this if the Midtower host has a fixed cluster address.
         # nodeIp = "10.0.30.XX";

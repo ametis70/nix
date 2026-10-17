@@ -67,6 +67,20 @@ in
       '';
     };
 
+    nodeLabels = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [ "dedicated=ai" ];
+      description = "Kubernetes labels to apply to this node.";
+    };
+
+    nodeTaints = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [ "dedicated=ai:NoSchedule" ];
+      description = "Kubernetes taints to apply to this node.";
+    };
+
     dataDir = lib.mkOption {
       type = lib.types.str;
       default = "";
@@ -169,6 +183,8 @@ in
         ++ lib.optionals (cfg.nodeIp != null) [
           "--node-ip ${cfg.nodeIp}"
         ]
+        ++ map (label: "--node-label ${label}") cfg.nodeLabels
+        ++ map (taint: "--node-taint ${taint}") cfg.nodeTaints
       );
 
       clusterInit = cfg.init;
