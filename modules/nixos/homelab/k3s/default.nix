@@ -132,7 +132,7 @@ in
       ];
     };
 
-    age.secrets.k3s.file = ../../../secrets/k3s.age;
+    age.secrets.k3s.file = ../../../../secrets/k3s.age;
 
     environment.systemPackages = with pkgs; [
       nfs-utils
@@ -171,10 +171,12 @@ in
 
       extraFlags = toString (
         [
+          "--flannel-iface=${dev}"
+        ]
+        ++ lib.optionals (cfg.role == "server") [
           "--disable servicelb"
           "--disable traefik"
           "--disable-helm-controller"
-          "--flannel-iface=${dev}"
         ]
         ++ lib.optionals cfg.init [
           "--tls-san ${vip}"

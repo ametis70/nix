@@ -11,6 +11,7 @@
         netdevConfig = {
           Kind = "vlan";
           Name = "vlan30";
+          MACAddress = "02:00:00:00:30:59";
         };
         vlanConfig.Id = 30;
       };
@@ -65,6 +66,28 @@
           jovian.sessionWrapper = lib.mkForce false;
         };
         streaming.moonlight.enable = lib.mkForce false;
+      };
+    };
+
+    # Disable the desktop, gaming, and graphical user-environment options
+    # inherited by the normal Midtower Home Manager configuration.
+    home-manager.users.ametis70.custom = {
+      desktop = {
+        keyring.gnome-keyring.enable = lib.mkForce false;
+        theme.enable = lib.mkForce false;
+        wm.hyprland.enable = lib.mkForce false;
+      };
+      gaming = {
+        emulation.enable = lib.mkForce false;
+        steam.returnToGamingMode.enable = lib.mkForce false;
+      };
+      programs = {
+        browser.enable = lib.mkForce false;
+        chat.enable = lib.mkForce false;
+        media.enable = lib.mkForce false;
+        wm.dunst.enable = lib.mkForce false;
+        wm.waybar.enable = lib.mkForce false;
+        wm.wofi.enable = lib.mkForce false;
       };
     };
   };
