@@ -43,9 +43,12 @@ in
     };
 
     role = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.enum [
+        "server"
+        "agent"
+      ];
       default = "server";
-      description = "Role for this node";
+      description = "Role for this node: server or agent";
     };
 
     interface = lib.mkOption {

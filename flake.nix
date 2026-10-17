@@ -193,6 +193,7 @@
         inherit hyprland;
         inherit hy3;
         pkgs-unstable = packages.${host.system}.unstable;
+        pkgs-stable = packages.${host.system}.stable;
       };
 
       hosts = {
