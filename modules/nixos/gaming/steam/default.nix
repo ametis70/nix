@@ -9,8 +9,7 @@
 
 let
   cfg = config.custom.gaming.steam;
-  hasJovianSteam = builtins.hasAttr "jovian" options && builtins.hasAttr "steam" options.jovian;
-  hasJovianSteamos = hasJovianSteam && builtins.hasAttr "steamos" options.jovian;
+  hasJovian = options ? jovian;
 in
 {
   options.custom.gaming.steam = {
@@ -27,8 +26,8 @@ in
       {
         assertions = [
           {
-            assertion = !cfg.jovian.enable || hasJovianSteam;
-            message = "custom.gaming.steam.jovian.enable requires the Jovian-NixOS module.";
+            assertion = !cfg.jovian.enable || hasJovian;
+            message = "custom.gaming.steam.jovian.enable requires jovian.nixosModules.default in this host's extraNixosModules.";
           }
         ];
 
@@ -56,7 +55,7 @@ in
           "steam-jupiter-unwrapped"
         ];
       }
-      (lib.mkIf (!cfg.jovian.enable || !hasJovianSteam) {
+      (lib.mkIf (!cfg.jovian.enable || !hasJovian) {
         programs = {
           steam = {
             enable = true;
@@ -65,49 +64,53 @@ in
           gamescope.enable = true;
         };
       })
-      (lib.mkIf (cfg.jovian.enable && hasJovianSteam) {
-        jovian.steam = {
-          enable = true;
-          autoStart = cfg.jovian.autoStart;
-          desktopSession = if cfg.jovian.autoStart then "plasma" else null;
-          user = host.username;
-        };
-      })
-      (lib.mkIf (cfg.jovian.enable && cfg.jovian.autoStart && hasJovianSteamos) {
-        nixpkgs.overlays = [
-          (final: prev: {
-            steamos-manager = prev.steamos-manager.overrideAttrs (old: {
-              patches = (old.patches or [ ]) ++ [ ./patches/steamos-manager-jobmode-replace.patch ];
-            });
-          })
-        ];
-
-        services.displayManager = {
-          defaultSession = lib.mkDefault "plasma";
-          autoLogin.enable = lib.mkForce false;
-          sddm = {
+      (lib.optionalAttrs hasJovian (
+        lib.mkIf cfg.jovian.enable {
+          jovian.steam = {
             enable = true;
-            wayland.enable = true;
-            settings.Autologin = {
-              Relogin = true;
-              User = host.username;
-            };
+            autoStart = cfg.jovian.autoStart;
+            desktopSession = if cfg.jovian.autoStart then "plasma" else null;
+            user = host.username;
           };
-        };
-
-        systemd.tmpfiles.rules =
-          let
-            desktops = config.services.displayManager.sessionData.desktops;
-          in
-          [
-            "L+ /usr/share/wayland-sessions - - - - ${desktops}/share/wayland-sessions"
-            "L+ /usr/share/xsessions - - - - ${desktops}/share/xsessions"
-            "f /etc/sddm.conf.d/zz-steamos-autologin.conf 0644 root root - [Autologin]\\nSession=gamescope-wayland.desktop\\n"
+        }
+      ))
+      (lib.optionalAttrs hasJovian (
+        lib.mkIf (cfg.jovian.enable && cfg.jovian.autoStart) {
+          nixpkgs.overlays = [
+            (final: prev: {
+              steamos-manager = prev.steamos-manager.overrideAttrs (old: {
+                patches = (old.patches or [ ]) ++ [ ./patches/steamos-manager-jobmode-replace.patch ];
+              });
+            })
           ];
 
-        jovian.steamos.useSteamOSConfig = true;
-      })
-      (lib.mkIf (cfg.jovian.sessionWrapper && hasJovianSteam) {
+          services.displayManager = {
+            defaultSession = lib.mkDefault "plasma";
+            autoLogin.enable = lib.mkForce false;
+            sddm = {
+              enable = true;
+              wayland.enable = true;
+              settings.Autologin = {
+                Relogin = true;
+                User = host.username;
+              };
+            };
+          };
+
+          systemd.tmpfiles.rules =
+            let
+              desktops = config.services.displayManager.sessionData.desktops;
+            in
+            [
+              "L+ /usr/share/wayland-sessions - - - - ${desktops}/share/wayland-sessions"
+              "L+ /usr/share/xsessions - - - - ${desktops}/share/xsessions"
+              "f /etc/sddm.conf.d/zz-steamos-autologin.conf 0644 root root - [Autologin]\\nSession=gamescope-wayland.desktop\\n"
+            ];
+
+          jovian.steamos.useSteamOSConfig = true;
+        }
+      ))
+      (lib.mkIf (cfg.jovian.enable && cfg.jovian.sessionWrapper) {
         environment.systemPackages = [
           (pkgs.writeShellScriptBin "steamos-session-select" ''
             # Stop the Jovian gamescope-session target.
