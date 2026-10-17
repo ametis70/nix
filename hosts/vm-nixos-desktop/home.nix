@@ -9,6 +9,7 @@
     development = {
       nvim.enable = true;
       opencode.enable = true;
+      pi.enable = true;
     };
     programs = {
       browser.enable = true;
