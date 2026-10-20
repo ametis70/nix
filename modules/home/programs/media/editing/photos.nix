@@ -22,6 +22,7 @@ in
         hdrmerge
         darktable
         exiftool
+        immich-cli
       ];
     })
   ];

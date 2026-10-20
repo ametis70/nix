@@ -14,7 +14,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.ssh.startAgent = true;
     security.pam.services.login.kwallet.enable = true;
     security.pam.services.kde.kwallet.enable = true;
 
@@ -24,6 +23,7 @@ in
     ];
 
     programs.ssh = {
+      startAgent = true;
       askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
       enableAskPassword = true;
     };
