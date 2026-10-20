@@ -1,4 +1,4 @@
-{ lib, pkgs-stable, ... }:
+{ lib, ... }:
 
 {
   specialisation.k3s-agent.configuration = {
@@ -67,9 +67,5 @@
         streaming.moonlight.enable = lib.mkForce false;
       };
     };
-
-    # Use the stable nixpkgs package for the Kubernetes 1.34 stream.
-    # At the pinned nixpkgs revision this is k3s v1.34.3+k3s1.
-    services.k3s.package = pkgs-stable.k3s_1_34;
   };
 }

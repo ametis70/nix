@@ -1,7 +1,8 @@
 {
+  pkgs,
+  pkgs-stable,
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -166,6 +167,7 @@ in
       enable = true;
       role = cfg.role;
       tokenFile = config.age.secrets.k3s.path;
+      package = pkgs-stable.k3s_1_34;
 
       extraFlags = toString (
         [
