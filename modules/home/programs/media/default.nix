@@ -30,6 +30,7 @@ in
     ./editing/design.nix
     ./editing/documents.nix
     ./editing/drawing.nix
+    ./editing/fdm.nix
     ./editing/games.nix
     ./editing/modeling.nix
     ./editing/notes.nix
