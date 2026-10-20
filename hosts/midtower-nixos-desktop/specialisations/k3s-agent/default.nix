@@ -5,15 +5,43 @@
     system.nixos.tags = [ "k3s-agent" ];
     system.nixos.variant_id = "k3s-agent";
 
+    systemd.network = {
+      enable = true;
+      netdevs."30-vlan30" = {
+        netdevConfig = {
+          Kind = "vlan";
+          Name = "vlan30";
+        };
+        vlanConfig.Id = 30;
+      };
+      networks = {
+        "30-enp8s0" = {
+          name = "enp8s0";
+          DHCP = "yes";
+          dhcpV4Config.RouteMetric = 100;
+          vlan = [ "vlan30" ];
+        };
+        "30-vlan30" = {
+          name = "vlan30";
+          DHCP = "yes";
+          dhcpV4Config.RouteMetric = 200;
+        };
+      };
+    };
+
     custom = {
+      networking = {
+        networkmanager.enable = lib.mkForce false;
+        networkd.enable = lib.mkForce true;
+      };
+
       homelab.k3s.node = {
         enable = true;
         role = "agent";
+        interface = "vlan30";
         nodeLabels = [ "dedicated=ai" ];
         nodeTaints = [ "dedicated=ai:NoSchedule" ];
-
-        # Set this if the Midtower host has a fixed cluster address.
-        # nodeIp = "10.0.30.XX";
+        nodeIp = "10.0.30.89";
       };
 
       # Disable the desktop and gaming feature modules inherited from the
