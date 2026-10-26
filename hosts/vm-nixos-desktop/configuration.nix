@@ -21,6 +21,7 @@
     hardware = {
       bluetooth.enable = true;
       logitech.enable = true;
+      m-vave.enable = true;
       keyboard.sofle.enable = true;
       tablet.enable = true;
     };
@@ -46,6 +47,9 @@
       "imagescan-plugin-networkscan"
       "via"
     ];
+
+  # Enable audio group for MIDI access
+  users.users.ametis70.extraGroups = [ "audio" ];
 
   services.blueman.enable = true;
 

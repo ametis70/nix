@@ -13,11 +13,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    nixpkgs.config.allowUnfreePackages = [
-      "libretro-fbneo"
-      "libretro-genesis-plus-gx"
-      "libretro-picodrive"
-      "libretro-snes9x"
-    ];
+    nixpkgs.config.allowUnfree = true;
   };
 }

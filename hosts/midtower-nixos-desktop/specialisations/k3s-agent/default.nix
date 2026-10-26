@@ -4,6 +4,7 @@
   specialisation.k3s-agent.configuration = {
     system.nixos.tags = [ "k3s-agent" ];
     system.nixos.variant_id = "k3s-agent";
+    boot.kernelParams = [ "video=HDMI-A-1:2560x1440@60e" ];
 
     systemd.network = {
       enable = true;

@@ -9,6 +9,7 @@
     ./intel-graphics
     ./keyboard
     ./logitech
+    ./m-vave
     ./steam-puck-bridge
     ./tablet
   ];

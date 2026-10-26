@@ -24,6 +24,7 @@
       amd.gpu.enable = true;
       bluetooth.enable = true;
       logitech.enable = true;
+      m-vave.enable = true;
       tablet.enable = true;
     };
     desktop = {
