@@ -28,6 +28,7 @@ in
         extraGroups = [
           "wheel"
           "media"
+          "dialout"
         ];
         shell = pkgs.zsh;
         openssh.authorizedKeys.keys = keys;
