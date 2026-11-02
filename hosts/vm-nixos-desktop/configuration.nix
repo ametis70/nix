@@ -9,7 +9,7 @@
   custom = {
     networking.networkmanager.enable = true;
 
-    development.docker.enable = true;
+    development.podman.enable = true;
 
     desktop = {
       dm.greetd.enable = true;

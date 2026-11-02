@@ -1,5 +1,8 @@
 { ... }:
 
 {
-  imports = [ ./docker ];
+  imports = [
+    ./docker
+    ./podman
+  ];
 }
