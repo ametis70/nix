@@ -22,6 +22,7 @@ in
         packages = [
           "npm:pi-web-access"
           "npm:pi-catppuccin"
+          "npm:pi-provider-litellm"
         ];
         theme = "catppuccin-latte/catppuccin-mocha";
       };
