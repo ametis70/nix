@@ -6,11 +6,7 @@ in
 
 {
   options = {
-    custom.timezone.dynamic = lib.mkOption {
-      description = "Enable dynamic timezone";
-      default = true;
-      type = lib.types.bool;
-    };
+    custom.timezone.dynamic = lib.mkEnableOption "Enable dynamic timezone";
   };
 
   config = lib.mkMerge [
@@ -18,7 +14,7 @@ in
       time.timeZone = lib.mkDefault "America/Argentina/Buenos_Aires";
     }
     (lib.mkIf cfg.dynamic {
-      time.timeZone = null;
+      time.timeZone = lib.mkForce null;
       location.provider = "geoclue2";
       services.geoclue2 = {
         enable = true;
