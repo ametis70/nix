@@ -19,6 +19,7 @@ in
     home.packages = [
       (pkgs.writeShellScriptBin "kube" (builtins.readFile ./kube.sh))
       (pkgs.writeShellScriptBin "kubemail" (builtins.readFile ./kubemail.sh))
+      (pkgs.writeShellScriptBin "ai-model-switch" (builtins.readFile ./ai-model-switch.sh))
     ]
     ++ (with pkgs; [
       kubectl
@@ -28,6 +29,7 @@ in
       kubernetes-helm
       k9s
       fluxcd
+      jq
       libsecret
       envchain
     ]);
